@@ -1,9 +1,9 @@
-## Neuro Corporation
-# Face the Stream, Build the Content
+# Neuro Corporation
+## Face the Stream, Build the Content
 
 This mod, when fully completed, will allow Neuro-sama to communicate with Lobotomy Corporation through a secondary program that sends and receives information from the game itself using web requests. This is done because Lobotomy Corporation runs on a framework that is too old to support the Neuro SDK by itself. 
 
-# INSTALLATION
+## Installation
 
 I would not recommend installing this mod currently because it is very much incomplete. However, if you would like to install it anyways: 
 1. If you do not have the [Lobotomy Mod Manager](https://github.com/LobotomyBaseMod/LMM/releases) downloaded already, download and install it (I would recommend following [this guide](https://lobotomycorporationmodded.wiki.gg/wiki/Lobotomy_Mod_Manager) on the Lobotomy Corporation Modding Wiki to do this).
@@ -21,7 +21,7 @@ I would not recommend installing this mod currently because it is very much inco
 
 And voila, you're all set to let a human-like AI play Lobotomy Corporation! Just make sure the Head doesn't find out...
 
-# CREDITS 
+## Credits 
 Vedal, Alex, and all the other Contributors for the [Neuro SDK](https://github.com/VedalAI/neuro-sdk/tree/main)
 pandapanda135, for the [C# Implementation of the Neuro SDK](https://github.com/pandapanda135/CSharp-Neuro-SDK) that is being used in the secondary program
 The developers of the [Lobotomy Mod Manager](https://github.com/LobotomyBaseMod/LMM/releases) for developing the Lobotomy Mod Manager
