@@ -1,0 +1,242 @@
+﻿using NeuroSDKCsharp.Actions;
+using NeuroSDKCsharp.Json;
+using NeuroSDKCsharp.Messages.Outgoing;
+using NeuroSDKCsharp.Websocket;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace NeuroLCConnector
+{
+    /*
+     * This ActionScene covers the main gameplay phase of Lobotomy Corporation, the management of Abnormalities.
+     * This scene contains a lot more actions overall than most scenes, and a lot of actions which only get data in particular.
+     */
+
+    /*
+     * TODO: 
+     * -Add an Action to cancel Tool Usage (potentially also normal work assignment?)
+     * -Add an Action to get information on containment units in Qliphoth Overload state
+     * -Add an Action to get information about suppressible entities
+     * -Add an Action to order suppression
+     * -Add an Action to use Managerial Bullets (and a config option to disallow execution bullets. for obvious reasons.)
+     * -Add an Action to order Rabbit Team Deployment...? (perhaps not?)
+     * -Could be interesting to give her the ability to read an Abnormality's lore (not needed though)
+     * -Could also give her the ability to unlock an Abnormality's observation info / craft E.G.O, but I think that might be better for just ved to be able to do (so she doesn't waste it)
+     * 
+     * TODO (CORE SUPPRESSIONS):
+     * [The Core Suppressions will extend this scene, with modified context and actions to help direct Neuro while also making it a proper boss even for her.]
+     * -MALKUTH: AssignWork will assign the randomized work instead of the version she requests (as per the original game), but since Neuro can't see the work icons to see what was assigned, 
+     *      she will instead be told what was actually assigned without telling her it changed (e.g., attempts to assign Instinct, gets a message saying Repression was begun)
+     * -YESOD: SendContext will randomly scramble some of the characters before sending the message back, with the intensity increasing as the suppression continues
+     * -HOD: No change except for context (GetDayStatus informs her of the progressively weakened agents). 
+     * -NETZACH: No change except for context (informs her every Qliphoth Meltdown of the heal).
+     * -TIPHERETH: No change except for context (informs her energy generation is not required and to focus on meltdowns).
+     * -GEBURA: I don't even know how to translate this one to make Neuro able to do things. She might just have to be moral support for Ved.
+     * -CHESED: No change except for context (GetDayStatus informs her of the currently boosted damage types).
+     * -BINAH: Same problem as Gebura, but she can still help deal with Qliphoth Overloads at least. The Qliphoth Overload info Action will also inform her of the type.
+     * -HOKMA: So I can't exactly speed up Neuro's response to things, so, to truly emulate the boss' time-warping experience, I'd need to like...do...something else...
+     *      (for legal reasons, I am not going to artifically increase Neuro's latency on her Actions. I would never.)
+     * -KETER (A): No change except for context...? Might add something to track the Claw's containment unit targetting, not sure.
+     * -KETER (ABEL): All of Asiyah's gimmicks again, with new context.
+     * -KETER (ABRAM): All of Briah's gimmicks again, with new context. 
+     * -KETER (ADAM): All of Atziluth's gimmicks again, with new context. But maybe disable Hokma's (LEGALLY NONEXISTENT) latency gimmick because day 49 sucks enough as is.
+     * -DA'AT: ;)
+     */
+    public class FacilityManagementScene : ActionScene
+    {
+        protected override List<INeuroAction> InitActions
+        {
+            get
+            {
+                List<INeuroAction> list = new List<INeuroAction>
+                {
+                    new GetDayStatus(),
+                    new GetAgentStatuses(),
+                    new GetDetailedAgentInfo(),
+                    new GetAbnormalityStatuses(),
+                    new GetDetailedAbnormalityInfo(),
+                    new AssignWork(),
+                    new UseTool()
+                };
+                return list;
+            }
+        }
+
+        protected override List<INeuroAction> AllPossibleActions 
+        {
+            get
+            {
+                List<INeuroAction> list = new List<INeuroAction>
+                {
+                    new GetDayStatus(),
+                    new GetAgentStatuses(),
+                    new GetDetailedAgentInfo(),
+                    new GetAbnormalityStatuses(),
+                    new GetDetailedAbnormalityInfo(),
+                    new AssignWork(),
+                    new UseTool()
+                };
+                return list;
+            }
+        }
+
+        //TODO: add the actual day and energy requirements in here (will require a game request)
+        protected override string GetActionSceneStartContext()
+        {
+            return "The day has begun. Manage Abnormalities and collect P.E. Boxes until enough energy has been collected to call it a day.";
+        }
+    }
+
+    public class GetDayStatus : NeuroActionNoValidation
+    {
+        public override string Name => "get_day_status";
+
+        protected override string SuccessMessage => "Getting the day's status to send as context...";
+
+        protected override string Description => "Get the day's overall status. ";
+
+    }
+
+    public class GetAgentStatuses : NeuroActionNoValidation
+    {
+        public override string Name => "get_agent_statuses";
+
+        protected override string SuccessMessage => "Getting all agents' statuses to send as context...";
+
+        protected override string Description => "Get a brief overview of the status of all agents.";
+    }
+
+    public class GetDetailedAgentInfo : NeuroActionExternalExecute
+    {
+        public override string Name => "get_detailed_agent_info";
+
+        protected override string Description => "Get the detailed information for a specified agent.";
+
+        protected override JsonSchema? Schema => new()
+        {
+            Type = JsonSchemaType.Object,
+            Required = new List<string> { "agent_name" },
+            Properties = new Dictionary<string, JsonSchema>
+            {
+                ["agent_name"] = QJS.Type(JsonSchemaType.String)
+            }
+        };
+
+        protected override ExecutionResult Validate(ActionData actionData)
+        {
+            string? agentName = actionData.Data?["agent_name"]?.Value<string>();
+            if (String.IsNullOrEmpty(agentName)) return ExecutionResult.Failure("Action failed. Missing required parameter 'agent_name'.");
+            return ValidateGameSide(agentName);
+        }
+    }
+
+    public class GetAbnormalityStatuses : NeuroActionNoValidation
+    {
+        public override string Name => "get_abnormality_statuses";
+
+        protected override string SuccessMessage => "Getting all Abnormalities' statuses to send as context...";
+
+        protected override string Description => "Get a brief overview of the status of Abnormalities.";
+    }
+
+    public class GetDetailedAbnormalityInfo : NeuroActionExternalExecute
+    {
+        public override string Name => "get_detailed_abnormality_info";
+
+        protected override string Description => "Get detailed information for a specified Abnormality.";
+
+        protected override JsonSchema? Schema => new()
+        {
+            Type = JsonSchemaType.Object,
+            Required = new List<string> { "abnormality_name" },
+            Properties = new Dictionary<string, JsonSchema>
+            {
+                ["abnormality_name"] = QJS.Type(JsonSchemaType.String),
+                ["include_basic_info"] = QJS.Enum(new List<string> { "true", "false"}),
+                ["include_managerial_guidelines"] = QJS.Enum(new List<string> { "true", "false" }),
+                ["include_work_success_rates"] = QJS.Enum(new List<string> { "true", "false" }),
+                ["include_escape_information"] = QJS.Enum(new List<string> { "true", "false" })
+            }
+        };
+
+        protected override ExecutionResult Validate(ActionData actionData)
+        {
+            string? abnormalityName = actionData.Data?["abnormality_name"]?.Value<string>();
+            if (String.IsNullOrEmpty(abnormalityName)) return ExecutionResult.Failure("Action failed. Missing required parameter 'abnormality_name'.");
+            string? includeBasicInfo = actionData.Data?["include_basic_info"]?.Value<string>();
+            if (String.IsNullOrEmpty(includeBasicInfo)) includeBasicInfo = "true";
+            else if (!includeBasicInfo.Equals("false") && !includeBasicInfo.Equals("true")) return ExecutionResult.Failure("Action failed. Parameter 'include_basic_info' must be 'true', 'false', or left empty.");
+            string? includeManagerialGuidelines = actionData.Data?["include_managerial_guidelines"]?.Value<string>();
+            if (String.IsNullOrEmpty(includeManagerialGuidelines)) includeManagerialGuidelines = "true";
+            else if (!includeManagerialGuidelines.Equals("false") && !includeManagerialGuidelines.Equals("true")) return ExecutionResult.Failure("Action failed. Parameter 'include_managerial_guidelines' must be 'true', 'false', or left empty.");
+            string? includeWorkSuccessRates = actionData.Data?["include_work_success_rates"]?.Value<string>();
+            if (String.IsNullOrEmpty(includeWorkSuccessRates)) includeWorkSuccessRates = "true";
+            else if (!includeWorkSuccessRates.Equals("false") && !includeWorkSuccessRates.Equals("true")) return ExecutionResult.Failure("Action failed. Parameter 'include_work_success_rates' must be 'true', 'false', or left empty.");
+            string? includeEscapeInformation = actionData.Data?["include_escape_information"]?.Value<string>();
+            if (String.IsNullOrEmpty(includeEscapeInformation)) includeEscapeInformation = "true";
+            else if (!includeEscapeInformation.Equals("false") && !includeEscapeInformation.Equals("true")) return ExecutionResult.Failure("Action failed. Parameter 'include_escape_information' must be 'true', 'false', or left empty.");
+            return ValidateGameSide(abnormalityName, includeBasicInfo, includeManagerialGuidelines, includeWorkSuccessRates, includeEscapeInformation);
+        }
+    }
+
+    public class AssignWork : NeuroActionExternalExecute
+    {
+        public override string Name => "assign_work";
+
+        protected override string Description => "Assign an agent to do work on an Abnormality.";
+
+        protected override JsonSchema? Schema => new()
+        {
+            Type = JsonSchemaType.Object,
+            Required = new List<string>() { "agent_name", "abnormality_name", "work_type" },
+            Properties = new Dictionary<string, JsonSchema>
+            {
+                ["agent_name"] = QJS.Type(JsonSchemaType.String),
+                ["abnormality_name"] = QJS.Type(JsonSchemaType.String),
+                ["work_type"] = QJS.Enum(new List<string>() { "Instinct", "Insight", "Attachment", "Repression" })
+            }
+        };
+
+        protected override ExecutionResult Validate(ActionData actionData)
+        {
+            string? agentName = actionData.Data?["agent_name"]?.Value<string>();
+            if (String.IsNullOrEmpty(agentName)) return ExecutionResult.Failure("Action failed. Missing required parameter 'agent_name'.");
+            string? abnormalityName = actionData.Data?["abnormality_name"]?.Value<string>();
+            if (String.IsNullOrEmpty(abnormalityName)) return ExecutionResult.Failure("Action failed. Missing required parameter 'abnormality_name'.");
+            string? workType = actionData.Data?["work_type"]?.Value<string>();
+            if (String.IsNullOrEmpty(workType)) return ExecutionResult.Failure("Action failed. Missing required parameter 'work_type'.");
+            return ValidateGameSide(agentName, abnormalityName, workType);
+        }
+    }
+
+    public class UseTool : NeuroActionExternalExecute
+    {
+        public override string Name => "use_tool";
+
+        protected override string Description => "Assign an agent to use a Tool Abnormality.";
+
+        protected override JsonSchema? Schema => new()
+        {
+            Type = JsonSchemaType.Object,
+            Required = new List<string>() { "agent_name", "abnormality_name"},
+            Properties = new Dictionary<string, JsonSchema>
+            {
+                ["agent_name"] = QJS.Type(JsonSchemaType.String),
+                ["abnormality_name"] = QJS.Type(JsonSchemaType.String)
+            }
+        };
+
+        protected override ExecutionResult Validate(ActionData actionData)
+        {
+            string? agentName = actionData.Data?["agent_name"]?.Value<string>();
+            if (String.IsNullOrEmpty(agentName)) return ExecutionResult.Failure("Action failed. Missing required parameter 'agent_name'.");
+            string? abnormalityName = actionData.Data?["abnormality_name"]?.Value<string>();
+            if (String.IsNullOrEmpty(abnormalityName)) return ExecutionResult.Failure("Action failed. Missing required parameter 'abnormality_name'.");
+            return ValidateGameSide(agentName, abnormalityName);
+        }
+    }
+}
