@@ -60,7 +60,8 @@ namespace NeuroLCConnector
                     new GetAbnormalityStatuses(),
                     new GetDetailedAbnormalityInfo(),
                     new AssignWork(),
-                    new UseTool()
+                    new UseTool(),
+                    new GetSuppressableTargets()
                 };
                 return list;
             }
@@ -78,7 +79,8 @@ namespace NeuroLCConnector
                     new GetAbnormalityStatuses(),
                     new GetDetailedAbnormalityInfo(),
                     new AssignWork(),
-                    new UseTool()
+                    new UseTool(),
+                    new GetSuppressableTargets()
                 };
                 return list;
             }
@@ -238,5 +240,14 @@ namespace NeuroLCConnector
             if (String.IsNullOrEmpty(abnormalityName)) return ExecutionResult.Failure("Action failed. Missing required parameter 'abnormality_name'.");
             return ValidateGameSide(agentName, abnormalityName);
         }
+    }
+
+    public class GetSuppressableTargets : NeuroActionNoValidation
+    {
+        public override string Name => "get_suppressable_targets";
+
+        protected override string SuccessMessage => "Getting all suppressable targets to send as context...";
+
+        protected override string Description => "Get all entities which can currently be suppressed.";
     }
 }

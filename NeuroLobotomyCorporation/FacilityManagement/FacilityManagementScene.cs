@@ -34,6 +34,8 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     return AssignWork.Command(message[(int)AssignWork.Parameters.AGENT_NAME], message[(int)AssignWork.Parameters.ABNORMALITY_NAME], message[(int)AssignWork.Parameters.WORK_TYPE]);
                 case "use_tool":
                     return UseTool.Command(message[(int)UseTool.Parameters.AGENT_NAME], message[(int)UseTool.Parameters.ABNORMALITY_NAME]);
+                case "get_suppressable_targets":
+                    return GetSuppressableTargets.Command();
             }
             return "Command " + message[COMMAND_INDEX] + " does not exist in scene FacilityManagementScene.";
         }
