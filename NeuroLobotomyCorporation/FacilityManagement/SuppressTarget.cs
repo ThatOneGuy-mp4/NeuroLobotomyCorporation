@@ -43,6 +43,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             UnitModel target = TryFindPanickedTarget(targetName);
             if (target == null) target = TryFindAbnormalityTarget(targetName, sefiraDepartment);
             if (target == null) target = TryFindOrdealTarget(targetName, sefiraDepartment);
+            if (target == null) target = TryFindSefiraCoreTarget(targetName);
             if (target == null) return "failure|There are no valid targets of the specified name.";
             ThreadPool.QueueUserWorkItem(CommandExecute, new SuppressTargetState(agent, target, sefiraDepartment));
             return String.Format("success|{0} has begun suppressing {1}.", agentName, targetName);
@@ -96,6 +97,16 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             }
             if (targetsInDepartment.Count > 0) return targetsInDepartment[rand.Next(0, targetsInDepartment.Count)];
             return targetsWithName[rand.Next(0, targetsWithName.Count)];
+        }
+
+        private static UnitModel TryFindSefiraCoreTarget(string targetName)
+        {
+            if (!SefiraBossManager.Instance.IsAnyBossSessionActivated()) return null;
+            foreach (SefiraBossCreatureModel bossSefira in SefiraBossManager.Instance.CurrentBossBase.modelList)
+            {
+                if (bossSefira.script.GetName().Equals(targetName)) return bossSefira;
+            }
+            return null;
         }
 
         private class SuppressTargetState

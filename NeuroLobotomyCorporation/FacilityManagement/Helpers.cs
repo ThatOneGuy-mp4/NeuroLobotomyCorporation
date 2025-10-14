@@ -209,6 +209,12 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             return defenseTypeInfo;
         }
 
+        public static string GetResistancesText(List<string> defenseInfo)
+        {
+            return String.Format("{0} RED Res, {1} WHITE Res, {2} BLACK Res, {3} PALE Res.",
+                defenseInfo[(int)ResistanceTypes.RED], defenseInfo[(int)ResistanceTypes.WHITE], defenseInfo[(int)ResistanceTypes.BLACK], defenseInfo[(int)ResistanceTypes.PALE]);
+        }
+
         public enum AbnormalityWorkingState
         {
             UNKNOWN,
