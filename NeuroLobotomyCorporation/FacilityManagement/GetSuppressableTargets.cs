@@ -8,41 +8,35 @@ namespace NeuroLobotomyCorporation.FacilityManagement
 {
     public class GetSuppressableTargets
     {
-        //TODO: i don't understand what tf is happening with this passage shit and I'm almost certain there's a simpler way of doing it with less methods. so figure that out mayhaps.
         public static string Command()
         {
             string result = "";
             List<AgentModel> panickingAgents = new List<AgentModel>();
-            foreach(AgentModel agent in AgentManager.instance.GetAgentList())
+            foreach (AgentModel agent in AgentManager.instance.GetAgentList())
             {
                 if (agent.IsPanic()) panickingAgents.Add(agent);
             }
-            if(panickingAgents.Count > 0)
+            if (panickingAgents.Count > 0)
             {
                 result += "Panicking Agents (suppress with WHITE or BLACK damage to recover sanity)\n-------------------------\n";
                 foreach (AgentModel agent in panickingAgents)
                 {
                     string name = agent.GetUnitName();
-                    MapNode currentNode = agent.GetMovableNode().GetCurrentNode();
-                    string location = "";
-                    if (currentNode == null)
-                    {
-                        PassageObjectModel currentPassage = agent.GetMovableNode().GetPassage();
-                        if (currentPassage == null) location = "Location Unknown";
-                        else location = String.Format("Currently in the {0} Department", Helpers.GetDepartmentBySefira(currentPassage.GetSefiraEnum()));
-                    }
-                    else location = String.Format("Currently in the {0} Department", Helpers.GetDepartmentBySefira(currentNode.GetAttachedPassage().GetSefiraEnum()));
+                    string location = Helpers.GetUnitModelLocationText(agent);
                     string panicAction = "";
-                    if(agent.CurrentPanicAction is PanicViolence)
+                    if (agent.CurrentPanicAction is PanicViolence)
                     {
                         panicAction = "Attempting to Commit Murder";
-                    }else if(agent.CurrentPanicAction is PanicSuicideExecutor)
+                    }
+                    else if (agent.CurrentPanicAction is PanicSuicideExecutor)
                     {
                         panicAction = "Preparing to Commit Suicide";
-                    }else if(agent.CurrentPanicAction is PanicRoaming)
+                    }
+                    else if (agent.CurrentPanicAction is PanicRoaming)
                     {
                         panicAction = "Running Around Aimlessly";
-                    }else if(agent.CurrentPanicAction is PanicOpenIsolate)
+                    }
+                    else if (agent.CurrentPanicAction is PanicOpenIsolate)
                     {
                         panicAction = "Attempting to Free Abnormalities";
                     }
@@ -56,29 +50,29 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                 result += "\n";
             }
             //TODO: add special enemies which always get placed at the top of the list 
-            //  (Red Mist, An Arbiter, Apoc Bird + Eggs, Whitenight + Angels, Claw)
+            //  (Red Mist, An Arbiter, Apoc Bird + Eggs, Whitenight + Angels, Claw (during Keter 1))
+            //TODO: make sure this works correctly with identically named child entities
             List<CreatureModel> escapedAbnormalities = SefiraManager.instance.GetEscapedCreatures();
-            foreach(CreatureModel abnormality in escapedAbnormalities)
+            if (escapedAbnormalities.Count > 0)
             {
-                string name = abnormality.script.GetName();
-                string riskLevel = abnormality.metaInfo.riskLevelForce;
-                MapNode currentNode = abnormality.GetMovableNode().GetCurrentNode();
-                string location = "";
-                if (currentNode == null)
+                result += "Breaching Abnormalities\n-------------------------\n";
+                foreach (CreatureModel abnormality in escapedAbnormalities)
                 {
-                    PassageObjectModel currentPassage = abnormality.script.movable.GetPassage();
-                    if (currentPassage == null) location = "Location Unknown";
-                    else location = String.Format("Currently in the {0} Department", Helpers.GetDepartmentBySefira(currentPassage.GetSefiraEnum()));
+                    string name = abnormality.script.GetName();
+                    string riskLevel = abnormality.metaInfo.riskLevelForce;
+                    string location = Helpers.GetUnitModelLocationText(abnormality);
+                    string healthPercentRemaining = ((int)((float)(abnormality.hp / abnormality.metaInfo.maxHp) * 100)).ToString();
+                    List<string> defenseInfo = Helpers.GetResistanceTypeValues(abnormality);
+                    result += String.Format("{0}, {1} Level Threat, {2}, {3}% HP Remaining\n" +
+                        "{4} RED Res, {5} WHITE Res, {6} BLACK Res, {7} PALE Res.", name, riskLevel, location, healthPercentRemaining,
+                        defenseInfo[(int)Helpers.ResistanceTypes.RED], defenseInfo[(int)Helpers.ResistanceTypes.WHITE], defenseInfo[(int)Helpers.ResistanceTypes.BLACK], defenseInfo[(int)Helpers.ResistanceTypes.PALE]);
                 }
-                else location = String.Format("Currently in the {0} Department", Helpers.GetDepartmentBySefira(currentNode.GetAttachedPassage().GetSefiraEnum()));
-
-                string healthPercentRemaining = ((int)((float)(abnormality.hp / abnormality.metaInfo.maxHp) * 100)).ToString();
-                result += String.Format("{0}, {1} Level Threat, {2}, {3}% HP Remaining\n", name, riskLevel, location, healthPercentRemaining);
             }
+
             List<OrdealBase> activatedOrdeals = OrdealManager.instance.GetActivatedOrdeals();
-            if(activatedOrdeals.Count > 0)
+            if (activatedOrdeals.Count > 0)
             {
-                foreach(OrdealBase ordeal in activatedOrdeals)
+                foreach (OrdealBase ordeal in activatedOrdeals)
                 {
                     List<OrdealCreatureModel> ordealCreaturesInOrdeal = new List<OrdealCreatureModel>();
                     foreach (OrdealCreatureModel ordealCreature in OrdealManager.instance.GetOrdealCreatureList())
@@ -86,18 +80,11 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                         if (ordealCreature.OrdealBase.OrdealTypeText.Equals(ordeal.OrdealTypeText)) ordealCreaturesInOrdeal.Add(ordealCreature);
                     }
                     string ordealTargets = String.Format("{0}\n-------------------------\n", ordeal.OrdealTypeText);
-                    foreach(OrdealCreatureModel ordealCreature in ordealCreaturesInOrdeal)
+                    foreach (OrdealCreatureModel ordealCreature in ordealCreaturesInOrdeal)
                     {
                         string name = ordealCreature.OrdealBase.OrdealNameText(ordealCreature);
                         string riskLevel = ordealCreature.OrdealBase.GetRiskLevel(ordealCreature).ToString();
-                        MapNode currentNode = ordealCreature.GetMovableNode().GetCurrentNode();
-                        string location = "";
-                        if (currentNode == null) {
-                            PassageObjectModel currentPassage = ordealCreature.script.movable.GetPassage();
-                            if (currentPassage == null) location = "Location Unknown";
-                            else location = String.Format("Currently in the {0} Department", Helpers.GetDepartmentBySefira(currentPassage.GetSefiraEnum()));
-                        }
-                        else location = String.Format("Currently in the {0} Department", Helpers.GetDepartmentBySefira(currentNode.GetAttachedPassage().GetSefiraEnum()));
+                        string location = Helpers.GetUnitModelLocationText(ordealCreature);
                         string healthPercentRemaining = ((int)((float)(ordealCreature.hp / ordealCreature.metaInfo.maxHp) * 100)).ToString();
                         ordealTargets += String.Format("{0}, {1} Level Threat, {2}, {3}% HP Remaining\n", name, riskLevel, location, healthPercentRemaining);
                     }

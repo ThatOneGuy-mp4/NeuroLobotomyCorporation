@@ -42,6 +42,60 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             return "Department could not be gotten from the Sephira. Complain to the mod developer about it.";
         }
 
+        public static SefiraEnum GetSefiraByDepartment(string department)
+        {
+            switch (department)
+            {
+                case "Control":
+                    return SefiraEnum.MALKUT;
+                case "Information":
+                    return SefiraEnum.YESOD;
+                case "Training":
+                    return SefiraEnum.HOD;
+                case "Safety":
+                    return SefiraEnum.NETZACH;
+                case "Upper Central Command":
+                    return SefiraEnum.TIPERERTH1;
+                case "Lower Central Command":
+                    return SefiraEnum.TIPERERTH2;
+                case "Disciplinary":
+                    return SefiraEnum.GEBURAH;
+                case "Welfare":
+                    return SefiraEnum.CHESED;
+                case "Extraction":
+                    return SefiraEnum.BINAH;
+                case "Record":
+                    return SefiraEnum.CHOKHMAH;
+                case "Architecture":
+                    return SefiraEnum.KETHER;
+                case "Carmen's Chamber":
+                    return SefiraEnum.DAAT;
+            }
+            return SefiraEnum.DUMMY;
+        }
+
+        public static string GetUnitModelLocationText(UnitModel unit)
+        {
+            string location = "";
+            PassageObjectModel currentPassage = unit.GetMovableNode().GetPassage();
+            if (currentPassage == null)
+            {
+                location = "Location Unknown";
+            }
+            else location = String.Format("Currently in the {0} Department", Helpers.GetDepartmentBySefira(currentPassage.GetSefiraEnum()));
+            return location;
+        }
+
+        public static SefiraEnum GetUnitModelLocationSefira(UnitModel unit)
+        {
+            PassageObjectModel currentPassage = unit.GetMovableNode().GetPassage();
+            if (currentPassage != null)
+            {
+                return currentPassage.GetSefiraEnum();
+            }
+            return SefiraEnum.DUMMY;
+        }
+
         public enum AgentWorkingState
         {
             UNKNOWN,
@@ -142,6 +196,17 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     return "Pale";
             }
             return "Damage type could not be found. Complain to the mod developer about it.";
+        }
+
+        public static List<string> GetResistanceTypeValues(UnitModel unit)
+        {
+            DefenseInfo defenseInfo = unit.defense;
+            List<string> defenseTypeInfo = new List<string>();
+            defenseTypeInfo.Add(UIUtil.GetDefenseText(defenseInfo.GetDefenseType(defenseInfo.R)));
+            defenseTypeInfo.Add(UIUtil.GetDefenseText(defenseInfo.GetDefenseType(defenseInfo.W)));
+            defenseTypeInfo.Add(UIUtil.GetDefenseText(defenseInfo.GetDefenseType(defenseInfo.B)));
+            defenseTypeInfo.Add(UIUtil.GetDefenseText(defenseInfo.GetDefenseType(defenseInfo.P)));
+            return defenseTypeInfo;
         }
 
         public enum AbnormalityWorkingState

@@ -61,7 +61,8 @@ namespace NeuroLCConnector
                     new GetDetailedAbnormalityInfo(),
                     new AssignWork(),
                     new UseTool(),
-                    new GetSuppressableTargets()
+                    new GetSuppressableTargets(),
+                    new SuppressTarget()
                 };
                 return list;
             }
@@ -80,7 +81,8 @@ namespace NeuroLCConnector
                     new GetDetailedAbnormalityInfo(),
                     new AssignWork(),
                     new UseTool(),
-                    new GetSuppressableTargets()
+                    new GetSuppressableTargets(),
+                    new SuppressTarget()
                 };
                 return list;
             }
@@ -249,5 +251,50 @@ namespace NeuroLCConnector
         protected override string SuccessMessage => "Getting all suppressable targets to send as context...";
 
         protected override string Description => "Get all entities which can currently be suppressed.";
+    }
+
+    public class SuppressTarget : NeuroActionExternalExecute
+    {
+        public override string Name => "suppress_target";
+
+        protected override string Description => "Order an agent to suppress a specified entity.";
+
+        protected override JsonSchema? Schema => new()
+        {
+            Type = JsonSchemaType.Object,
+            Required = new List<string>() { "agent_name", "target_name"},
+            Properties = new Dictionary<string, JsonSchema>
+            {
+                ["agent_name"] = QJS.Type(JsonSchemaType.String),
+                ["target_name"] = QJS.Type(JsonSchemaType.String),
+                ["target_department"] = QJS.Type(JsonSchemaType.String) //could change this to be an enum but that would also require making a game request at some point to see which departments have been opened
+            }
+        };
+
+        protected override ExecutionResult Validate(ActionData actionData)
+        {
+            string? agentName = actionData.Data?["agent_name"]?.Value<string>();
+            if (String.IsNullOrEmpty(agentName)) return ExecutionResult.Failure("Action failed. Missing required parameter 'agent_name'.");
+            string? targetName = actionData.Data?["target_name"]?.Value<string>();
+            if (String.IsNullOrEmpty(targetName)) return ExecutionResult.Failure("Action failed. Missing required parameter 'target_name'.");
+            string? targetDepartment = actionData.Data?["target_department"]?.Value<string>();
+            if (!String.IsNullOrEmpty(targetDepartment))
+            {
+                if (targetDepartment.Contains("Department"))
+                {
+                    targetDepartment = targetDepartment.Remove(targetDepartment.IndexOf("Department"));
+                }
+                targetDepartment = targetDepartment.Trim();
+            }
+            else targetDepartment = "DUMMY";
+            return ValidateGameSide(agentName, targetName, targetDepartment);
+        }
+
+        //private bool IsValidDepartment(string department)
+        //{
+        //    return department.Equals("Control") || department.Equals("Information") || department.Equals("Training") || department.Equals("Safety")
+        //        || department.Equals("Upper Central Command") || department.Equals("Lower Central Command") || department.Equals("Disciplinary") || department.Equals("Welfare")
+        //        || department.Equals("Extraction") || department.Equals("Record") || department.Equals("Architecture") || department.Equals("Carmen's Chamber");
+        //}
     }
 }
