@@ -289,12 +289,5 @@ namespace NeuroLCConnector
             else targetDepartment = "DUMMY";
             return ValidateGameSide(agentName, targetName, targetDepartment);
         }
-
-        //private bool IsValidDepartment(string department)
-        //{
-        //    return department.Equals("Control") || department.Equals("Information") || department.Equals("Training") || department.Equals("Safety")
-        //        || department.Equals("Upper Central Command") || department.Equals("Lower Central Command") || department.Equals("Disciplinary") || department.Equals("Welfare")
-        //        || department.Equals("Extraction") || department.Equals("Record") || department.Equals("Architecture") || department.Equals("Carmen's Chamber");
-        //}
     }
 }
