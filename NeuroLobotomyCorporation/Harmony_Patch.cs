@@ -18,6 +18,7 @@ using System.Text;
 using CreatureSelect;
 using System.Net.Sockets;
 using NeuroLobotomyCorporation.FacilityManagement;
+using GlobalBullet;
 
 namespace NeuroLobotomyCorporation
 {
@@ -55,6 +56,8 @@ namespace NeuroLobotomyCorporation
                 new HarmonyMethod(typeof(AssignWork).GetMethod("SortSystemLogs", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(SystemLogScript).GetMethod("OnNotice", AccessTools.all), null,
                 new HarmonyMethod(typeof(AssignWork).GetMethod("UpdateNeuroLogsObservationLevel", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(GlobalBulletWindow).GetMethod("Update", AccessTools.all), null,
+                new HarmonyMethod(typeof(ShootManagerialBullet).GetMethod("NeuroShootBullet", AccessTools.all)), null);
         }
 
         public static void SendCommand(string command)

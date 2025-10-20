@@ -20,9 +20,7 @@ namespace NeuroLCConnector
      * TODO: 
      * -Add an Action to cancel Tool Usage (potentially also normal work assignment?)
      * -Add an Action to get information on containment units in Qliphoth Overload state
-     * -Add an Action to get information about suppressible entities
-     * -Add an Action to order suppression
-     * -Add an Action to use Managerial Bullets (and a config option to disallow execution bullets. for obvious reasons.)
+     * -Add a config option to allow execution bullets.
      * -Add an Action to order Rabbit Team Deployment...? (perhaps not?)
      * -Could be interesting to give her the ability to read an Abnormality's lore (not needed though)
      * -Could also give her the ability to unlock an Abnormality's observation info / craft E.G.O, but I think that might be better for just ved to be able to do (so she doesn't waste it)
@@ -82,7 +80,8 @@ namespace NeuroLCConnector
                     new AssignWork(),
                     new UseTool(),
                     new GetSuppressableTargets(),
-                    new SuppressTarget()
+                    new SuppressTarget(),
+                    new ShootManagerialBullet()
                 };
                 return list;
             }
@@ -92,6 +91,13 @@ namespace NeuroLCConnector
         protected override string GetActionSceneStartContext()
         {
             return "The day has begun. Manage Abnormalities and collect P.E. Boxes until enough energy has been collected to call it a day.";
+        }
+
+        public override void InitializeActionScene()
+        {
+            base.InitializeActionScene();
+            string isBulletUnlocked = NeuroLCConnector.Connector.SendCommand("is_bullet_unlocked").Result;
+            if (isBulletUnlocked.Equals("true")) RegisterAction("shoot_managerial_bullet");
         }
     }
 
@@ -288,6 +294,49 @@ namespace NeuroLCConnector
             }
             else targetDepartment = "DUMMY";
             return ValidateGameSide(agentName, targetName, targetDepartment);
+        }
+    }
+
+    public class ShootManagerialBullet : NeuroActionExternalExecute
+    {
+        public override string Name => "shoot_managerial_bullet";
+
+        protected override string Description => "Shoot a specified type of managerial bullet at the specified target.";
+
+        protected override JsonSchema? Schema => new()
+        {
+            Type = JsonSchemaType.Object,
+            Required = new List<string>() { "bullet_type", "target_name" },
+            Properties = new Dictionary<string, JsonSchema>
+            {
+                ["bullet_type"] = QJS.Type(JsonSchemaType.String),
+                ["target_name"] = QJS.Type(JsonSchemaType.String),
+                ["target_department"] = QJS.Type(JsonSchemaType.String) 
+            }
+        };
+
+        protected override ExecutionResult Validate(ActionData actionData)
+        {
+            string? bulletType = actionData.Data?["bullet_type"]?.Value<string>();
+            if (String.IsNullOrEmpty(bulletType)) return ExecutionResult.Failure("Action failed. Missing required parameter 'bullet_type'.");
+            if (bulletType.Contains("Bullet"))
+            {
+                bulletType = bulletType.Remove(bulletType.IndexOf("Bullet"));
+                bulletType = bulletType.Trim();
+            }
+            string? targetName = actionData.Data?["target_name"]?.Value<string>();
+            if (String.IsNullOrEmpty(targetName)) return ExecutionResult.Failure("Action failed. Missing required parameter 'target_name'.");
+            string? targetDepartment = actionData.Data?["target_department"]?.Value<string>();
+            if (String.IsNullOrEmpty(targetDepartment)) targetDepartment = "DUMMY";
+            else
+            {
+                if (targetDepartment.Contains("Department"))
+                {
+                    targetDepartment = targetDepartment.Remove(targetDepartment.IndexOf("Department"));
+                    targetDepartment = targetDepartment.Trim();
+                }
+            }
+            return ValidateGameSide(bulletType, targetName, targetDepartment);
         }
     }
 }

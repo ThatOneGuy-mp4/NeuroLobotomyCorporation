@@ -250,5 +250,74 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             AttachmentSuccess = 4,
             RepressionSuccess = 5
         }
+
+        public static UnitModel TryFindAnySuppressableTarget(string targetName, SefiraEnum targetDepartment)
+        {
+            UnitModel target = TryFindPanickedTarget(targetName);
+            if (target == null) target = TryFindAbnormalityTarget(targetName, targetDepartment);
+            if (target == null) target = TryFindOrdealTarget(targetName, targetDepartment);
+            if (target == null) target = TryFindSefiraCoreTarget(targetName);
+            return target;
+        }
+
+        public static UnitModel TryFindPanickedTarget(string targetName)
+        {
+            AgentModel panickedTarget = null;
+            if (Helpers.AgentExists(targetName, out panickedTarget) && panickedTarget.IsPanic()) return panickedTarget;
+            return null;
+        }
+
+        public static UnitModel TryFindAbnormalityTarget(string targetName, SefiraEnum targetDepartment)
+        {
+            List<UnitModel> targetsWithName = new List<UnitModel>();
+            foreach (CreatureModel abnormality in SefiraManager.instance.GetEscapedCreatures())
+            {
+                if (targetName.Equals(abnormality.script.GetName())) targetsWithName.Add(abnormality);
+            }
+            if (targetsWithName.Count == 0) return null;
+            if (targetsWithName.Count == 1) return targetsWithName[0];
+            Random rand = new Random();
+            if (targetDepartment == SefiraEnum.DUMMY) return targetsWithName[rand.Next(0, targetsWithName.Count)];
+            List<UnitModel> targetsInDepartment = new List<UnitModel>();
+            foreach (CreatureModel abnormality in targetsWithName)
+            {
+                SefiraEnum targetLocation = Helpers.GetUnitModelLocationSefira(abnormality);
+                if (targetLocation == targetDepartment) targetsInDepartment.Add(abnormality);
+            }
+            if (targetsInDepartment.Count > 0) return targetsInDepartment[rand.Next(0, targetsInDepartment.Count)];
+            return targetsWithName[rand.Next(0, targetsWithName.Count)];
+        }
+
+        public static UnitModel TryFindOrdealTarget(string targetName, SefiraEnum targetDepartment)
+        {
+            if (OrdealManager.instance.GetActivatedOrdeals().Count == 0) return null;
+            List<UnitModel> targetsWithName = new List<UnitModel>();
+            foreach (OrdealCreatureModel ordealCreature in OrdealManager.instance.GetOrdealCreatureList())
+            {
+                if (ordealCreature.OrdealBase.OrdealNameText(ordealCreature).Equals(targetName)) targetsWithName.Add(ordealCreature);
+            }
+            if (targetsWithName.Count == 0) return null;
+            if (targetsWithName.Count == 1) return targetsWithName[0];
+            Random rand = new Random();
+            if (targetDepartment == SefiraEnum.DUMMY) return targetsWithName[rand.Next(0, targetsWithName.Count)];
+            List<UnitModel> targetsInDepartment = new List<UnitModel>();
+            foreach (OrdealCreatureModel ordealCreature in targetsWithName)
+            {
+                SefiraEnum targetLocation = Helpers.GetUnitModelLocationSefira(ordealCreature);
+                if (targetLocation == targetDepartment) targetsInDepartment.Add(ordealCreature);
+            }
+            if (targetsInDepartment.Count > 0) return targetsInDepartment[rand.Next(0, targetsInDepartment.Count)];
+            return targetsWithName[rand.Next(0, targetsWithName.Count)];
+        }
+
+        public static UnitModel TryFindSefiraCoreTarget(string targetName)
+        {
+            if (!SefiraBossManager.Instance.IsAnyBossSessionActivated()) return null;
+            foreach (SefiraBossCreatureModel bossSefira in SefiraBossManager.Instance.CurrentBossBase.modelList)
+            {
+                if (bossSefira.script.GetName().Equals(targetName)) return bossSefira;
+            }
+            return null;
+        }
     }
 }

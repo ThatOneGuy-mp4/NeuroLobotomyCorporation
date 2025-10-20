@@ -40,74 +40,13 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     sefiraDepartment = currentPassage.GetSefiraEnum();
                 }
             }
-            UnitModel target = TryFindPanickedTarget(targetName);
-            if (target == null) target = TryFindAbnormalityTarget(targetName, sefiraDepartment);
-            if (target == null) target = TryFindOrdealTarget(targetName, sefiraDepartment);
-            if (target == null) target = TryFindSefiraCoreTarget(targetName);
+            UnitModel target = Helpers.TryFindAnySuppressableTarget(targetName, sefiraDepartment);
             if (target == null) return "failure|There are no valid targets of the specified name.";
             ThreadPool.QueueUserWorkItem(CommandExecute, new SuppressTargetState(agent, target, sefiraDepartment));
             return String.Format("success|{0} has begun suppressing {1}.", agentName, targetName);
         }
 
-        private static UnitModel TryFindPanickedTarget(string targetName)
-        {
-            AgentModel panickedTarget = null;
-            if (Helpers.AgentExists(targetName, out panickedTarget) && panickedTarget.IsPanic()) return panickedTarget;
-            return null;
-        }
-
-        private static UnitModel TryFindAbnormalityTarget(string targetName, SefiraEnum location)
-        {
-            List<UnitModel> targetsWithName = new List<UnitModel>();
-            foreach(CreatureModel abnormality in SefiraManager.instance.GetEscapedCreatures())
-            {
-                if (targetName.Equals(abnormality.script.GetName())) targetsWithName.Add(abnormality);
-            }
-            if (targetsWithName.Count == 0) return null;
-            if (targetsWithName.Count == 1) return targetsWithName[0];
-            Random rand = new Random();
-            if (location == SefiraEnum.DUMMY) return targetsWithName[rand.Next(0, targetsWithName.Count)]; 
-            List<UnitModel> targetsInDepartment = new List<UnitModel>();
-            foreach (CreatureModel abnormality in targetsWithName)
-            {
-                SefiraEnum targetLocation = Helpers.GetUnitModelLocationSefira(abnormality);
-                if (targetLocation == location) targetsInDepartment.Add(abnormality);
-            }
-            if (targetsInDepartment.Count > 0) return targetsInDepartment[rand.Next(0, targetsInDepartment.Count)];
-            return targetsWithName[rand.Next(0, targetsWithName.Count)];
-        }
-
-        private static UnitModel TryFindOrdealTarget(string targetName, SefiraEnum location)
-        {
-            if (OrdealManager.instance.GetActivatedOrdeals().Count == 0) return null;
-            List<UnitModel> targetsWithName = new List<UnitModel>();
-            foreach(OrdealCreatureModel ordealCreature in OrdealManager.instance.GetOrdealCreatureList())
-            {
-                if (ordealCreature.OrdealBase.OrdealNameText(ordealCreature).Equals(targetName)) targetsWithName.Add(ordealCreature);
-            }
-            if (targetsWithName.Count == 0) return null;
-            if (targetsWithName.Count == 1) return targetsWithName[0];
-            Random rand = new Random();
-            if (location == SefiraEnum.DUMMY) return targetsWithName[rand.Next(0, targetsWithName.Count)];
-            List<UnitModel> targetsInDepartment = new List<UnitModel>();
-            foreach(OrdealCreatureModel ordealCreature in targetsWithName)
-            {
-                SefiraEnum targetLocation = Helpers.GetUnitModelLocationSefira(ordealCreature);
-                if (targetLocation == location) targetsInDepartment.Add(ordealCreature);
-            }
-            if (targetsInDepartment.Count > 0) return targetsInDepartment[rand.Next(0, targetsInDepartment.Count)];
-            return targetsWithName[rand.Next(0, targetsWithName.Count)];
-        }
-
-        private static UnitModel TryFindSefiraCoreTarget(string targetName)
-        {
-            if (!SefiraBossManager.Instance.IsAnyBossSessionActivated()) return null;
-            foreach (SefiraBossCreatureModel bossSefira in SefiraBossManager.Instance.CurrentBossBase.modelList)
-            {
-                if (bossSefira.script.GetName().Equals(targetName)) return bossSefira;
-            }
-            return null;
-        }
+        
 
         private class SuppressTargetState
         {

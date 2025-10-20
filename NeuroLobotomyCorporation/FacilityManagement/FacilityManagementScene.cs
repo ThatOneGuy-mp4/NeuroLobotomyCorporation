@@ -38,6 +38,10 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     return GetSuppressableTargets.Command();
                 case "suppress_target":
                     return SuppressTarget.Command(message[(int)SuppressTarget.Parameters.AGENT_NAME], message[(int)SuppressTarget.Parameters.TARGET_NAME], message[(int)SuppressTarget.Parameters.LOCATION]);
+                case "is_bullet_unlocked":
+                    return ShootManagerialBullet.IsBulletUnlocked();
+                case "shoot_managerial_bullet":
+                    return ShootManagerialBullet.Command(message[(int)ShootManagerialBullet.Parameters.BULLET_TYPE], message[(int)ShootManagerialBullet.Parameters.TARGET_NAME], message[(int)ShootManagerialBullet.Parameters.TARGET_DEPARTMENT]);
             }
             return "Command " + message[COMMAND_INDEX] + " does not exist in scene FacilityManagementScene.";
         }
