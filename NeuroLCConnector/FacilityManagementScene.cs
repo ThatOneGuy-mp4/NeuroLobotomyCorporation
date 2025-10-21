@@ -90,7 +90,7 @@ namespace NeuroLCConnector
         //TODO: add the actual day and energy requirements in here (will require a game request)
         protected override string GetActionSceneStartContext()
         {
-            return "The day has begun. Manage Abnormalities and collect P.E. Boxes until enough energy has been collected to call it a day.";
+            return NeuroLCConnector.Connector.SendCommand("get_day_start_context").Result;
         }
 
         public override void InitializeActionScene()

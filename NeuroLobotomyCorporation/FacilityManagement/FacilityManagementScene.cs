@@ -20,6 +20,8 @@ namespace NeuroLobotomyCorporation.FacilityManagement
         {
             switch (message[COMMAND_INDEX])
             {
+                case "get_day_start_context":
+                    return GetDayStartContext();
                 case "get_day_status":
                     return GetDayStatus.Command();
                 case "get_agent_statuses":
@@ -44,6 +46,13 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     return ShootManagerialBullet.Command(message[(int)ShootManagerialBullet.Parameters.BULLET_TYPE], message[(int)ShootManagerialBullet.Parameters.TARGET_NAME], message[(int)ShootManagerialBullet.Parameters.TARGET_DEPARTMENT]);
             }
             return "Command " + message[COMMAND_INDEX] + " does not exist in scene FacilityManagementScene.";
+        }
+
+        private string GetDayStartContext()
+        {
+            int currentDay = PlayerModel.instance.GetDay() + 1;
+            int energyRequired = (int)StageTypeInfo.instnace.GetEnergyNeed(currentDay - 1);
+            return String.Format("Day {0} has begun. Manage the Abnormalities until {1} P.E. Boxes have been collected to end the day.", currentDay, energyRequired);
         }
     }
 }
