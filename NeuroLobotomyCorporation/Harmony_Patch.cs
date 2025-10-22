@@ -19,6 +19,7 @@ using CreatureSelect;
 using System.Net.Sockets;
 using NeuroLobotomyCorporation.FacilityManagement;
 using GlobalBullet;
+using NeuroLobotomyCorporation.YesodSuppression;
 
 namespace NeuroLobotomyCorporation
 {
@@ -58,6 +59,10 @@ namespace NeuroLobotomyCorporation
                 new HarmonyMethod(typeof(AssignWork).GetMethod("UpdateNeuroLogsObservationLevel", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(GlobalBulletWindow).GetMethod("Update", AccessTools.all), null,
                 new HarmonyMethod(typeof(ShootManagerialBullet).GetMethod("NeuroShootBullet", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(SefiraBossManager).GetMethod("OnOverloadActivated", AccessTools.all), null,
+                new HarmonyMethod(typeof(Harmony_Patch).GetMethod("ChangeBossPhaseMeltdown", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(SefiraBossBase).GetMethod("OnCleared", AccessTools.all), null,
+                new HarmonyMethod(typeof(Harmony_Patch).GetMethod("BossCleared", AccessTools.all)), null);
         }
 
         public static void SendCommand(string command)
@@ -122,8 +127,31 @@ namespace NeuroLobotomyCorporation
         //MIGHT HAVE TO CHANGE THIS LATER TO BE ON THE SefiraBossUI OnStageStart TO ENSURE THE SCENE IS PROPERLY SET FOR CORE SUPPRESSIONS
         public static void BeginFacilityManagement()
         {
+            if (SefiraBossManager.Instance.IsAnyBossSessionActivated())
+            {
+                switch (SefiraBossManager.Instance.CurrentActivatedSefira)
+                {
+                    case SefiraEnum.YESOD:
+                        ActionScene.Instance = new YesodSuppressionScene();
+                        SendCommand("change_action_scene|yesod_suppression");
+                        break;
+                }
+                return;
+            }
             ActionScene.Instance = new FacilityManagementScene();
             SendCommand("change_action_scene|facility_management");
+        }
+
+        public static void ChangeBossPhaseMeltdown()
+        {
+            if (!SefiraBossManager.Instance.IsAnyBossSessionActivated()) return;
+            if (SefiraBossManager.Instance.CheckBossActivation(SefiraEnum.GEBURAH) || SefiraBossManager.Instance.CheckBossActivation(SefiraEnum.BINAH)) return;
+            SendCommand("change_boss_phase");
+        }
+
+        public static void BossCleared()
+        {
+            SendCommand("boss_cleared");
         }
     }
 }

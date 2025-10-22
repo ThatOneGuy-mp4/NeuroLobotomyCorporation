@@ -146,7 +146,6 @@ namespace NeuroLCConnector
         {
             string parsedMessage = Encoding.UTF8.GetString(message);
             string[] parameters = parsedMessage.Split("|");
-            Console.WriteLine(parameters[(int)ProcessGameMessageParameters.Command] + " | " + parameters[(int)ProcessGameMessageParameters.Command_Parameter]);
             switch (parameters[(int)ProcessGameMessageParameters.Command])
             {
                 case "send_context":
@@ -154,6 +153,14 @@ namespace NeuroLCConnector
                     break;
                 case "change_action_scene":
                     await ChangeCurrentActionScene(parameters);
+                    break;
+                case "change_boss_phase":
+                    if (!(ActionScene.CurrentActionScene is CoreSuppressionBaseScene)) return;
+                    await (ActionScene.CurrentActionScene as CoreSuppressionBaseScene).ChangePhase();
+                    break;
+                case "boss_cleared":
+                    if (!(ActionScene.CurrentActionScene is CoreSuppressionBaseScene)) return;
+                    await (ActionScene.CurrentActionScene as CoreSuppressionBaseScene).CoreSuppressionComplete();
                     break;
                 default:
                     Console.WriteLine("The command " + parameters[(int)ProcessGameMessageParameters.Command] + " was not found. Ensure it is spelt correctly on both game and server side.");
@@ -169,7 +176,9 @@ namespace NeuroLCConnector
         public static async Task SendContext(string[] parameters)
         {
             if (parameters.Length < 3) return;
-            Context.Send(parameters[(int)SendContextParameters.Message], bool.Parse(parameters[(int)SendContextParameters.Silent]));
+            string message = parameters[(int)SendContextParameters.Message];
+            if (ActionScene.CurrentActionScene != null && ActionScene.CurrentActionScene is YesodSuppressionScene) message = (ActionScene.CurrentActionScene as YesodSuppressionScene).GetScrambledMessage(message);
+            Context.Send(message, bool.Parse(parameters[(int)SendContextParameters.Silent]));
         }
 
         private static async Task ChangeCurrentActionScene(string[] parameters)
@@ -189,6 +198,9 @@ namespace NeuroLCConnector
                     break;
                 case "facility_management":
                     ActionScene.ChangeActionScene(new FacilityManagementScene());
+                    break;
+                case "yesod_suppression":
+                    ActionScene.ChangeActionScene(new YesodSuppressionScene());
                     break;
             }
         }
