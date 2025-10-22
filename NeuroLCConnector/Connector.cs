@@ -202,6 +202,9 @@ namespace NeuroLCConnector
                 case "yesod_suppression":
                     ActionScene.ChangeActionScene(new YesodSuppressionScene());
                     break;
+                case "hod_suppression":
+                    ActionScene.ChangeActionScene(new HodSuppressionScene());
+                    break;
             }
         }
     }

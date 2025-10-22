@@ -20,6 +20,7 @@ using System.Net.Sockets;
 using NeuroLobotomyCorporation.FacilityManagement;
 using GlobalBullet;
 using NeuroLobotomyCorporation.YesodSuppression;
+using NeuroLobotomyCorporation.HodSuppression;
 
 namespace NeuroLobotomyCorporation
 {
@@ -134,6 +135,10 @@ namespace NeuroLobotomyCorporation
                     case SefiraEnum.YESOD:
                         ActionScene.Instance = new YesodSuppressionScene();
                         SendCommand("change_action_scene|yesod_suppression");
+                        break;
+                    case SefiraEnum.HOD:
+                        ActionScene.Instance = new HodSuppressionScene();
+                        SendCommand("change_action_scene|hod_suppression");
                         break;
                 }
                 return;

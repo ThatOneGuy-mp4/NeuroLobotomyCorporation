@@ -7,11 +7,10 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace NeuroLobotomyCorporation.FacilityManagement
+namespace NeuroLobotomyCorporation.HodSuppression
 {
     public class GetDayStatus
     {
-        //TODO: separate all of these things into their own methods to make the core suppression versions more readable
         private static EnergyController _energyController = null;
         public static string Command()
         {
@@ -33,6 +32,9 @@ namespace NeuroLobotomyCorporation.FacilityManagement
 
             }
             int gaugesBeforeNextMeltdown = qliphothMeltdownMax - qliphothMeltdownGauge;
+            int qliphothMeltdownLevelProgress = (int)((float)(qliphothMeltdownLevel - 1) * 20 + ((float)20 / qliphothMeltdownMax * qliphothMeltdownGauge));
+            if (qliphothMeltdownLevelProgress > 100) qliphothMeltdownLevelProgress = 100;
+            int coreSuppressionProgress = (energyProgress + qliphothMeltdownLevelProgress) / 2;
             string ordealType = "";
             int overloadIsolateNum = -1;
             try
@@ -126,16 +128,22 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     trumpetDesc = "\nThe Third Trumpet is playing. Deal with the situation before nothing is left to save.";
                     break;
                 case EmergencyLevel.CHAOS:
-                    trumpetDesc = "\nThe emergency level is in a state of chaos. This shouldn't trigger outside of core suppressions so I don't think you should be seeing this.";
+                    trumpetDesc = "\nThe emergency level is in a state of chaos.";
                     break;
                 default:
                     trumpetDesc = "\nThe trumpet level is broken. Complain to the mod developer about it.";
                     break;
             }
+            string hodWeaknessDesc = "";
+            if (qliphothMeltdownLevel == 1) hodWeaknessDesc = "weakness";
+            else if (qliphothMeltdownLevel < 4) hodWeaknessDesc = "exhaustion";
+            else hodWeaknessDesc = "fatigue";
             status = String.Format("{0}/{1} ({2}%) P.E. Boxes have been collected for the day." +
-                "\nThe current Qliphoth Meltdown Level is {3}, and the next meltdown will trigger after {4} gauges have been filled." +
-                "\n{5}" +
-                "{6}", energyCollected, energyRequired, energyProgress, qliphothMeltdownLevel, gaugesBeforeNextMeltdown, nextMeltdownDesc, trumpetDesc);
+                "\nThe current Qliphoth Meltdown Level is {3}/6, and the next meltdown will trigger after {4} gauges have been filled (Meltdown Level Progress is {5}%)." +
+                "\n{6}" +
+                "{7}" +
+                "\nCore Suppression is {8}% complete. Continue generating P.E. Boxes and raising the Qliphoth Meltdown Level." +
+                "\nAn error with our employees' statuses has been detected. All Agents have reported feeling {9}.", energyCollected, energyRequired, energyProgress, qliphothMeltdownLevel, gaugesBeforeNextMeltdown, qliphothMeltdownLevelProgress, nextMeltdownDesc, trumpetDesc, coreSuppressionProgress, hodWeaknessDesc);
             return status;
         }
     }

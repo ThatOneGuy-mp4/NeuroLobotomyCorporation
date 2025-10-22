@@ -27,7 +27,7 @@ namespace NeuroLobotomyCorporation.YesodSuppression
             int energyRequired = (int)StageTypeInfo.instnace.GetEnergyNeed(currentDay - 1);
             return string.Format("Core Suppression has begun on Day {0}." +
                 "\nWarning! Yesod's Qlipha has manifested in the Information Department. Suppression will be complete once {1} P.E. Boxes have been generated and Qliphoth Meltdown Level 6 has been achieved." +
-                "\nErrors have been detected in the visual and information retrieval systems.", currentDay, energyRequired);
+                "\nAn error with the information and camera systems is detected.", currentDay, energyRequired);
         }
     }
 }

@@ -43,7 +43,8 @@ namespace NeuroLCConnector
             "Yesod's Qlipha has been disturbed. The error with the visual and information retrieval systems has greatly intensified.",
             "Yesod's Qlipha has been agitated. The error with the information retrival system has intensified.",
             "Yesod's Qlipha has been disturbed. The error with the visual and information retrieval systems has greatly intensified.",
-            "Yesod's Qlipha has been agitated. The error with the information retrival system has reached critical levels."
+            "Yesod's Qlipha has been agitated. The error with the information retrival system has reached critical levels." +
+            "\nYesod's core cannot sustain this level of corruption for much longer...suppression is nearing completion."
         };
 
         protected override string SuppressionCompleteDialogue => "\"So I was the one who couldn’t see a single step ahead...\"" +
