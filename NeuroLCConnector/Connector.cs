@@ -199,6 +199,9 @@ namespace NeuroLCConnector
                 case "facility_management":
                     ActionScene.ChangeActionScene(new FacilityManagementScene());
                     break;
+                case "malkuth_suppression":
+                    ActionScene.ChangeActionScene(new MalkuthSuppressionScene());
+                    break;
                 case "yesod_suppression":
                     ActionScene.ChangeActionScene(new YesodSuppressionScene());
                     break;

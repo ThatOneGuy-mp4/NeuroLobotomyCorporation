@@ -17,9 +17,9 @@ namespace NeuroLCConnector
             CreateScrambledPhaseTransition(4)
         };
 
-        private string YesodStartSuppressionDialogue_1 => "\"What was I really looking at all this time? ...This impenetrable darkness is inexplicably lonely.\"";
-        private string YesodStartSuppressionDialogue_2 => "\"What did we do wrong? Are we not even allowed to fall into despair?\"" +
-            "\n\"...You will not be able to discern anything properly.\"";
+        private string YesodStartSuppressionDialogue_1 => "\"What did we do wrong? ...Are we not even allowed to fall into despair?\"";
+        private string YesodStartSuppressionDialogue_2 => "\"This impenetrable darkness is inexplicably lonely. ...What was I really looking at all this time?\"" +
+            "\n\"You will not be able to discern anything properly.\"";
 
         protected override string GetActionSceneStartContext()
         {
@@ -40,11 +40,11 @@ namespace NeuroLCConnector
         private List<string> PhaseTransitionFacilityStatusDialogue => new List<string>
         {
             "UNUSED",
-            "Yesod's Qlipha has been disturbed. The error with the visual and information retrieval systems has greatly intensified.",
-            "Yesod's Qlipha has been agitated. The error with the information retrival system has intensified.",
-            "Yesod's Qlipha has been disturbed. The error with the visual and information retrieval systems has greatly intensified.",
-            "Yesod's Qlipha has been agitated. The error with the information retrival system has reached critical levels." +
-            "\nYesod's core cannot sustain this level of corruption for much longer...suppression is nearing completion."
+            "Yesod's Qlipha has been disturbed. The errors with the information and camera systems have greatly intensified.",
+            "Yesod's Qlipha has been agitated. The error with the information system has intensified.",
+            "Yesod's Qlipha has been disturbed. The errors with the information and camera systems have greatly intensified." +
+            "\nYesod's core cannot sustain this level of corruption for much longer...please maintain rationality in the last stretch of this suppression.",
+            "Yesod's Qlipha has been agitated. The error with the information system has reached critical levels." 
         };
 
         protected override string SuppressionCompleteDialogue => "\"So I was the one who couldn’t see a single step ahead...\"" +

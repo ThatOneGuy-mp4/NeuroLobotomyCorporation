@@ -89,18 +89,22 @@ namespace NeuroLCConnector
             }
         }
 
-        //TODO: add the actual day and energy requirements in here (will require a game request)
+        public override void InitializeOptionalActions()
+        {
+            string isBulletUnlocked = NeuroLCConnector.Connector.SendCommand("is_bullet_unlocked").Result;
+            if (isBulletUnlocked.Equals("true")) RegisterAction("shoot_managerial_bullet");
+        }
+
         protected override string GetActionSceneStartContext()
         {
             return NeuroLCConnector.Connector.SendCommand("get_day_start_context").Result;
         }
 
-        public override void InitializeActionScene()
-        {
-            base.InitializeActionScene();
-            string isBulletUnlocked = NeuroLCConnector.Connector.SendCommand("is_bullet_unlocked").Result;
-            if (isBulletUnlocked.Equals("true")) RegisterAction("shoot_managerial_bullet");
-        }
+        //public override void InitializeActionScene()
+        //{
+        //    base.InitializeActionScene();
+
+        //}
     }
 
     public class GetDayStatus : NeuroActionNoValidation

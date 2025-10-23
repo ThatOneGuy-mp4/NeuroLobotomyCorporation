@@ -61,9 +61,14 @@ namespace NeuroLCConnector
         {
             NeuroActionHandler.RegisterActions(InitActions);
             RegisteredActions.AddRange(InitActions);
-            //TODO: add a virtual method that registers optional scene start commands here. so that actions don't get registered after scene start context is sent.
+            InitializeOptionalActions();
             string startContext = GetActionSceneStartContext();
             if (!String.IsNullOrEmpty(startContext)) Context.Send(startContext);
+        }
+
+        public virtual void InitializeOptionalActions()
+        {
+
         }
 
         public virtual void CleanUpActionScene()

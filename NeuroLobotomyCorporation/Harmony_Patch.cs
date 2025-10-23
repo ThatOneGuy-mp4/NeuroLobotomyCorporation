@@ -21,6 +21,7 @@ using NeuroLobotomyCorporation.FacilityManagement;
 using GlobalBullet;
 using NeuroLobotomyCorporation.YesodSuppression;
 using NeuroLobotomyCorporation.HodSuppression;
+using NeuroLobotomyCorporation.MalkuthSupression;
 
 namespace NeuroLobotomyCorporation
 {
@@ -134,6 +135,10 @@ namespace NeuroLobotomyCorporation
             {
                 switch (SefiraBossManager.Instance.CurrentActivatedSefira)
                 {
+                    case SefiraEnum.MALKUT:
+                        ActionScene.Instance = new MalkuthSuppressionScene();
+                        SendCommand("change_action_scene|malkuth_suppression");
+                        break;
                     case SefiraEnum.YESOD:
                         ActionScene.Instance = new YesodSuppressionScene();
                         SendCommand("change_action_scene|yesod_suppression");
