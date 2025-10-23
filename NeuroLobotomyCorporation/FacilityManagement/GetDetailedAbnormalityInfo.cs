@@ -310,7 +310,6 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             }
             else
             {
-                //TODO: guh there's an else. add the tool abno info. whatever.
                 string department = Helpers.GetDepartmentBySefira(abnormality.sefira.sefiraEnum);
                 string abnormalityStatus = "";
                 switch (Helpers.GetAbnormalityWorkingState(abnormality))

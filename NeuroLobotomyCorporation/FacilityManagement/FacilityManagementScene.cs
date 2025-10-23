@@ -38,6 +38,8 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     return GetSuppressableTargets.Command();
                 case "suppress_target":
                     return SuppressTarget.Command(message[(int)SuppressTarget.Parameters.AGENT_NAME], message[(int)SuppressTarget.Parameters.TARGET_NAME], message[(int)SuppressTarget.Parameters.LOCATION]);
+                case "cancel_action":
+                    return CancelAction.Command(message[(int)CancelAction.Parameters.AGENT_NAME]);
                 case "is_bullet_unlocked":
                     return ShootManagerialBullet.IsBulletUnlocked();
                 case "shoot_managerial_bullet":

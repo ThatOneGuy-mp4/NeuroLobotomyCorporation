@@ -41,8 +41,17 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                 case Helpers.AbnormalityWorkingState.COOLDOWN:
                     return "failure|Work could not be assigned because the specified Abnormality is in cooldown. Try again in a bit."; //this shouldn't be possible with a tool I think but I'll leave it there anyways
             }
+            string cancelHint = "";
+            if(abnormality.metaInfo.creatureKitType == CreatureKitType.EQUIP)
+            {
+                if (agent.Equipment.kitCreature != null) return "failure|Work could not be assigned because the specified Abnormality is an equippable Tool, but the specified Agent already has a Tool equipped.";
+                cancelHint = String.Format(" (use the CancelAction command while {0} is idle to return the Tool)", agentName);
+            }else if(abnormality.metaInfo.creatureKitType == CreatureKitType.CHANNEL)
+            {
+                cancelHint = String.Format(" (use the CancelAction command on {0} to stop channeling the Tool)", agentName);
+            }
             ThreadPool.QueueUserWorkItem(CommandExecute, new UseToolState(agentName, abnormalityName));
-            return String.Format("success|{0} begins their usage of {1}.", agentName, abnormalityName);
+            return String.Format("success|{0} begins their usage of {1}{2}.", agentName, abnormalityName, cancelHint);
         }
 
         private class UseToolState
