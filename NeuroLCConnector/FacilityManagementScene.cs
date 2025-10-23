@@ -60,7 +60,8 @@ namespace NeuroLCConnector
                     new AssignWork(),
                     new UseTool(),
                     new GetSuppressableTargets(),
-                    new SuppressTarget()
+                    new SuppressTarget(),
+                    new CancelAction()
                 };
                 return list;
             }
@@ -81,6 +82,7 @@ namespace NeuroLCConnector
                     new UseTool(),
                     new GetSuppressableTargets(),
                     new SuppressTarget(),
+                    new CancelAction(),
                     new ShootManagerialBullet()
                 };
                 return list;
@@ -294,6 +296,30 @@ namespace NeuroLCConnector
             }
             else targetDepartment = "DUMMY";
             return ValidateGameSide(agentName, targetName, targetDepartment);
+        }
+    }
+
+    public class CancelAction : NeuroActionExternalExecute
+    {
+        public override string Name => "cancel_action";
+
+        protected override string Description => "Cancel an Agent's current action.";
+
+        protected override JsonSchema? Schema => new()
+        {
+            Type = JsonSchemaType.Object,
+            Required = new List<string>() { "agent_name" },
+            Properties = new Dictionary<string, JsonSchema>
+            {
+                ["agent_name"] = QJS.Type(JsonSchemaType.String)
+            }
+        };
+
+        protected override ExecutionResult Validate(ActionData actionData)
+        {
+            string? agentName = actionData.Data?["agent_name"]?.Value<string>();
+            if (String.IsNullOrEmpty(agentName)) return ExecutionResult.Failure("Action failed. Missing required parameter 'agent_name'.");
+            return ValidateGameSide(agentName);
         }
     }
 
