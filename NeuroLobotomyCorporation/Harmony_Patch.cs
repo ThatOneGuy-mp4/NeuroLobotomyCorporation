@@ -22,6 +22,7 @@ using GlobalBullet;
 using NeuroLobotomyCorporation.YesodSuppression;
 using NeuroLobotomyCorporation.HodSuppression;
 using NeuroLobotomyCorporation.MalkuthSupression;
+using NeuroLobotomyCorporation.NetzachSuppression;
 
 namespace NeuroLobotomyCorporation
 {
@@ -128,7 +129,6 @@ namespace NeuroLobotomyCorporation
             SendCommand(command);
         }
 
-        //MIGHT HAVE TO CHANGE THIS LATER TO BE ON THE SefiraBossUI OnStageStart TO ENSURE THE SCENE IS PROPERLY SET FOR CORE SUPPRESSIONS
         public static void BeginFacilityManagement()
         {
             if (SefiraBossManager.Instance.IsAnyBossSessionActivated())
@@ -146,6 +146,10 @@ namespace NeuroLobotomyCorporation
                     case SefiraEnum.HOD:
                         ActionScene.Instance = new HodSuppressionScene();
                         SendCommand("change_action_scene|hod_suppression");
+                        break;
+                    case SefiraEnum.NETZACH:
+                        ActionScene.Instance = new NetzachSuppressionScene();
+                        SendCommand("change_action_scene|netzach_suppression");
                         break;
                 }
                 return;

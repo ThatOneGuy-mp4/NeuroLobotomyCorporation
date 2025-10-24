@@ -100,7 +100,6 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             int qliphothMeltdownLevelProgress = (int)((float)(meltdownLevel - 1) * progressPerLevel + ((float)progressPerLevel / meltdownMax * meltdownGauge));
             if (qliphothMeltdownLevelProgress > 100) return 100;
             return qliphothMeltdownLevelProgress;
-
         }
     }
 }

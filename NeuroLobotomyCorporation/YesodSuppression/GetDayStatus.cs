@@ -27,7 +27,7 @@ namespace NeuroLobotomyCorporation.YesodSuppression
                 "\n{6}" +
                 "{7}" +
                 "\nCore Suppression is {8}% complete. Continue generating P.E. Boxes and raising the Qliphoth Meltdown Level." +
-                "\nAn error has been detected in the information and camera systems.", energyCollected, energyRequired, energyProgress, qliphothMeltdownLevel, gaugesBeforeNextMeltdown, qliphothMeltdownLevelProgress, nextMeltdownDesc, trumpetDesc, coreSuppressionProgress);
+                "\nAn error with the information and camera systems is detected.", energyCollected, energyRequired, energyProgress, qliphothMeltdownLevel, gaugesBeforeNextMeltdown, qliphothMeltdownLevelProgress, nextMeltdownDesc, trumpetDesc, coreSuppressionProgress);
             return status;
         }
     }

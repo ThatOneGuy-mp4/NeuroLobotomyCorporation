@@ -28,9 +28,9 @@ namespace NeuroLobotomyCorporation.MalkuthSupression
             return string.Format("\"I could have done it. ...I just wanted to help out.\"" +
                 "\n\nCore Suppression has begun on Day {0}." +
                 "\nWarning! Malkuth's Qlipha has manifested in the Control Department. Suppression will be complete once {1} P.E. Boxes have been generated and Qliphoth Meltdown Level 6 has been achieved." +
-                "\nAn error with the work assignment system has been detected." +
+                "\nAn error with the work assignment system is detected." +
                 "\n\n\"This is what you call a truly uncontrollable situation, manager. ...It's unpredictable, isn't it?\"" +
-                "\n\"Everything’s all jumbled up, messed up, flustered... hahaha...\"", currentDay, energyRequired);
+                "\n\"Everything’s all jumbled up, messed up, flustered... hahaha...", currentDay, energyRequired);
         }
     }
 }

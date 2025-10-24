@@ -17,7 +17,7 @@ namespace NeuroLCConnector
             "\n\nMalkuth's Qlipha has been agitated. The error with the work assignment system remains stable.",
             "\"Can’t you hear it? The sound of it struggling, as if to say it can’t fall asleep like this. ...Will you finally praise me? I just want to feel proud.\"" +
             "\n\nMalkuth's Qlipha has been disturbed. The error with the work assignment system has mutated. Additionally, an error in the work cancellation system has been detected." +
-            "\nMalkuth's core cannot sustain this level of corruption for much longer...please maintain your will in the last stretch of this suppression.",
+            "\nMalkuth's core cannot sustain this level of corruption for much longer...please steel your will in the last stretch of this suppression.",
             "\"I see now how much fun it can be to look down on someone, manager... Be honest, back then it wasn’t that hard to turn around and look back at me.\"" +
             "\n\nMalkuth's Qlipha has been agitated. The error with the work assignment system remains stable."
         };

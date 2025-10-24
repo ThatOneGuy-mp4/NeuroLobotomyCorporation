@@ -20,8 +20,8 @@ namespace NeuroLobotomyCorporation.MalkuthSuppression
             string nextMeltdownDesc = FacilityManagement.GetDayStatus.GetNextMeltdownInformation();
             string trumpetDesc = FacilityManagement.GetDayStatus.GetTrumpetInformation();
             string currentErrorDesc = "";
-            if (qliphothMeltdownLevel < 4) currentErrorDesc = "An error with the work assignment system has been detected.";
-            else currentErrorDesc = "Errors with the work assignment system and work cancellation system have been detected.";
+            if (qliphothMeltdownLevel < 4) currentErrorDesc = "An error with the work assignment system is detected.";
+            else currentErrorDesc = "Errors with the work assignment system and work cancellation system are detected.";
             status = String.Format("{0}/{1} ({2}%) P.E. Boxes have been collected for the day." +
                 "\nThe current Qliphoth Meltdown Level is {3}/6, and the next meltdown will trigger after {4} gauges have been filled (Meltdown Level Progress is {5}%)." +
                 "\n{6}" +
