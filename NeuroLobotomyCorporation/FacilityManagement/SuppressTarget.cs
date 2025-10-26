@@ -40,7 +40,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     sefiraDepartment = currentPassage.GetSefiraEnum();
                 }
             }
-            UnitModel target = Helpers.TryFindAnySuppressableTarget(targetName, sefiraDepartment);
+            UnitModel target = Helpers.TryFindAnySuppressibleTarget(targetName, sefiraDepartment);
             if (target == null) return "failure|There are no valid targets of the specified name.";
             ThreadPool.QueueUserWorkItem(CommandExecute, new SuppressTargetState(agent, target, sefiraDepartment));
             return String.Format("success|{0} has begun suppressing {1}.", agentName, targetName);

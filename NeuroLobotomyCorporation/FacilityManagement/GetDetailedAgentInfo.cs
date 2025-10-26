@@ -97,7 +97,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                 egoGiftsCombine += egoGifts[i];
                 if (i != egoGifts.Count - 1) egoGiftsCombine += " & ";
             }
-            Harmony_Patch.SendContext(String.Format("{0}, {1} Team Agent" +
+            NeuroSDKHandler.SendContext(String.Format("{0}, {1} Team Agent" +
                 "\n{2}/{3} HP, {4}/{5} SP" +
                 "\nAGENT IS {6}" +
                 "\nAGENT'S OVERALL LEVEL IS {7} (FORTITUDE:{8}, PRUDENCE:{9}, TEMPERANCE:{10}, JUSTICE:{11})" +

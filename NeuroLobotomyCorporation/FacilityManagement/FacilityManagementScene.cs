@@ -20,6 +20,8 @@ namespace NeuroLobotomyCorporation.FacilityManagement
         {
             switch (message[COMMAND_INDEX])
             {
+                case "DEBUG_fucking_kills_you":
+                    return DEBUGFuckingKillsYou.Command(message[(int)DEBUGFuckingKillsYou.Parameters.GUY_TO_FUCKING_KILL]);
                 case "get_day_start_context":
                     return GetDayStartContext();
                 case "get_day_status":
@@ -32,12 +34,14 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     return GetAbnormalityStatuses.Command();
                 case "get_detailed_abnormality_info":
                     return GetDetailedAbnormalityInfo.Command(message[(int)GetDetailedAbnormalityInfo.Parameters.ABNORMALITY_NAME], bool.Parse(message[(int)GetDetailedAbnormalityInfo.Parameters.INCLUDE_BASIC_INFO]), bool.Parse(message[(int)GetDetailedAbnormalityInfo.Parameters.INCLUDE_MANAGERIAL_GUIDELINES]), bool.Parse(message[(int)GetDetailedAbnormalityInfo.Parameters.INCLUDE_WORK_SUCCESS_RATES]), bool.Parse(message[(int)GetDetailedAbnormalityInfo.Parameters.INCLUDE_ESCAPE_INFORMATION]));
+                case "get_overloaded_units":
+                    return GetOverloadedUnits.Command();
                 case "assign_work":
                     return AssignWork.Command(message[(int)AssignWork.Parameters.AGENT_NAME], message[(int)AssignWork.Parameters.ABNORMALITY_NAME], message[(int)AssignWork.Parameters.WORK_TYPE]);
                 case "use_tool":
                     return UseTool.Command(message[(int)UseTool.Parameters.AGENT_NAME], message[(int)UseTool.Parameters.ABNORMALITY_NAME]);
-                case "get_suppressable_targets":
-                    return GetSuppressableTargets.Command();
+                case "get_suppressible_targets":
+                    return GetSuppressibleTargets.Command();
                 case "suppress_target":
                     return SuppressTarget.Command(message[(int)SuppressTarget.Parameters.AGENT_NAME], message[(int)SuppressTarget.Parameters.TARGET_NAME], message[(int)SuppressTarget.Parameters.LOCATION]);
                 case "cancel_action":
@@ -55,6 +59,16 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             int currentDay = PlayerModel.instance.GetDay() + 1;
             int energyRequired = (int)StageTypeInfo.instnace.GetEnergyNeed(currentDay - 1);
             return String.Format("Day {0} has begun. Manage the Abnormalities until {1} P.E. Boxes have been collected to end the day.", currentDay, energyRequired);
+        }
+
+        public static void InformNeuroAgentDied(AgentModel __instance)
+        {
+            if(!__instance.invincible) NeuroSDKHandler.SendContext(String.Format("{0} has died.", __instance.GetUnitName()), true);
+        }
+
+        public static void InformNeuroAgentPanicked(AgentModel __instance)
+        {
+            if(!__instance.invincible) NeuroSDKHandler.SendContext(String.Format("{0} has panicked.", __instance.GetUnitName()), true);
         }
     }
 }

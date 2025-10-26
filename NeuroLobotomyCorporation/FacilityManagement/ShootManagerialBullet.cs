@@ -34,7 +34,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             {
                 SefiraEnum sefiraDepartment = Helpers.GetSefiraByDepartment(targetDepartment);
                 if (sefiraDepartment == SefiraEnum.DUMMY && !targetDepartment.Equals("DUMMY")) return "failure|Target's department was specified but was not valid.";
-                unit = Helpers.TryFindAnySuppressableTarget(targetName, sefiraDepartment);
+                unit = Helpers.TryFindAnySuppressibleTarget(targetName, sefiraDepartment);
             }
             if (unit == null) return "failure|The specified target does not exist.";
             GlobalBulletType bullet = GlobalBulletType.NONE;

@@ -317,7 +317,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     case Helpers.AbnormalityWorkingState.BREACHING:
                         abnormalityStatus = "Breaching"; //thanks yang 
                         break;
-                    case Helpers.AbnormalityWorkingState.WORKING: //TODO: this state includes channeled tools, but it is yet to be tested if this includes equipped tools. so that needs to be tested
+                    case Helpers.AbnormalityWorkingState.WORKING:
                         abnormalityStatus = "Being Used";
                         break;
                     case Helpers.AbnormalityWorkingState.IDLE: //this is kinda wrong in regards to the train specifically. i don't know if it's worth adding an exception for though.
@@ -417,7 +417,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     }
                 }
             }
-            Harmony_Patch.SendContext(info, true);
+            NeuroSDKHandler.SendContext(info, true);
         }
     }
 }

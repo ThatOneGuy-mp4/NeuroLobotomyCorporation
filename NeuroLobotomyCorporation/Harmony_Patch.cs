@@ -33,19 +33,6 @@ namespace NeuroLobotomyCorporation
         //TODO: this too
         public static string serverToGameURI = "http://localhost:8081/";
 
-        public static HttpWebRequest GameOutput
-        {
-            get
-            {
-                return gameOutput;
-            }
-            set
-            {
-                gameOutput = value;
-            }
-        }
-        private static HttpWebRequest gameOutput;
-
         public Harmony_Patch()
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
@@ -68,33 +55,12 @@ namespace NeuroLobotomyCorporation
                 new HarmonyMethod(typeof(Harmony_Patch).GetMethod("BossCleared", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(IsolateRoom).GetMethod("Update", AccessTools.all), null,
                 new HarmonyMethod(typeof(CancelAction).GetMethod("CancelChannelledTool", AccessTools.all)), null);
-        }
+            harmonyInstance.Patch(typeof(AgentModel).GetMethod("OnDie", AccessTools.all), null,
+                new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroAgentDied", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(AgentModel).GetMethod("Panic", AccessTools.all), null,
+                new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroAgentPanicked", AccessTools.all)), null);
+            harmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
 
-        public static void SendCommand(string command)
-        {
-            GameOutput = (HttpWebRequest)WebRequest.Create(gameToServerURI);
-            GameOutput.KeepAlive = true;
-            GameOutput.Method = "POST";
-            GameOutput.BeginGetRequestStream((asyncResult) =>
-            {
-                byte[] parsedMessage = Encoding.UTF8.GetBytes(command);
-                Stream postStream = GameOutput.EndGetRequestStream(asyncResult);
-                postStream.Write(parsedMessage, 0, parsedMessage.Length);
-                postStream.Close();
-                GameOutput.BeginGetResponse((asyncResult2) =>
-                {
-                    using (HttpWebResponse response = (HttpWebResponse)GameOutput.EndGetResponse(asyncResult2))
-                    {
-                        //nothing lule. just doing this to dispose of the response.
-                    }
-                }, asyncResult);
-            }, command);
-        }
-
-        public static void SendContext(string message, bool silent = false)
-        {
-            string fullCommand = "send_context|" + message + "|" + silent.ToString();
-            SendCommand(fullCommand);
         }
 
         private static bool initialized = false;
@@ -126,7 +92,7 @@ namespace NeuroLobotomyCorporation
             }
             //TODO: add whether or not re-extraction will be possible here
             ActionScene.Instance = new AbnormalityExtraction.AbnormalityExtractionScene();
-            SendCommand(command);
+            NeuroSDKHandler.SendCommand(command);
         }
 
         public static void BeginFacilityManagement()
@@ -155,7 +121,7 @@ namespace NeuroLobotomyCorporation
                 return;
             }
             ActionScene.Instance = new FacilityManagementScene();
-            SendCommand("change_action_scene|facility_management");
+            NeuroSDKHandler.SendCommand("change_action_scene|facility_management");
         }
 
         public static void ChangeBossPhaseMeltdown()
