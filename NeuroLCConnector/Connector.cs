@@ -214,6 +214,9 @@ namespace NeuroLCConnector
                 case "tiphereth_suppression":
                     ActionScene.ChangeActionScene(new TipherethSuppressionScene());
                     break;
+                case "chesed_suppression":
+                    ActionScene.ChangeActionScene(new ChesedSuppressionScene());
+                    break;
             }
         }
     }

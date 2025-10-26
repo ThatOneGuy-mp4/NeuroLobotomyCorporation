@@ -24,6 +24,7 @@ using NeuroLobotomyCorporation.HodSuppression;
 using NeuroLobotomyCorporation.MalkuthSupression;
 using NeuroLobotomyCorporation.NetzachSuppression;
 using NeuroLobotomyCorporation.TipherethSuppression;
+using NeuroLobotomyCorporation.ChesedSuppression;
 
 namespace NeuroLobotomyCorporation
 {
@@ -122,6 +123,10 @@ namespace NeuroLobotomyCorporation
                     case SefiraEnum.TIPERERTH2:
                         ActionScene.Instance = new TipherethSuppressionScene();
                         NeuroSDKHandler.SendCommand("change_action_scene|tiphereth_suppression");
+                        break;
+                    case SefiraEnum.CHESED:
+                        ActionScene.Instance = new ChesedSuppressionScene();
+                        NeuroSDKHandler.SendCommand("change_action_scene|chesed_suppression");
                         break;
                 }
                 return;
