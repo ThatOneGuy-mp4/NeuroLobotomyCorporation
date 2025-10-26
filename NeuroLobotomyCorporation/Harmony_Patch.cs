@@ -23,6 +23,7 @@ using NeuroLobotomyCorporation.YesodSuppression;
 using NeuroLobotomyCorporation.HodSuppression;
 using NeuroLobotomyCorporation.MalkuthSupression;
 using NeuroLobotomyCorporation.NetzachSuppression;
+using NeuroLobotomyCorporation.TipherethSuppression;
 
 namespace NeuroLobotomyCorporation
 {
@@ -116,6 +117,11 @@ namespace NeuroLobotomyCorporation
                     case SefiraEnum.NETZACH:
                         ActionScene.Instance = new NetzachSuppressionScene();
                         NeuroSDKHandler.SendCommand("change_action_scene|netzach_suppression");
+                        break;
+                    case SefiraEnum.TIPERERTH1:
+                    case SefiraEnum.TIPERERTH2:
+                        ActionScene.Instance = new TipherethSuppressionScene();
+                        NeuroSDKHandler.SendCommand("change_action_scene|tiphereth_suppression");
                         break;
                 }
                 return;

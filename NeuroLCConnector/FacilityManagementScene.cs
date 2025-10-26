@@ -25,7 +25,6 @@ namespace NeuroLCConnector
      * 
      * TODO (CORE SUPPRESSIONS):
      * [The Core Suppressions will extend this scene, with modified context and actions to help direct Neuro while also making it a proper boss even for her.]
-     * -TIPHERETH: No change except for context (informs her energy generation is not required and to focus on meltdowns).
      * -GEBURA: I don't even know how to translate this one to make Neuro able to do things. She might just have to be moral support for Ved.
      * -CHESED: No change except for context (GetDayStatus informs her of the currently boosted damage types).
      * -BINAH: Same problem as Gebura, but she can still help deal with Qliphoth Overloads at least. The Qliphoth Overload info Action will also inform her of the type.

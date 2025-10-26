@@ -26,7 +26,7 @@ namespace NeuroLCConnector
             phase++;
             if(phase < PhaseTransitionDialogue.Count)
             {
-                Context.Send(PhaseTransitionDialogue[phase]);
+                Context.Send(PhaseTransitionDialogue[phase], true);
             }
         }
 
