@@ -25,11 +25,6 @@ namespace NeuroLCConnector
      * 
      * TODO (CORE SUPPRESSIONS):
      * [The Core Suppressions will extend this scene, with modified context and actions to help direct Neuro while also making it a proper boss even for her.]
-     * -MALKUTH: AssignWork will assign the randomized work instead of the version she requests (as per the original game), but since Neuro can't see the work icons to see what was assigned, 
-     *      she will instead be told what was actually assigned without telling her it changed (e.g., attempts to assign Instinct, gets a message saying Repression was begun)
-     * -YESOD: SendContext will randomly scramble some of the characters before sending the message back, with the intensity increasing as the suppression continues
-     * -HOD: No change except for context (GetDayStatus informs her of the progressively weakened agents). 
-     * -NETZACH: No change except for context (informs her every Qliphoth Meltdown of the heal).
      * -TIPHERETH: No change except for context (informs her energy generation is not required and to focus on meltdowns).
      * -GEBURA: I don't even know how to translate this one to make Neuro able to do things. She might just have to be moral support for Ved.
      * -CHESED: No change except for context (GetDayStatus informs her of the currently boosted damage types).

@@ -103,19 +103,19 @@ namespace NeuroLobotomyCorporation
                 {
                     case SefiraEnum.MALKUT:
                         ActionScene.Instance = new MalkuthSuppressionScene();
-                        SendCommand("change_action_scene|malkuth_suppression");
+                        NeuroSDKHandler.SendCommand("change_action_scene|malkuth_suppression");
                         break;
                     case SefiraEnum.YESOD:
                         ActionScene.Instance = new YesodSuppressionScene();
-                        SendCommand("change_action_scene|yesod_suppression");
+                        NeuroSDKHandler.SendCommand("change_action_scene|yesod_suppression");
                         break;
                     case SefiraEnum.HOD:
                         ActionScene.Instance = new HodSuppressionScene();
-                        SendCommand("change_action_scene|hod_suppression");
+                        NeuroSDKHandler.SendCommand("change_action_scene|hod_suppression");
                         break;
                     case SefiraEnum.NETZACH:
                         ActionScene.Instance = new NetzachSuppressionScene();
-                        SendCommand("change_action_scene|netzach_suppression");
+                        NeuroSDKHandler.SendCommand("change_action_scene|netzach_suppression");
                         break;
                 }
                 return;
@@ -128,12 +128,12 @@ namespace NeuroLobotomyCorporation
         {
             if (!SefiraBossManager.Instance.IsAnyBossSessionActivated()) return;
             if (SefiraBossManager.Instance.CheckBossActivation(SefiraEnum.GEBURAH) || SefiraBossManager.Instance.CheckBossActivation(SefiraEnum.BINAH)) return;
-            SendCommand("change_boss_phase");
+            NeuroSDKHandler.SendCommand("change_boss_phase");
         }
 
         public static void BossCleared()
         {
-            SendCommand("boss_cleared");
+            NeuroSDKHandler.SendCommand("boss_cleared");
         }
     }
 }
