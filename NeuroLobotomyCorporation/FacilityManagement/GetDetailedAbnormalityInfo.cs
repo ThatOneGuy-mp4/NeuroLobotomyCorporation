@@ -417,7 +417,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     }
                 }
             }
-            Harmony_Patch.SendContext(info, true);
+            NeuroSDKHandler.SendContext(info, true);
         }
     }
 }

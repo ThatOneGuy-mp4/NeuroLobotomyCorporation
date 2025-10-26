@@ -30,6 +30,19 @@ namespace NeuroLobotomyCorporation
             }
         }
 
+        public static HttpWebRequest GameOutput
+        {
+            get
+            {
+                return gameOutput;
+            }
+            set
+            {
+                gameOutput = value;
+            }
+        }
+        private static HttpWebRequest gameOutput;
+
         public HttpListener ServerInput
         {
             get
@@ -44,13 +57,25 @@ namespace NeuroLobotomyCorporation
         }
         private HttpListener serverInput;
 
-        private bool awaitingDone;
+        private bool awaitingInputDone;
+        private bool awaitingOutputDone;
+
+        public List<string> QueuedCommands
+        {
+            get
+            {
+                if (queuedCommands == null) queuedCommands = new List<string>();
+                return queuedCommands;
+            }
+        }
+        private List<string> queuedCommands;
 
         private void Awake()
         {
             DontDestroyOnLoad(gameObject);
             Instance = this;
-            awaitingDone = true;
+            awaitingInputDone = true;
+            awaitingOutputDone = true;
             StartListeningForServer();
         }
 
@@ -63,10 +88,17 @@ namespace NeuroLobotomyCorporation
 
         private void Update()
         {
-            if (awaitingDone)
+            if (awaitingInputDone)
             {
-                awaitingDone = false;
+                awaitingInputDone = false;
                 ServerInput.BeginGetContext(new AsyncCallback(ProcessServerInput), null);
+            }
+            if (awaitingOutputDone && QueuedCommands.Count > 0)
+            {
+                awaitingOutputDone = false;
+                string command = QueuedCommands[0];
+                QueuedCommands.Remove(command);
+                ProcessGameOutput(command);
             }
         }
 
@@ -89,7 +121,40 @@ namespace NeuroLobotomyCorporation
                 output.Write(responseMessage, 0, responseMessage.Length);
                 output.Close();
             }
-            awaitingDone = true;
+            awaitingInputDone = true;
+        }
+
+        private void ProcessGameOutput(string command)
+        {
+            GameOutput = (HttpWebRequest)WebRequest.Create(Harmony_Patch.gameToServerURI);
+            GameOutput.KeepAlive = true;
+            GameOutput.Method = "POST";
+            GameOutput.BeginGetRequestStream((asyncResult) =>
+            {
+                byte[] parsedMessage = Encoding.UTF8.GetBytes(command);
+                Stream postStream = GameOutput.EndGetRequestStream(asyncResult);
+                postStream.Write(parsedMessage, 0, parsedMessage.Length);
+                postStream.Close();
+                GameOutput.BeginGetResponse((asyncResult2) =>
+                {
+                    using (HttpWebResponse response = (HttpWebResponse)GameOutput.EndGetResponse(asyncResult2))
+                    {
+                        //nothing lule. just doing this to dispose of the response.
+                    }
+                    awaitingOutputDone = true;
+                }, asyncResult);
+            }, command);
+        }
+
+        public static void SendCommand(string command)
+        {
+            NeuroSDKHandler.Instance.QueuedCommands.Add(command);
+        }
+
+        public static void SendContext(string message, bool silent = false)
+        {
+            string fullCommand = "send_context|" + message + "|" + silent.ToString();
+            SendCommand(fullCommand);
         }
     }
 }

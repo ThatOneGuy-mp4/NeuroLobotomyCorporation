@@ -56,5 +56,15 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             int energyRequired = (int)StageTypeInfo.instnace.GetEnergyNeed(currentDay - 1);
             return String.Format("Day {0} has begun. Manage the Abnormalities until {1} P.E. Boxes have been collected to end the day.", currentDay, energyRequired);
         }
+
+        public static void InformNeuroAgentDied(AgentModel __instance)
+        {
+            if(!__instance.invincible) NeuroSDKHandler.SendContext(String.Format("{0} has died.", __instance.GetUnitName()), true);
+        }
+
+        public static void InformNeuroAgentPanicked(AgentModel __instance)
+        {
+            if(!__instance.invincible) NeuroSDKHandler.SendContext(String.Format("{0} has panicked.", __instance.GetUnitName()), true);
+        }
     }
 }
