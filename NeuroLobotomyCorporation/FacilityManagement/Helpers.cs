@@ -74,6 +74,75 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             return SefiraEnum.DUMMY;
         }
 
+        public static List<Entry<SefiraEnum, List<AgentModel>>> SortAgentsByDepartment(AgentModel[] agents, bool sortByCurrentLocation)
+        {
+            List<Entry<SefiraEnum, List<AgentModel>>> sefiraSortingList = new List<Entry<SefiraEnum, List<AgentModel>>>();
+            foreach (Sefira sefira in SefiraManager.instance.GetActivatedSefiras())
+            {
+                sefiraSortingList.Add(new Entry<SefiraEnum, List<AgentModel>>(sefira.sefiraEnum, new List<AgentModel>()));
+            }
+            if (!sortByCurrentLocation)
+            {
+                foreach (AgentModel agent in agents)
+                {
+                    sefiraSortingList.Find((Entry<SefiraEnum, List<AgentModel>> entry) => entry.k == agent.currentSefiraEnum).v.Add(agent);
+                }
+            }
+            else
+            {
+                Entry<SefiraEnum, List<AgentModel>> unknownLocationAgents = new Entry<SefiraEnum, List<AgentModel>>(SefiraEnum.DUMMY, new List<AgentModel>());
+                foreach (AgentModel agent in agents)
+                {
+                    SefiraEnum location = GetUnitModelLocationSefira(agent);
+                    if (location == SefiraEnum.DUMMY) unknownLocationAgents.v.Add(agent);
+                    else sefiraSortingList.Find((Entry<SefiraEnum, List<AgentModel>> entry) => entry.k == location).v.Add(agent);
+                }
+                if (unknownLocationAgents.v.Count > 0) sefiraSortingList.Add(unknownLocationAgents);
+            }
+            return sefiraSortingList;
+        }
+
+        public static List<Entry<SefiraEnum, List<CreatureModel>>> SortAbnormalitiesByDepartment(CreatureModel[] abnormalities, bool currentLocation)
+        {
+            List<Entry<SefiraEnum, List<CreatureModel>>> sefiraSortingList = new List<Entry<SefiraEnum, List<CreatureModel>>>();
+            foreach (Sefira sefira in SefiraManager.instance.GetActivatedSefiras())
+            {
+                sefiraSortingList.Add(new Entry<SefiraEnum, List<CreatureModel>>(sefira.sefiraEnum, new List<CreatureModel>()));
+            }
+            if (!currentLocation)
+            {
+                foreach (CreatureModel abnormality in abnormalities)
+                {
+                    sefiraSortingList.Find((Entry<SefiraEnum, List<CreatureModel>> entry) => entry.k == abnormality.sefira.sefiraEnum).v.Add(abnormality);
+                }
+            }
+            else
+            {
+                Entry<SefiraEnum, List<CreatureModel>> unknownLocationAbnormalities = new Entry<SefiraEnum, List<CreatureModel>>(SefiraEnum.DUMMY, new List<CreatureModel>());
+                foreach (CreatureModel abnormality in abnormalities)
+                {
+                    SefiraEnum location = GetUnitModelLocationSefira(abnormality);
+                    if (location == SefiraEnum.DUMMY) unknownLocationAbnormalities.v.Add(abnormality);
+                    else sefiraSortingList.Find((Entry<SefiraEnum, List<CreatureModel>> entry) => entry.k == location).v.Add(abnormality);
+                }
+                if (unknownLocationAbnormalities.v.Count > 0) sefiraSortingList.Add(unknownLocationAbnormalities);
+            }
+            return sefiraSortingList;
+        }
+
+        public class Entry<K, V>
+        {
+            public K k { get; private set; }
+
+            public V v { get; private set; }
+
+            public Entry(K key, V value)
+            {
+                k = key;
+                v = value;
+            }
+        }
+
         public static string GetUnitModelLocationText(UnitModel unit)
         {
             string location = "";
@@ -251,11 +320,12 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             RepressionSuccess = 5
         }
 
-        public static UnitModel TryFindAnySuppressableTarget(string targetName, SefiraEnum targetDepartment)
+        public static UnitModel TryFindAnySuppressibleTarget(string targetName, SefiraEnum targetDepartment)
         {
             UnitModel target = TryFindPanickedTarget(targetName);
             if (target == null) target = TryFindAbnormalityTarget(targetName, targetDepartment);
             if (target == null) target = TryFindOrdealTarget(targetName, targetDepartment);
+            if (target == null) target = TryFindEventCreatureTarget(targetName);
             if (target == null) target = TryFindSefiraCoreTarget(targetName);
             return target;
         }
@@ -272,7 +342,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             List<UnitModel> targetsWithName = new List<UnitModel>();
             foreach (CreatureModel abnormality in SefiraManager.instance.GetEscapedCreatures())
             {
-                if (targetName.Equals(abnormality.script.GetName())) targetsWithName.Add(abnormality);
+                if (abnormality.Unit.gameObject.activeSelf && targetName.Equals(abnormality.script.GetName())) targetsWithName.Add(abnormality);
             }
             if (targetsWithName.Count == 0) return null;
             if (targetsWithName.Count == 1) return targetsWithName[0];
@@ -308,6 +378,15 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             }
             if (targetsInDepartment.Count > 0) return targetsInDepartment[rand.Next(0, targetsInDepartment.Count)];
             return targetsWithName[rand.Next(0, targetsWithName.Count)];
+        }
+
+        public static UnitModel TryFindEventCreatureTarget(string targetName)
+        {
+            foreach (EventCreatureModel eventCreature in SpecialEventManager.instance.GetEventCreatureList())
+            {
+                if (eventCreature.GetUnitName().Equals(targetName)) return eventCreature;
+            }
+            return null;
         }
 
         public static UnitModel TryFindSefiraCoreTarget(string targetName)

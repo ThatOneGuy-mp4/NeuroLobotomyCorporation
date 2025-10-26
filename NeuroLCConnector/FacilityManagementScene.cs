@@ -18,8 +18,6 @@ namespace NeuroLCConnector
 
     /*
      * TODO: 
-     * -Add an Action to cancel Tool Usage (potentially also normal work assignment?)
-     * -Add an Action to get information on containment units in Qliphoth Overload state
      * -Add a config option to allow execution bullets.
      * -Add an Action to order Rabbit Team Deployment...? (perhaps not?)
      * -Could be interesting to give her the ability to read an Abnormality's lore (not needed though)
@@ -52,14 +50,16 @@ namespace NeuroLCConnector
             {
                 List<INeuroAction> list = new List<INeuroAction>
                 {
+                    new DEBUGFuckingKillsYou(),
                     new GetDayStatus(),
                     new GetAgentStatuses(),
                     new GetDetailedAgentInfo(),
                     new GetAbnormalityStatuses(),
                     new GetDetailedAbnormalityInfo(),
+                    new GetOverloadedUnits(),
                     new AssignWork(),
                     new UseTool(),
-                    new GetSuppressableTargets(),
+                    new GetSuppressibleTargets(),
                     new SuppressTarget(),
                     new CancelAction()
                 };
@@ -73,14 +73,16 @@ namespace NeuroLCConnector
             {
                 List<INeuroAction> list = new List<INeuroAction>
                 {
+                    new DEBUGFuckingKillsYou(),
                     new GetDayStatus(),
                     new GetAgentStatuses(),
                     new GetDetailedAgentInfo(),
                     new GetAbnormalityStatuses(),
                     new GetDetailedAbnormalityInfo(),
+                    new GetOverloadedUnits(),
                     new AssignWork(),
                     new UseTool(),
-                    new GetSuppressableTargets(),
+                    new GetSuppressibleTargets(),
                     new SuppressTarget(),
                     new CancelAction(),
                     new ShootManagerialBullet()
@@ -113,6 +115,27 @@ namespace NeuroLCConnector
 
     }
 
+    public class DEBUGFuckingKillsYou : NeuroActionExternalExecute
+    {
+        public override string Name => "DEBUG_fucking_kills_you";
+
+        protected override string Description => "Fucking kill that guy. Kill 'em dead.";
+
+        protected override JsonSchema? Schema => new()
+        {
+            Type = JsonSchemaType.Object,
+            Required = new List<string> { "target_name" },
+            Properties = new Dictionary<string, JsonSchema>
+            {
+                ["target_name"] = QJS.Type(JsonSchemaType.String)
+            }
+        };
+
+        protected override ExecutionResult Validate(ActionData actionData)
+        {
+            return ValidateGameSide(actionData.Data?["target_name"]?.Value<string>());
+        }
+    }
     public class GetAgentStatuses : NeuroActionNoValidation
     {
         public override string Name => "get_agent_statuses";
@@ -195,6 +218,15 @@ namespace NeuroLCConnector
         }
     }
 
+    public class GetOverloadedUnits : NeuroActionNoValidation
+    {
+        public override string Name => "get_overloaded_units";
+
+        protected override string SuccessMessage => "Getting all overloaded Containment Units to send as context...";
+
+        protected override string Description => "Get the names of all Abnormalities with overloaded Containment Units.";
+    }
+
     public class AssignWork : NeuroActionExternalExecute
     {
         public override string Name => "assign_work";
@@ -252,11 +284,11 @@ namespace NeuroLCConnector
         }
     }
 
-    public class GetSuppressableTargets : NeuroActionNoValidation
+    public class GetSuppressibleTargets : NeuroActionNoValidation
     {
-        public override string Name => "get_suppressable_targets";
+        public override string Name => "get_suppressible_targets";
 
-        protected override string SuccessMessage => "Getting all suppressable targets to send as context...";
+        protected override string SuccessMessage => "Getting all suppressible targets to send as context...";
 
         protected override string Description => "Get all entities which can currently be suppressed.";
     }

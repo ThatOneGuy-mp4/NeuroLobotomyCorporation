@@ -51,9 +51,9 @@ namespace NeuroLobotomyCorporation
                 new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroAgentDied", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(AgentModel).GetMethod("Panic", AccessTools.all), null,
                 new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroAgentPanicked", AccessTools.all)), null);
-        }
+            harmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
 
-        
+        }
 
         private static bool initialized = false;
         public static void InitializeSDK()
