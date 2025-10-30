@@ -68,7 +68,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
 
         public static void InformNeuroAgentPanicked(AgentModel __instance)
         {
-            if(!__instance.invincible) NeuroSDKHandler.SendContext(String.Format("{0} has panicked.", __instance.GetUnitName()), true);
+            if(!__instance.invincible && !__instance.CannotControll() && !__instance.IsDead()) NeuroSDKHandler.SendContext(String.Format("{0} has been thrown into a panic.", __instance.GetUnitName()), true);
         }
     }
 }

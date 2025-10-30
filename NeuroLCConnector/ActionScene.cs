@@ -79,33 +79,35 @@ namespace NeuroLCConnector
 
         protected abstract string GetActionSceneStartContext();
 
-        public void RegisterAction(string actionName)
+        public bool RegisterAction(string actionName)
         {
             INeuroAction? neuroAction = AllPossibleActions.Find((INeuroAction NA) => NA.Name.Equals(actionName));
             if(neuroAction == null || neuroAction.GetType() == typeof(INeuroAction))
             {
                 Console.WriteLine("Action " + actionName + " does not exist in the current scene, skipping.");
-                return;
+                return false;
             }
             if (RegisteredActions.Contains(neuroAction))
             {
                 Console.WriteLine("Action " + actionName + " is already registered in the current scene, skipping.");
-                return;
+                return false;
             }
             NeuroActionHandler.RegisterActions(neuroAction);
             RegisteredActions.Add(neuroAction);
+            return true;
         }
 
-        public void UnregisterAction(string actionName)
+        public bool UnregisterAction(string actionName)
         {
             INeuroAction? neuroAction = RegisteredActions.Find((INeuroAction NA) => NA.Name.Equals(actionName));
             if (neuroAction == null || neuroAction.GetType() == typeof(INeuroAction))
             {
                 Console.WriteLine("Action " + actionName + " is not registered in the current scene, skipping.");
-                return;
+                return false;
             }
             NeuroActionHandler.UnregisterActions(neuroAction);
             RegisteredActions.Remove(neuroAction);
+            return true;
         }
 
         public static void ChangeActionScene(ActionScene scene)

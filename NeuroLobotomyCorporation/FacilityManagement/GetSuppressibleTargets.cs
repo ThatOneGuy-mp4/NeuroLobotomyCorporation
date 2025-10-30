@@ -25,7 +25,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             List<AgentModel> panickingAgents = new List<AgentModel>();
             foreach (AgentModel agent in AgentManager.instance.GetAgentList())
             {
-                if (agent.IsPanic()) panickingAgents.Add(agent);
+                if (agent.IsPanic() && !agent.IsDead()) panickingAgents.Add(agent);
             }
             if (panickingAgents.Count > 0)
             {
@@ -173,7 +173,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                             coreSuppressionProgress += 50;
                             break;
                         case GeburahBoss.GeburahPhase.P4:
-                            equippedEGOGear = "Twilight";
+                            equippedEGOGear = "Twilight & an Effloresced E.G.O";
                             coreSuppressionProgress += 75;
                             break;
                         default:

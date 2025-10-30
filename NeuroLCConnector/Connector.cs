@@ -162,6 +162,12 @@ namespace NeuroLCConnector
                     if (!(ActionScene.CurrentActionScene is CoreSuppressionBaseScene)) return;
                     await (ActionScene.CurrentActionScene as CoreSuppressionBaseScene).CoreSuppressionComplete();
                     break;
+                case "give_poke":
+                    if(ActionScene.CurrentActionScene is GeburaSuppressionScene)
+                    {
+                        Task.Run(new Func<Task>((ActionScene.CurrentActionScene as GeburaSuppressionScene).GivePokeAction));
+                    }
+                    break;
                 default:
                     Console.WriteLine("The command " + parameters[(int)ProcessGameMessageParameters.Command] + " was not found. Ensure it is spelt correctly on both game and server side.");
                     break;
@@ -213,6 +219,9 @@ namespace NeuroLCConnector
                     break;
                 case "tiphereth_suppression":
                     ActionScene.ChangeActionScene(new TipherethSuppressionScene());
+                    break;
+                case "gebura_suppression":
+                    ActionScene.ChangeActionScene(new GeburaSuppressionScene());
                     break;
                 case "chesed_suppression":
                     ActionScene.ChangeActionScene(new ChesedSuppressionScene());

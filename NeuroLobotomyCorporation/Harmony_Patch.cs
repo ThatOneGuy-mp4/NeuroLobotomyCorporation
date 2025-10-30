@@ -25,6 +25,8 @@ using NeuroLobotomyCorporation.MalkuthSupression;
 using NeuroLobotomyCorporation.NetzachSuppression;
 using NeuroLobotomyCorporation.TipherethSuppression;
 using NeuroLobotomyCorporation.ChesedSuppression;
+using GeburahBoss;
+using NeuroLobotomyCorporation.GeburaSuppression;
 
 namespace NeuroLobotomyCorporation
 {
@@ -53,6 +55,37 @@ namespace NeuroLobotomyCorporation
                 new HarmonyMethod(typeof(ShootManagerialBullet).GetMethod("NeuroShootBullet", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(SefiraBossManager).GetMethod("OnOverloadActivated", AccessTools.all), null,
                 new HarmonyMethod(typeof(Harmony_Patch).GetMethod("ChangeBossPhaseMeltdown", AccessTools.all)), null);
+            
+            //Give Neuro context for all of Gebura's special attacks
+            harmonyInstance.Patch(typeof(GeburahCoreScript).GetMethod("OnTakeDamage", AccessTools.all), null,
+                new HarmonyMethod(typeof(GeburaSuppressionScene).GetMethod("PhaseChangeGebura", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(GreedyTelepeort).GetMethod("OnReadyForRun", AccessTools.all), null,
+                new HarmonyMethod(typeof(GeburaSuppressionScene).GetMethod("GoldRushTeleport", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(DacapoThrow).GetMethod("OnStart", AccessTools.all), null,
+               new HarmonyMethod(typeof(GeburaSuppressionScene).GetMethod("DecapoThrow", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(DacapoThrow).GetMethod("MoveToDest", AccessTools.all), null,
+               new HarmonyMethod(typeof(GeburaSuppressionScene).GetMethod("MimicryLeap", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(FourthPhase).GetMethod("GetNextAction", AccessTools.all), null,
+               new HarmonyMethod(typeof(GeburaSuppressionScene).GetMethod("StartTwilightChase", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(ChaseAction).GetMethod("OnArriveAttack", AccessTools.all), null,
+               new HarmonyMethod(typeof(GeburaSuppressionScene).GetMethod("TwilightTargetReached", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(GreedyThrow).GetMethod("OnReadyForRun", AccessTools.all), null,
+                new HarmonyMethod(typeof(GeburaSuppressionScene).GetMethod("GoldRushThrow", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(ChaseAction).GetMethod("OnEnd", AccessTools.all), null,
+                new HarmonyMethod(typeof(GeburaSuppressionScene).GetMethod("TwilightExhausted", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(GreedyThrow).GetMethod("OnEnd", AccessTools.all), null,
+                new HarmonyMethod(typeof(GeburaSuppressionScene).GetMethod("GoldRushThrowExhausted", AccessTools.all)), null);
+            //end Gebura context
+            //Red Mist ragebait neuroTomfoolery
+            harmonyInstance.Patch(typeof(FirstPhase).GetMethod("GetNextAction", AccessTools.all), null,
+               new HarmonyMethod(typeof(GeburaSuppressionScene).GetMethod("Phase1InterruptWithRagebait", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(SecondPhase).GetMethod("GetNextAction", AccessTools.all), null,
+              new HarmonyMethod(typeof(GeburaSuppressionScene).GetMethod("Phase2InterruptWithRagebait", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(ThirdPhase).GetMethod("GetNextAction", AccessTools.all), null,
+              new HarmonyMethod(typeof(GeburaSuppressionScene).GetMethod("Phase3InterruptWithRagebait", AccessTools.all)), null);
+            //end ragebait
+            harmonyInstance.Patch(typeof(SefiraBossCreatureModel).GetMethod("OnFixedUpdate", AccessTools.all), null,
+                new HarmonyMethod(typeof(Poke).GetMethod("PokeRedMist", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(SefiraBossBase).GetMethod("OnCleared", AccessTools.all), null,
                 new HarmonyMethod(typeof(Harmony_Patch).GetMethod("BossCleared", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(IsolateRoom).GetMethod("Update", AccessTools.all), null,
@@ -123,6 +156,10 @@ namespace NeuroLobotomyCorporation
                     case SefiraEnum.TIPERERTH2:
                         ActionScene.Instance = new TipherethSuppressionScene();
                         NeuroSDKHandler.SendCommand("change_action_scene|tiphereth_suppression");
+                        break;
+                    case SefiraEnum.GEBURAH:
+                        ActionScene.Instance = new GeburaSuppressionScene();
+                        NeuroSDKHandler.SendCommand("change_action_scene|gebura_suppression");
                         break;
                     case SefiraEnum.CHESED:
                         ActionScene.Instance = new ChesedSuppressionScene();
