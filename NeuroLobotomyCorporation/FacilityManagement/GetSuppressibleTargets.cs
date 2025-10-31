@@ -73,11 +73,10 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             {
                 TryCheckIsSpecialEnemy(eventCreature, specialEnemies);
             }
-            //TODO: make sure this works correctly with identically named child entities
-            List<CreatureModel> escapedAbnormalities = SefiraManager.instance.GetEscapedCreatures();
+            List<CreatureModel> escapedAbnormalities = Helpers.GetAllSuppressibleAbnormalitiesAndChildren();
             if (escapedAbnormalities.Count > 0)
             {
-                escapedAbnormalities = RemoveSpecialAbnormalities(escapedAbnormalities, specialEnemies);
+                escapedAbnormalities = RemoveSpecialAbnormalities(escapedAbnormalities, specialEnemies); 
                 result += "Breaching Abnormalities\n-------------------------\n";
                 List<Helpers.Entry<SefiraEnum, List<CreatureModel>>> sortedAbnormalities = Helpers.SortAbnormalitiesByDepartment(escapedAbnormalities.ToArray(), true);
                 foreach (Helpers.Entry<SefiraEnum, List<CreatureModel>> sortingEntry in sortedAbnormalities)
@@ -195,32 +194,10 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                 case "WhiteNight":
                     specialEnemies.Add("wiin");
                     return true;
-                /*
-                 * When Apocalypse Bird is awoken, the game does not actually get rid of the three breaching birds, and just hides them.
-                 * This messes with the suppressible target output, so if Apocalypse Bird is active, designate the birds as special enemies
-                 * so RemoveSpecialAbnormalities removes them from normal output.
+                /* 
+                 * Apocalypse Bird doesn't get correctly added to the output if I check for it last time I tried 
+                 * and I can't be bothered to figure out why, so instead just check for Judgement Bird and add it if the boss exists.
                  */
-                case "O-02-56":
-                case "Small Bird":
-                case "Punishing Bird":
-                    SmallBird smallBird = (unit as CreatureModel).script as SmallBird;
-                    if (smallBird.Boss_Activated)
-                    {
-                        if (!apocalypseBirdAdded) specialEnemies.Add(GetApocalypseBirdStatus(smallBird.Boss));
-                        return true;
-                    }
-                    if (!smallBird.Unit.gameObject.activeSelf) return true;
-                    return false;
-                case "O-02-40":
-                case "Big Bird":
-                    BigBird bigBird = (unit as CreatureModel).script as BigBird;
-                    if (bigBird.Boss_Activated)
-                    {
-                        if (!apocalypseBirdAdded) specialEnemies.Add(GetApocalypseBirdStatus(bigBird.Boss));
-                        return true;
-                    }
-                    if (!bigBird.Unit.gameObject.activeSelf) return true;
-                    return false;
                 case "O-02-62":
                 case "Long Bird":
                 case "Judgement Bird":
@@ -232,7 +209,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     }
                     if (!longBird.Unit.gameObject.activeSelf) return true;
                     return false;
-                //Entrance also doesn't go away for some reason even after Apocalypse Bird is dead. so check if the portal is dead.
+                //Entrance doesn't go away for some reason even after Apocalypse Bird is dead. so check if the portal is dead.
                 case "Entrance to the Black Forest":
                     if ((unit as CreatureModel).hp == 0) return false;
                     specialEnemies.Add(String.Format("Entrance to the Black Forest: {0}" +
