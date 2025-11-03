@@ -320,6 +320,30 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             RepressionSuccess = 5
         }
 
+        public static List<CreatureModel> GetAllSuppressibleAbnormalitiesAndChildren()
+        {
+            List<CreatureModel> suppressibleAbnormalities = new List<CreatureModel>();
+            foreach(CreatureModel abnormality in CreatureManager.instance.GetCreatureList())
+            {
+                //The .gameObject.activeSelf and IsActive checks are because the game likes to spawn creatures
+                //and then turn them invisible instead of getting rid of them when suppressed (especially for child entities)
+                if (abnormality.IsEscaped() && abnormality.Unit.gameObject.activeSelf) suppressibleAbnormalities.Add(abnormality);
+                if (abnormality.GetAliveChilds().Count > 0) {
+                    if (abnormality.script is LongBird) {
+                        //Apocalypse Bird spawns as Judgement Bird's child at day start and then just hides until it is time. this excludes that. and I'm gonna hope this is the only abnormality like this.
+                        //Also this will effectively add Apocalypse Bird to the suppressible entity list by treating Judgement Bird as a special enemy.
+                        if ((abnormality.script as LongBird).Boss_Activated) suppressibleAbnormalities.Add(abnormality); 
+                        continue;                                                                                  
+                    }
+                    foreach(CreatureModel child in abnormality.GetAliveChilds())
+                    {
+                        if((child as ChildCreatureModel).GetMovableNode() != null && (child as ChildCreatureModel).GetMovableNode().isActive) suppressibleAbnormalities.Add(child); 
+                    }
+                }
+            }
+            return suppressibleAbnormalities;
+        }
+
         public static UnitModel TryFindAnySuppressibleTarget(string targetName, SefiraEnum targetDepartment)
         {
             UnitModel target = TryFindPanickedTarget(targetName);
@@ -340,9 +364,13 @@ namespace NeuroLobotomyCorporation.FacilityManagement
         public static UnitModel TryFindAbnormalityTarget(string targetName, SefiraEnum targetDepartment)
         {
             List<UnitModel> targetsWithName = new List<UnitModel>();
-            foreach (CreatureModel abnormality in SefiraManager.instance.GetEscapedCreatures())
+            foreach (CreatureModel abnormality in GetAllSuppressibleAbnormalitiesAndChildren())
             {
-                if (abnormality.Unit.gameObject.activeSelf && targetName.Equals(abnormality.script.GetName())) targetsWithName.Add(abnormality);
+                if(abnormality is ChildCreatureModel)
+                {
+                    if ((abnormality as ChildCreatureModel).GetMovableNode() != null && (abnormality as ChildCreatureModel).GetMovableNode().isActive && targetName.Equals(abnormality.script.GetName())) targetsWithName.Add(abnormality);
+                }
+                else if (abnormality.Unit.gameObject.activeSelf && targetName.Equals(abnormality.script.GetName())) targetsWithName.Add(abnormality);
             }
             if (targetsWithName.Count == 0) return null;
             if (targetsWithName.Count == 1) return targetsWithName[0];
