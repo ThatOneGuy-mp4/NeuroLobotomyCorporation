@@ -23,6 +23,7 @@ using NeuroLobotomyCorporation.YesodSuppression;
 using NeuroLobotomyCorporation.HodSuppression;
 using NeuroLobotomyCorporation.MalkuthSupression;
 using NeuroLobotomyCorporation.NetzachSuppression;
+using Rabbit;
 
 namespace NeuroLobotomyCorporation
 {
@@ -55,10 +56,38 @@ namespace NeuroLobotomyCorporation
                 new HarmonyMethod(typeof(Harmony_Patch).GetMethod("BossCleared", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(IsolateRoom).GetMethod("Update", AccessTools.all), null,
                 new HarmonyMethod(typeof(CancelAction).GetMethod("CancelChannelledTool", AccessTools.all)), null);
+            //The FacilityManagement Context Zone
+            harmonyInstance.Patch(typeof(AngelaConversation).GetMethod("MakeMessage", AccessTools.all), null,
+                new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroAngelaMessage", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(AgentModel).GetMethod("OnDie", AccessTools.all), null,
                 new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroAgentDied", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(AgentModel).GetMethod("Panic", AccessTools.all), null,
                 new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroAgentPanicked", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(AgentModel).GetMethod("LoseControl", AccessTools.all), null,
+                new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroAgentBecomesUncontrollable", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(AgentModel).GetMethod("StopPanic", AccessTools.all), 
+                new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroAgentRecoverPanic", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(AgentModel).GetMethod("GetControl", AccessTools.all),
+                new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroAgentBecomesControllable", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(CreatureModel).GetMethod("UpdateQliphothCounter", AccessTools.all),
+                new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroAbnormalityQliphothCounterDroppedToZero", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(CreatureModel).GetMethod("Escape", AccessTools.all), null,
+                new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroAbnormalityEscaped", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(ChildCreatureModel).GetMethod("Escape", AccessTools.all), null,
+                new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroChildSpawned", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(CreatureModel).GetMethod("Suppressed", AccessTools.all), null,
+                new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroAbnormalitySuppressed", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(PlayerModel.EmergencyController).GetMethod("SetLevel", AccessTools.all), new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroPrefixTrumpetLevelChanged", AccessTools.all)),
+                new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroPostfixTrumpetLevelChanged", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(CreatureModel).GetMethod("ActivateOverload", AccessTools.all), null,
+                new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroOverloadActivatedOutsideOfMeltdown", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(OrdealBase).GetMethod("OrdealTypo", AccessTools.all), null,
+                new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroOrdealStartedAndEnded", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(RabbitCaptaionConversation).GetMethod("GetText", AccessTools.all), null,
+                new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroRabbitsDialogue", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(RabbitProtocolWindow).GetMethod("OnClickCommand", AccessTools.all), new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroPreRabbitsDeployed", AccessTools.all)),
+                new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroPostRabbitsDeployed", AccessTools.all)), null);
+            //FacilityManagement context end
             harmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
 
         }

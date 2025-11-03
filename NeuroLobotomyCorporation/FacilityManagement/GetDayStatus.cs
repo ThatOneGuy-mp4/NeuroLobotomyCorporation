@@ -52,20 +52,21 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             OrdealBase ordeal = (OrdealBase)ordealInfo.GetValue(CreatureOverloadManager.instance);
             if (ordeal != null)
             {
-                string getTypeOfOrdeal = ordeal.GetType().Name;
-                string prefix = "";
-                string suffix = "";
-                if (getTypeOfOrdeal.Contains("Dawn")) prefix = "Dawn";
-                else if (getTypeOfOrdeal.Contains("Noon")) prefix = "Noon";
-                else if (getTypeOfOrdeal.Contains("Dusk")) prefix = "Dusk";
-                else prefix = "Midnight";
+                string typeOfOrdeal = ordeal.OrdealTypeText;
+                //string getTypeOfOrdeal = ordeal.GetType().Name;
+                //string prefix = "";
+                //string suffix = "";
+                //if (getTypeOfOrdeal.Contains("Dawn")) prefix = "Dawn";
+                //else if (getTypeOfOrdeal.Contains("Noon")) prefix = "Noon";
+                //else if (getTypeOfOrdeal.Contains("Dusk")) prefix = "Dusk";
+                //else prefix = "Midnight";
 
-                if (getTypeOfOrdeal.Contains("Machine")) suffix = "Green";
-                else if (getTypeOfOrdeal.Contains("OutterGod")) suffix = "Violet";
-                else if (getTypeOfOrdeal.Contains("Circus")) suffix = "Crimson";
-                else if (getTypeOfOrdeal.Contains("Bug")) suffix = "Amber"; //Ellie reference?
-                else suffix = "Indigo";
-                return String.Format("The next meltdown will spawn the {0} of {1}.", prefix, suffix);
+                //if (getTypeOfOrdeal.Contains("Machine")) suffix = "Green";
+                //else if (getTypeOfOrdeal.Contains("OutterGod")) suffix = "Violet";
+                //else if (getTypeOfOrdeal.Contains("Circus")) suffix = "Crimson";
+                //else if (getTypeOfOrdeal.Contains("Bug")) suffix = "Amber"; //Ellie reference?
+                //else suffix = "Indigo";
+                return String.Format("The next meltdown will spawn {0}.", typeOfOrdeal);
             }
             if (_energyController == null) _energyController = GameObject.FindObjectOfType<EnergyController>();
             int overloadIsolateNum = Int32.Parse(_energyController.OverLoadIsolateNumText.text);

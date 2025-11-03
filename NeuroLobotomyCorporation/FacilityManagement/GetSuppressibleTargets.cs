@@ -109,6 +109,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     string ordealTargets = String.Format("{0}\n-------------------------\n", ordeal.OrdealTypeText);
                     foreach (OrdealCreatureModel ordealCreature in ordealCreaturesInOrdeal)
                     {
+                        if (ordealCreature.hp <= 0) continue;
                         string name = ordealCreature.OrdealBase.OrdealNameText(ordealCreature); //would GetUnitName work here?
                         string riskLevel = ordealCreature.OrdealBase.GetRiskLevel(ordealCreature).ToString();
                         string location = Helpers.GetUnitModelLocationText(ordealCreature);
