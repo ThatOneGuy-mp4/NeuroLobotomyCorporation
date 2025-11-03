@@ -87,10 +87,12 @@ namespace NeuroLobotomyCorporation
             harmonyInstance.Patch(typeof(SefiraBossCreatureModel).GetMethod("OnFixedUpdate", AccessTools.all), null,
                 new HarmonyMethod(typeof(Poke).GetMethod("PokeRedMist", AccessTools.all)), null);
             //end ragebait
+
             harmonyInstance.Patch(typeof(SefiraBossBase).GetMethod("OnCleared", AccessTools.all), null,
                 new HarmonyMethod(typeof(Harmony_Patch).GetMethod("BossCleared", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(IsolateRoom).GetMethod("Update", AccessTools.all), null,
                 new HarmonyMethod(typeof(CancelAction).GetMethod("CancelChannelledTool", AccessTools.all)), null);
+
             //The FacilityManagement Context Zone
             harmonyInstance.Patch(typeof(AngelaConversation).GetMethod("MakeMessage", AccessTools.all), null,
                 new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroAngelaMessage", AccessTools.all)), null);
@@ -123,6 +125,7 @@ namespace NeuroLobotomyCorporation
             harmonyInstance.Patch(typeof(RabbitProtocolWindow).GetMethod("OnClickCommand", AccessTools.all), new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroPreRabbitsDeployed", AccessTools.all)),
                 new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroPostRabbitsDeployed", AccessTools.all)), null);
             //FacilityManagement context end
+
             harmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
 
         }

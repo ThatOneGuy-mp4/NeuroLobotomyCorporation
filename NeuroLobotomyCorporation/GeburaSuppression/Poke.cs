@@ -18,6 +18,7 @@ namespace NeuroLobotomyCorporation.GeburaSuppression
             if (SefiraManager.instance.GameOverCheck()) return "failure|Every Agent is dead...suppression cannot continue. Please ask the manager to retry the day."; //i'm not letting vedal tell neuro to spam poke 12000 times to win. because i feel like that's something he'd consider if everyone else was dead.
             SefiraBossCreatureModel redMistModel = (SefiraBossCreatureModel)Helpers.TryFindSefiraCoreTarget("The Red Mist");
             if (RedMistRagebait.Instance == null || RedMistRagebait.Instance.RedMistModel != redMistModel) RedMistRagebait.Instance = new RedMistRagebait(redMistModel);
+            if (!RedMistRagebait.Instance.CanPoke()) return "failure|...I fear the manager will not learn the lesson he is supposed to if you do much of the work for him. Once the next 'phase' begins, you may assist again."; //additional anti-cheese for vedal. prevents neuro from poking too much in one phase.
             string ragebaitResult = RedMistRagebait.Instance.Poked();
             poking = true;
             return String.Format("success|{0}", ragebaitResult);
@@ -56,14 +57,20 @@ namespace NeuroLobotomyCorporation.GeburaSuppression
             public SefiraBossCreatureModel RedMistModel = null;
 
             private int timesPokedSinceLastRage = 0;
-            private static readonly int MAX_POKES_BEFORE_RAGE = 100;
+            private static readonly int MAX_POKES_BEFORE_RAGE = 100; 
 
             private bool hasRaged = false;
             private static readonly int MAX_POKES_FIRST_RAGE = 10;
 
+            private int totalPokesThisPhase = 0;
+            private static readonly int MAX_POKES_PER_PHASE = 727;
+
             private int timesRagedSinceLastBait = 0;
-            private static readonly int BAITS_BEFORE_RAGE = 3;
+            private static readonly int RAGES_BEFORE_BAIT = 3;
             public string ragingDialogue = "";
+
+            private int totalBaitsThisPhase = 0;
+            private static readonly int MAX_BAITS_PER_PHASE = 3;
 
             public bool FullyBaited { get; set; }
             public string fullyRagebaitedDialogue = "";
@@ -99,24 +106,30 @@ namespace NeuroLobotomyCorporation.GeburaSuppression
                 "Focus..."
             };
 
+            public bool CanPoke()
+            {
+                return (totalPokesThisPhase <= MAX_POKES_PER_PHASE);
+            }
+
             public string Poked()
             {
                 string ragebaitResult = "The Red Mist has been poked.";
                 if (FullyBaited) return ragebaitResult;
                 timesPokedSinceLastRage++;
+                totalPokesThisPhase++;
                 if(rand.Next(0, MAX_POKES_BEFORE_RAGE) < timesPokedSinceLastRage || (!hasRaged && rand.Next(0, MAX_POKES_FIRST_RAGE) < timesPokedSinceLastRage))
                 {
                     timesPokedSinceLastRage = 0;
                     timesRagedSinceLastBait++;
                     hasRaged = true;
-                    if (timesRagedSinceLastBait < BAITS_BEFORE_RAGE)
+                    if (timesRagedSinceLastBait < RAGES_BEFORE_BAIT)
                     {
                         ragingDialogue = rageIncreasing[rand.Next(rageIncreasing.Length)];
                         ragebaitResult = String.Format("\"{0}\"", ragingDialogue);
                         //(RedMistModel.script as GeburahCoreScript).AnimScript.MakeGeburahText(ragebaitResult);
                     }
                 }
-                if(timesRagedSinceLastBait >= BAITS_BEFORE_RAGE)
+                if(timesRagedSinceLastBait >= RAGES_BEFORE_BAIT && totalBaitsThisPhase < MAX_BAITS_PER_PHASE) //one more anti-cheese here, neuro can only bait The Red Mist so many times a phase, so ved can't just attack then.
                 {
                     FullyBaited = true;
                     fullyRagebaitedDialogue = fullyBaited[rand.Next(rageIncreasing.Length)];
@@ -130,8 +143,15 @@ namespace NeuroLobotomyCorporation.GeburaSuppression
                 FullyBaited = false;
                 timesPokedSinceLastRage = 0;
                 timesRagedSinceLastBait = 0;
+                totalBaitsThisPhase++;
                 (RedMistModel.script as GeburahCoreScript).AnimScript.MakeGeburahText(fullyRagebaitedDialogue);
                 return new GeburahRagebaitedIdle(RedMistModel.script as GeburahCoreScript, MALD_TIME, false);
+            }
+
+            public void ResetPhase()
+            {
+                totalPokesThisPhase = 0;
+                totalBaitsThisPhase = 0;
             }
 
             private class GeburahRagebaitedIdle : GeburahIdle
@@ -177,7 +197,7 @@ namespace NeuroLobotomyCorporation.GeburaSuppression
 
                 public override void OnEnd()
                 {
-                    (RedMistRagebait.instance.RedMistModel.script as GeburahCoreScript).AnimScript.MakeGeburahText(calmedDown[rand.Next(rageIncreasing.Length)]);
+                    (RedMistRagebait.instance.RedMistModel.script as GeburahCoreScript).AnimScript.MakeGeburahText(calmedDown[rand.Next(calmedDown.Length)]);
                 }
             }
         }

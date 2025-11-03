@@ -28,7 +28,7 @@ namespace NeuroLobotomyCorporation.GeburaSuppression
         private string GetDayStartContext()
         {
             int currentDay = PlayerModel.instance.GetDay() + 1;
-            return string.Format("\"I’m back; the Red Mist has walked out from a sea of pain. ...I’m no longer weak like I used to be; I can replace any body part even if it gets cut off, and I can be repaired even if I’m broken.\"" +
+            return String.Format("\"I’m back; the Red Mist has walked out from a sea of pain. ...I’m no longer weak like I used to be; I can replace any body part even if it gets cut off, and I can be repaired even if I’m broken.\"" +
                 "\n\nCore Suppression has begun on Day {0}." +
                 "\nWarning!! Gebura's Qlipha has manifested as The Red Mist in the Disciplinary Department. Ignore all other objectives; The Red Mist must be immediately suppressed by force." +
                 "\nThe Red Mist has the E.G.O Weapons Red Eyes & Penitence equipped. Expect her to reveal more gear as the suppression progresses." +
@@ -42,13 +42,14 @@ namespace NeuroLobotomyCorporation.GeburaSuppression
             if (__instance.model.hp <= 1 && __instance.IsInvincible)
             {
                 NeuroSDKHandler.SendCommand("change_boss_phase");
+                if (Poke.RedMistRagebait.Instance != null) Poke.RedMistRagebait.Instance.ResetPhase();
             }
         }
 
         /*
          * The Red Mist has a lot of attacks. It's a useless endeavor to inform Neuro of all of them, 
          * especially since she can't maneuver Agents precisely enough to dodge, so to not clog up her context I've only given her the most important.
-         * (i.e., phase and mid-phase transitions, and also the final phase's attacks.
+         * (i.e., phase and mid-phase transitions, and also the final phase's attacks.)
          * All of these are done with Harmony Patches. See Harmony_Patch to see which methods they're patched on.
          */
         //Gold Rush (P1 & P3)

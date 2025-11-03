@@ -34,11 +34,15 @@ namespace NeuroLCConnector
             }
         }
 
-        //public override void InitializeActionScene()
-        //{
-        //    base.InitializeActionScene();
-        //    //GivePokeAction().Start();
-        //}
+        public override void InitializeActionScene()
+        {
+            base.InitializeActionScene();
+            if (angelaConversationSaidBefore)
+            {
+                RegisterAction("poke");
+                Context.Send("The 'poke' command has been reauthorized. May the suppression proceed smoothly.", true);
+            }
+        }
 
         private static bool angelaConversationSaidBefore = false;
         public async Task GivePokeAction()
@@ -59,11 +63,6 @@ namespace NeuroLCConnector
                         "\n...ah, but it would seem the registering of the action has failed...well, it shall be waiting when the next attempt has started.", false);
                 }
                 angelaConversationSaidBefore = true;
-            }
-            else
-            {
-                RegisterAction("poke");
-                Context.Send("The 'poke' command has been reauthorized. May the suppression proceed smoothly.", true);
             }
         }
 
