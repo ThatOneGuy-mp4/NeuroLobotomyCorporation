@@ -99,6 +99,7 @@ namespace NeuroLCConnector
 
         public static async Task<string> SendCommand(string command)
         {
+            if (ActionScene.CurrentActionScene != null && ActionScene.CurrentActionScene is HokmaSuppressionScene) await (ActionScene.CurrentActionScene as HokmaSuppressionScene).Stall();
             ServerOutput = (HttpWebRequest)WebRequest.Create(serverToGameURI);
             ServerOutput.KeepAlive = true;
             ServerOutput.Method = "POST";
@@ -225,6 +226,10 @@ namespace NeuroLCConnector
                     break;
                 case "chesed_suppression":
                     ActionScene.ChangeActionScene(new ChesedSuppressionScene());
+                    break;
+
+                case "hokma_suppression":
+                    ActionScene.ChangeActionScene(new HokmaSuppressionScene());
                     break;
             }
         }

@@ -28,6 +28,8 @@ using NeuroLobotomyCorporation.ChesedSuppression;
 using GeburahBoss;
 using NeuroLobotomyCorporation.GeburaSuppression;
 using Rabbit;
+using GameStatusUI;
+using NeuroLobotomyCorporation.HokmaSuppression;
 
 namespace NeuroLobotomyCorporation
 {
@@ -126,6 +128,13 @@ namespace NeuroLobotomyCorporation
                 new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroPostRabbitsDeployed", AccessTools.all)), null);
             //FacilityManagement context end
 
+            //Hokma Price of Silence Information
+            harmonyInstance.Patch(typeof(ChokhmahPlaySpeedBlockUI).GetMethod("SetText", AccessTools.all), null,
+                new HarmonyMethod(typeof(HokmaSuppressionScene).GetMethod("SavePriceOfSilenceDialogue", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(ChokhmahBossBase).GetMethod("OnTryTimePause", AccessTools.all), null,
+                new HarmonyMethod(typeof(HokmaSuppressionScene).GetMethod("InformNeuroPriceOfSilencePaid", AccessTools.all)), null);
+            //Price of Silence Information End
+
             harmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
 
         }
@@ -196,6 +205,11 @@ namespace NeuroLobotomyCorporation
                     case SefiraEnum.CHESED:
                         ActionScene.Instance = new ChesedSuppressionScene();
                         NeuroSDKHandler.SendCommand("change_action_scene|chesed_suppression");
+                        break;
+
+                    case SefiraEnum.CHOKHMAH:
+                        ActionScene.Instance = new HokmaSuppressionScene();
+                        NeuroSDKHandler.SendCommand("change_action_scene|hokma_suppression");
                         break;
                 }
                 return;

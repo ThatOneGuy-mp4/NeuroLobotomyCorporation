@@ -26,7 +26,7 @@ namespace NeuroLobotomyCorporation.ChesedSuppression
                 "\n{6}" +
                 "{7}" +
                 "\nCore Suppression is {8}% complete. Continue generating P.E. Boxes and raising the Qliphoth Meltdown Level." +
-                "\nAn error with the amount of damage employees receive is detected. {9}", energyCollected, energyRequired, energyProgress, qliphothMeltdownLevel, gaugesBeforeNextMeltdown, qliphothMeltdownLevelProgress, nextMeltdownDesc, trumpetDesc, coreSuppressionProgress, boostedDamageTypes);
+                "\nAn anomaly with the amount of damage employees receive is detected. {9}", energyCollected, energyRequired, energyProgress, qliphothMeltdownLevel, gaugesBeforeNextMeltdown, qliphothMeltdownLevelProgress, nextMeltdownDesc, trumpetDesc, coreSuppressionProgress, boostedDamageTypes);
             return status;
         }
 
