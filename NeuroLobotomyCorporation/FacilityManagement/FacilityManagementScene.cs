@@ -1,5 +1,6 @@
 ﻿using GameStatusUI;
 using Harmony;
+using NeuroLobotomyCorporation.BinahSuppression;
 using Rabbit;
 using System;
 using System.Collections;
@@ -210,7 +211,11 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             {
                 if (SefiraBossManager.Instance.CheckBossActivation(SefiraEnum.BINAH) || (SefiraBossManager.Instance.IsKetherBoss() && SefiraBossManager.Instance.GetKetherBossType() == KetherBossType.E3))
                 {
-                    //TODO: implement the special overloads for battles against An Arbiter. These should probably go in BinahSuppression and be called from here.
+                    if(type != OverloadType.DEFAULT)
+                    {
+                        BinahSuppressionScene.InformNeuroArbiterMeltdowns(overloadCount, type);
+                        return;
+                    }
                 }
                 if (overloadCount == 0) NeuroSDKHandler.SendContext("The Qliphoth Meltdown Level has been raised, however, no overloads or Ordeals have occurred.");
                 else NeuroSDKHandler.SendContext(String.Format("The Qliphoth Meltdown Level has been raised, and {0} containment units have become overloaded as a result.", overloadCount), true);

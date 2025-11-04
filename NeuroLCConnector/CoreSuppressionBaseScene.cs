@@ -11,6 +11,7 @@ namespace NeuroLCConnector
     {
         protected int phase = 0;
 
+        //The first element of this list will always be ignored, and should be assigned as such.
         protected abstract List<string> PhaseTransitionDialogue
         {
             get;

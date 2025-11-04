@@ -24,7 +24,7 @@ namespace NeuroLCConnector
             "\n\nHokma's Qlipha has been agitated. The anomaly in the flow of time has intensified.",
             "\"You never knew when to stop, so I shall stop you with absolute certainty this time.\"" +
             "\n\nHokma's Qlipha has been disturbed. The anomaly in the flow of time has greatly intensified." +
-            "\nHokma's core cannot sustain this level of corruption for much longer...face the past in the last stretch of this suppression.",
+            "\nHokma's core cannot sustain this level of corruption for much longer...please face the past as the last stretch of this suppression begins.",
             "\"No, I do not wish to change. I do not want to forget it all. Please, let’s just stay.\"" +
             "\n\nHokma's Qlipha has been disturbed. The anomaly in the flow of time has greatly intensified.",
             "\"I do not understand. What more must you sacrifice? Just what are you trying to achieve?\"" +

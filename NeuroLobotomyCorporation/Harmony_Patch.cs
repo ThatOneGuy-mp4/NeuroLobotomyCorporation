@@ -30,6 +30,8 @@ using NeuroLobotomyCorporation.GeburaSuppression;
 using Rabbit;
 using GameStatusUI;
 using NeuroLobotomyCorporation.HokmaSuppression;
+using NeuroLobotomyCorporation.BinahSuppression;
+using BinahBoss;
 
 namespace NeuroLobotomyCorporation
 {
@@ -59,7 +61,7 @@ namespace NeuroLobotomyCorporation
             harmonyInstance.Patch(typeof(SefiraBossManager).GetMethod("OnOverloadActivated", AccessTools.all), null,
                 new HarmonyMethod(typeof(Harmony_Patch).GetMethod("ChangeBossPhaseMeltdown", AccessTools.all)), null);
             
-            //Give Neuro context for all of Gebura's special attacks
+            //Give Neuro context for all of Gebura's special attacks + phase changes
             harmonyInstance.Patch(typeof(GeburahCoreScript).GetMethod("OnTakeDamage", AccessTools.all), null,
                 new HarmonyMethod(typeof(GeburaSuppressionScene).GetMethod("PhaseChangeGebura", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(GreedyTelepeort).GetMethod("OnReadyForRun", AccessTools.all), null,
@@ -80,15 +82,36 @@ namespace NeuroLobotomyCorporation
                 new HarmonyMethod(typeof(GeburaSuppressionScene).GetMethod("GoldRushThrowExhausted", AccessTools.all)), null);
             //end Gebura context
             //Red Mist ragebait neuroTomfoolery
-            harmonyInstance.Patch(typeof(FirstPhase).GetMethod("GetNextAction", AccessTools.all), null,
+            harmonyInstance.Patch(typeof(GeburahBoss.FirstPhase).GetMethod("GetNextAction", AccessTools.all), null,
                new HarmonyMethod(typeof(GeburaSuppressionScene).GetMethod("Phase1InterruptWithRagebait", AccessTools.all)), null);
-            harmonyInstance.Patch(typeof(SecondPhase).GetMethod("GetNextAction", AccessTools.all), null,
+            harmonyInstance.Patch(typeof(GeburahBoss.SecondPhase).GetMethod("GetNextAction", AccessTools.all), null,
               new HarmonyMethod(typeof(GeburaSuppressionScene).GetMethod("Phase2InterruptWithRagebait", AccessTools.all)), null);
-            harmonyInstance.Patch(typeof(ThirdPhase).GetMethod("GetNextAction", AccessTools.all), null,
+            harmonyInstance.Patch(typeof(GeburahBoss.ThirdPhase).GetMethod("GetNextAction", AccessTools.all), null,
               new HarmonyMethod(typeof(GeburaSuppressionScene).GetMethod("Phase3InterruptWithRagebait", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(SefiraBossCreatureModel).GetMethod("OnFixedUpdate", AccessTools.all), null,
                 new HarmonyMethod(typeof(Poke).GetMethod("PokeRedMist", AccessTools.all)), null);
             //end ragebait
+
+            //Give Neuro context for all of Binah's special attacks + phase changes + meltdowns
+            harmonyInstance.Patch(typeof(BinahCoreScript).GetMethod("OnTakeDamage", AccessTools.all), null,
+                new HarmonyMethod(typeof(BinahSuppressionScene).GetMethod("PhaseChangeBinah", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(GoldenOverload).GetMethod("OnSuccess", AccessTools.all), null,
+                new HarmonyMethod(typeof(BinahSuppressionScene).GetMethod("InformNeuroMeltdownGoldCleared", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(GoldenOverload).GetMethod("OnFail", AccessTools.all), null,
+                new HarmonyMethod(typeof(BinahSuppressionScene).GetMethod("InformNeuroMeltdownGoldNotCleared", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(BlackFogOverload).GetMethod("OnSuccess", AccessTools.all), null,
+                new HarmonyMethod(typeof(BinahSuppressionScene).GetMethod("InformNeuroMeltdownDarkFogCleared", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(BlackFogOverload).GetMethod("OnFail", AccessTools.all), null,
+                new HarmonyMethod(typeof(BinahSuppressionScene).GetMethod("InformNeuroMeltdownDarkFogNotCleared", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(WaveOverload).GetMethod("OnSuccess", AccessTools.all), null,
+                new HarmonyMethod(typeof(BinahSuppressionScene).GetMethod("InformNeuroMeltdownWavesCleared", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(WaveOverload).GetMethod("OnFail", AccessTools.all), null,
+                new HarmonyMethod(typeof(BinahSuppressionScene).GetMethod("InformNeuroMeltdownWaveNotCleared", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(ColumnOverload).GetMethod("OnSuccess", AccessTools.all), null,
+                new HarmonyMethod(typeof(BinahSuppressionScene).GetMethod("InformNeuroMeltdownPillarsCleared", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(ColumnOverload).GetMethod("OnFail", AccessTools.all), null,
+                new HarmonyMethod(typeof(BinahSuppressionScene).GetMethod("InformNeuroMeltdownPillarsNotCleared", AccessTools.all)), null);
+            //end Binah context
 
             harmonyInstance.Patch(typeof(SefiraBossBase).GetMethod("OnCleared", AccessTools.all), null,
                 new HarmonyMethod(typeof(Harmony_Patch).GetMethod("BossCleared", AccessTools.all)), null);
@@ -206,7 +229,10 @@ namespace NeuroLobotomyCorporation
                         ActionScene.Instance = new ChesedSuppressionScene();
                         NeuroSDKHandler.SendCommand("change_action_scene|chesed_suppression");
                         break;
-
+                    case SefiraEnum.BINAH:
+                        ActionScene.Instance = new BinahSuppressionScene();
+                        NeuroSDKHandler.SendCommand("change_action_scene|binah_suppression");
+                        break;
                     case SefiraEnum.CHOKHMAH:
                         ActionScene.Instance = new HokmaSuppressionScene();
                         NeuroSDKHandler.SendCommand("change_action_scene|hokma_suppression");

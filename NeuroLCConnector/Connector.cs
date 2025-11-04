@@ -227,7 +227,9 @@ namespace NeuroLCConnector
                 case "chesed_suppression":
                     ActionScene.ChangeActionScene(new ChesedSuppressionScene());
                     break;
-
+                case "binah_suppression":
+                    ActionScene.ChangeActionScene(new BinahSuppressionScene());
+                    break;
                 case "hokma_suppression":
                     ActionScene.ChangeActionScene(new HokmaSuppressionScene());
                     break;

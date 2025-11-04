@@ -152,44 +152,11 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             switch (name)
             {
                 case "The Red Mist": //bait used to be believable-
-                    SefiraBossCreatureModel redMistModel = (SefiraBossCreatureModel)unit;
-                    GeburahCoreScript redMistScript = (GeburahCoreScript)redMistModel.script;
-                    int healthPercentRemaining = (int)((float)(redMistModel.hp / redMistModel.metaInfo.maxHp) * 100);
-                    int coreSuppressionProgress = (100 - healthPercentRemaining) / 4;
-                    string location = Helpers.GetUnitModelLocationText(unit);
-                    string equippedEGOGear = "";
-                    List<string> defenseInfo = Helpers.GetResistanceTypeValues(redMistModel);
-                    switch (redMistScript.Phase)
-                    {
-                        case GeburahBoss.GeburahPhase.P1:
-                            equippedEGOGear = "Red Eyes & Penitence";
-                            break;
-                        case GeburahBoss.GeburahPhase.P2:
-                            equippedEGOGear = "Mimicry & De Capo";
-                            coreSuppressionProgress += 25;
-                            break;
-                        case GeburahBoss.GeburahPhase.P3:
-                            equippedEGOGear = "Smile & Justitia";
-                            coreSuppressionProgress += 50;
-                            break;
-                        case GeburahBoss.GeburahPhase.P4:
-                            equippedEGOGear = "Twilight & an Effloresced E.G.O";
-                            coreSuppressionProgress += 75;
-                            break;
-                        default:
-                            equippedEGOGear = "Nothing";
-                            break;
-                    }
-                    specialEnemies.Add(String.Format("The Red Mist\n" +
-                        "Equipped E.G.O Gear: {0}\n" +
-                        "{1}% HP Remaining (Overall Suppression is {2}% Complete)\n" +
-                        "{3}\n" +
-                        "{4}", equippedEGOGear, healthPercentRemaining.ToString(), coreSuppressionProgress.ToString(),
-                        location, Helpers.GetResistancesText(defenseInfo)));
+                    specialEnemies.Add(GetRedMistStatus(unit));
                     return true;
                 //TODO: fill the rest of these out once you can test them
                 case "An Arbiter":
-                    specialEnemies.Add("biin");
+                    specialEnemies.Add(GetAnArbiterStatus(unit));
                     return true;
                 case "T-03-46":
                 case "WhiteNight":
@@ -235,6 +202,70 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                 if (!TryCheckIsSpecialEnemy(abnormality, specialEnemies)) nonSpecialAbnormalities.Add(abnormality);
             }
             return nonSpecialAbnormalities;
+        }
+
+        private static string GetRedMistStatus(UnitModel unit)
+        {
+            SefiraBossCreatureModel redMistModel = (SefiraBossCreatureModel)unit;
+            GeburahCoreScript redMistScript = (GeburahCoreScript)redMistModel.script;
+            int healthPercentRemaining = (int)((float)(redMistModel.hp / redMistModel.metaInfo.maxHp) * 100);
+            int coreSuppressionProgress = (100 - healthPercentRemaining) / 4;
+            string location = Helpers.GetUnitModelLocationText(unit);
+            string equippedEGOGear = "";
+            List<string> defenseInfo = Helpers.GetResistanceTypeValues(redMistModel);
+            switch (redMistScript.Phase)
+            {
+                case GeburahBoss.GeburahPhase.P1:
+                    equippedEGOGear = "Red Eyes & Penitence";
+                    break;
+                case GeburahBoss.GeburahPhase.P2:
+                    equippedEGOGear = "Mimicry & De Capo";
+                    coreSuppressionProgress += 25;
+                    break;
+                case GeburahBoss.GeburahPhase.P3:
+                    equippedEGOGear = "Smile & Justitia";
+                    coreSuppressionProgress += 50;
+                    break;
+                case GeburahBoss.GeburahPhase.P4:
+                    equippedEGOGear = "Twilight & an Effloresced E.G.O";
+                    coreSuppressionProgress += 75;
+                    break;
+                default:
+                    equippedEGOGear = "Nothing";
+                    break;
+            }
+            return String.Format("The Red Mist\n" +
+                "Equipped E.G.O Gear: {0}\n" +
+                "{1}% HP Remaining (Overall Suppression is {2}% Complete)\n" +
+                "{3}\n" +
+                "{4}", equippedEGOGear, healthPercentRemaining.ToString(), coreSuppressionProgress.ToString(),
+                location, Helpers.GetResistancesText(defenseInfo));
+        }
+
+        private static string GetAnArbiterStatus(UnitModel unit)
+        {
+            SefiraBossCreatureModel anArbiterModel = (SefiraBossCreatureModel)unit;
+            BinahCoreScript anArbiterScript = (BinahCoreScript)anArbiterModel.script;
+            int healthPercentRemaining = (int)((float)(anArbiterModel.hp / anArbiterModel.metaInfo.maxHp) * 100);
+            int coreSuppressionProgress = (100 - healthPercentRemaining) / 3;
+            string location = Helpers.GetUnitModelLocationText(unit);
+            List<string> defenseInfo = Helpers.GetResistanceTypeValues(anArbiterModel);
+            switch (anArbiterScript.Phase)
+            {
+                case BinahBoss.BinahPhase.P1:
+                    break;
+                case BinahBoss.BinahPhase.P2:
+                    coreSuppressionProgress += 34;
+                    break;
+                case BinahBoss.BinahPhase.P3:
+                    coreSuppressionProgress += 67;
+                    break;
+            }
+            return String.Format("An Arbiter\n" +
+                "{0}% HP Remaining (Overall Suppression is {1}% Complete)\n" +
+                "{2}\n" +
+                "{3}", healthPercentRemaining.ToString(), coreSuppressionProgress.ToString(),
+                location, Helpers.GetResistancesText(defenseInfo));
         }
 
         private static string GetApocalypseBirdStatus(BossBird apocalypseBird)
