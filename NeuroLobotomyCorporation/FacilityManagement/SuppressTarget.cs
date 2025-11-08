@@ -29,6 +29,8 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     return "failure|Suppression could not be ordered because the specified agent is panicking.";
                 case Helpers.AgentWorkingState.UNCONTROLLABLE:
                     return "failure|Suppression could not be ordered because the specified agent is uncontrollable.";
+                case Helpers.AgentWorkingState.HERETIC:
+                    return "failure|Suppression could not be ordered because the specified agent is a heretic. They can do naught but hope someone will hear their confession.";
             }
             SefiraEnum sefiraDepartment = Helpers.GetSefiraByDepartment(location);
             if (sefiraDepartment == SefiraEnum.DUMMY && !location.Equals("DUMMY")) return "failure|Target's department was specified but was not valid.";

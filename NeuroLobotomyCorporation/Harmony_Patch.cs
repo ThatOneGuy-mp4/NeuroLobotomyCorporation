@@ -28,6 +28,7 @@ using NeuroLobotomyCorporation.ChesedSuppression;
 using GeburahBoss;
 using NeuroLobotomyCorporation.GeburaSuppression;
 using Rabbit;
+using WhiteNightSpace;
 
 namespace NeuroLobotomyCorporation
 {
@@ -125,6 +126,19 @@ namespace NeuroLobotomyCorporation
             harmonyInstance.Patch(typeof(RabbitProtocolWindow).GetMethod("OnClickCommand", AccessTools.all), new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroPreRabbitsDeployed", AccessTools.all)),
                 new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroPostRabbitsDeployed", AccessTools.all)), null);
             //FacilityManagement context end
+
+            //WhiteNight context
+            harmonyInstance.Patch(typeof(PlagueDoctor).GetMethod("GenDeathAngel", AccessTools.all), null,
+                new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("StoreWhiteNight", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(AdventClockUI).GetMethod("ExecuteNextAdventTarget", AccessTools.all), null,
+                new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroFirstAdventApostleSpawned", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(DeathAngel).GetMethod("Escape", AccessTools.all), null,
+                new HarmonyMethod(typeof(GetSuppressibleTargets).GetMethod("WhiteNightAdvented", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(DeathAngel).GetMethod("OnSuppressedByConfess", AccessTools.all), null,
+                new HarmonyMethod(typeof(GetSuppressibleTargets).GetMethod("OneSinSuppressedWhiteNight", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(DeathAngel).GetMethod("OnSuppressedByDamage", AccessTools.all), 
+                new HarmonyMethod(typeof(GetSuppressibleTargets).GetMethod("VedalSuppressedWhiteNight", AccessTools.all)), null, null);
+            //WhiteNight context end
 
             harmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
 
