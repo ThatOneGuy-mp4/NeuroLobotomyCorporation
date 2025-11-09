@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
+using WhiteNightSpace;
 
 namespace NeuroLobotomyCorporation.FacilityManagement
 {
@@ -56,6 +57,10 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                 case Helpers.AgentWorkingState.HERETIC:
                     if (!abnoName.Equals("One Sin and Hundreds of Good Deeds")) return "failure|Work could not be assigned because the specified agent is a heretic. They can do naught but hope someone will hear their confession.";
                     break;
+            }
+            if (agent.HasUnitBuf(UnitBufType.KNIGHTOFDESPAIR_BLESS))
+            {
+                return "failure|The specified Agent has a Knight's Blessing, and can only participate in suppressions.";
             }
             switch (Helpers.GetAbnormalityWorkingState(abnormality))
             {
@@ -164,6 +169,15 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                 specialResultMessage = String.Format("Repression Work on {0} is replaced with Sacrifice Work, and only the manager may assign it.", abnormality.GetUnitName());
                 specialResultSuccess = false;
                 return true;
+            }
+            if (abnormality.script is PlagueDoctor)
+            {
+                if ((abnormality.script as PlagueDoctor).CheckApostle(agent))
+                {
+                    specialResultMessage = String.Format("{0} has been blessed by {1}, and can no longer work with him.", agent.GetUnitName(), abnormality.GetUnitName());
+                    specialResultSuccess = false;
+                    return true;
+                }
             }
             if (abnormality.script is PinkCorps && workId == 3)
             {

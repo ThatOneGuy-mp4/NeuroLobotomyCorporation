@@ -34,6 +34,10 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                 case Helpers.AgentWorkingState.HERETIC:
                     return "failure|Work could not be assigned because the specified agent is a heretic. They can do naught but hope someone will hear their confession.";
             }
+            if (agent.HasUnitBuf(UnitBufType.KNIGHTOFDESPAIR_BLESS))
+            {
+                return "failure|The specified Agent has a Knight's Blessing, and can only participate in suppressions.";
+            }
             switch (Helpers.GetAbnormalityWorkingState(abnormality))
             {
                 case Helpers.AbnormalityWorkingState.BREACHING:
