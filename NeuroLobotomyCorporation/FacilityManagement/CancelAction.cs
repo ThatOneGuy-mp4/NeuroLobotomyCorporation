@@ -41,6 +41,8 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     if (agent.Equipment.kitCreature == null) return "failure|The specified Agent is idle and has no action to cancel.";
                     ThreadPool.QueueUserWorkItem(CommandExecute, new CancelActionState(agent, CancelType.EQUIPPED_TOOL));
                     return String.Format("success|{0} has been ordered to return their equipped Tool.", agentName);
+                case Helpers.AgentWorkingState.HERETIC:
+                    return "failure|You should not concern yourself with what a heretic is or is not doing in this situation.";
                 case Helpers.AgentWorkingState.UNKNOWN:
                     return "failure|The Agent's status is unknown. Complain to the mod developer about it.";
             }

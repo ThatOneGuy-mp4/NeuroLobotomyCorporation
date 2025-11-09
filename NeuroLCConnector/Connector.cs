@@ -169,10 +169,30 @@ namespace NeuroLCConnector
                         Task.Run(new Func<Task>((ActionScene.CurrentActionScene as GeburaSuppressionScene).GivePokeAction));
                     }
                     break;
+                case "dont_touch_me_touched_event_start":
+                    DontTouchMeTouchedEventStart();
+                    break;
+                case "dont_touch_me_touched_event_end":
+                    DontTouchMeTouchedEventEnd();
+                    break;
                 default:
                     Console.WriteLine("The command " + parameters[(int)ProcessGameMessageParameters.Command] + " was not found. Ensure it is spelt correctly on both game and server side.");
                     break;
             }
+        }
+
+        private static void DontTouchMeTouchedEventStart()
+        {
+            if (!(ActionScene.CurrentActionScene is FacilityManagementScene)) return;
+            ActionScene.CurrentActionScene.CleanUpActionScene();
+            Context.Send("O-05-47 has been pressed. An extremely strong urge to continue pressing it washes over you.", false);
+            ActionScene.CurrentActionScene.RegisterAction("keep_pressing");
+        }
+
+        private static void DontTouchMeTouchedEventEnd()
+        {
+            ActionScene.CurrentActionScene.CleanUpActionScene();
+            Context.Send("Pressing Don't Touch Me has triggered a forceful shutdown of all systems...terminating connection.", false);
         }
 
         private enum SendContextParameters

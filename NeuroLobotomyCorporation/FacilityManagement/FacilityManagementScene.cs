@@ -13,6 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using WhiteNightSpace;
 
 namespace NeuroLobotomyCorporation.FacilityManagement
 {
@@ -52,6 +53,11 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     return ShootManagerialBullet.IsBulletUnlocked();
                 case "shoot_managerial_bullet":
                     return ShootManagerialBullet.Command(message[(int)ShootManagerialBullet.Parameters.BULLET_TYPE], message[(int)ShootManagerialBullet.Parameters.TARGET_NAME], message[(int)ShootManagerialBullet.Parameters.TARGET_DEPARTMENT]);
+                case "keep_pressing":
+                    neuroButtonMashTimer = new Timer();
+                    neuroButtonMashTimer.autoStop = false;
+                    neuroButtonMashTimer.StartTimer(0.75f);
+                    return "PressPressPressPressPress-";
             }
             return "Command " + message[COMMAND_INDEX] + " does not exist in scene FacilityManagementScene.";
         }
@@ -70,7 +76,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             {
                 case AngelaMessageState.ENERGY_HALF:
                     if (SefiraBossManager.Instance.IsAnyBossSessionActivated()) return;
-                    if(__result.Contains("You cut off the broadcast."))
+                    if (__result.Contains("You cut off the broadcast."))
                     {
                         __result = "As of this moment you have accumulated exactly half of the energy needed. Well, to be technical, there is no such thing as “exactly half” of energy; energy is formless. The phrase “exactly half of the energy” is a contradictory statement, completely without reason. In other words— Ah, the broadcast has been cut.";
                     }
@@ -78,10 +84,10 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     break;
                 case AngelaMessageState.ENERGY_FULL:
                     string finalMessage = "";
-                    if (!SefiraBossManager.Instance.IsAnyBossSessionActivated()) 
+                    if (!SefiraBossManager.Instance.IsAnyBossSessionActivated())
                     {
                         if (__result.Contains("perfect fit as manager")) finalMessage += "Look now, the result of your effort is before us. It is exactly as we needed. See, you’re a perfect fit as assistant to the manager of the facility.";
-                        else finalMessage += __result + "\n"; 
+                        else finalMessage += __result + "\n";
                     }
                     else finalMessage += "The target amount of energy has been collected. ";
                     finalMessage += "Commencing Refinement… ";
@@ -99,7 +105,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
         //Postfix
         public static void InformNeuroAgentPanicked(AgentModel __instance)
         {
-            if(!__instance.invincible && !__instance.CannotControll() && !__instance.IsDead()) NeuroSDKHandler.SendContext(String.Format("{0} has been thrown into a panic.", __instance.GetUnitName()), true);
+            if (!__instance.invincible && !__instance.CannotControll() && !__instance.IsDead()) NeuroSDKHandler.SendContext(String.Format("{0} has been thrown into a panic.", __instance.GetUnitName()), true);
         }
 
         //Postfix
@@ -258,7 +264,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
         private static string rabbitStartDialogue = "";
         public static void InformNeuroRabbitsDialogue(RabbitCaptainConversationType type, string __result)
         {
-            if(type == RabbitCaptainConversationType.START)
+            if (type == RabbitCaptainConversationType.START)
             {
                 rabbitStartDialogue = __result;
             }
@@ -276,7 +282,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             __state = new List<SefiraEnum>();
             FieldInfo selectedInfo = typeof(RabbitProtocolWindow).GetField("currentSelected", BindingFlags.Instance | BindingFlags.NonPublic);
             List<SefiraEnum> currentSelected = (List<SefiraEnum>)selectedInfo.GetValue(__instance);
-            foreach(SefiraEnum selected in currentSelected)
+            foreach (SefiraEnum selected in currentSelected)
             {
                 __state.Add(selected);
             }
@@ -287,7 +293,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
         {
             if (__state.Count <= 0) return;
             string departmentsDeployedIn = "";
-            for(int i = 0; i < __state.Count; i++)
+            for (int i = 0; i < __state.Count; i++)
             {
                 departmentsDeployedIn += Helpers.GetDepartmentBySefira(__state[i]);
                 if (i != __state.Count - 1) departmentsDeployedIn += ", ";
@@ -296,6 +302,173 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                 "\n\nThe Rabbits have been deployed in the following department(s): {1}." +
                 "\nAny entity, friend or foe, will be shot on sight in said departments, and be unable to leave. You may not assign any work in those departments until the Rabbits have left." + //TODO: the second half of this is actually not true currently; make it so.
                 "\n{2}% of our energy quota has been deducted from our energy as payment for their services.", rabbitStartDialogue, departmentsDeployedIn, (__state.Count * 25)), true);
+        }
+
+        private static readonly List<string> ROMAN_NUMERAL_CLOCK = new List<string>
+        {
+            "I. ",
+            "II. ",
+            "III. ",
+            "IV. ",
+            "V. ",
+            "VI. ",
+            "VII. ",
+            "VIII. ",
+            "IX. ",
+            "X. ",
+            "XI. ",
+            "XII. "
+        };
+        //Postfix - show Neuro the clock every time an agent is blessed. Elaborate no futher. 
+        [HarmonyPatch(typeof(PlagueDoctor), "GetApostleDescRefined", new Type[] { typeof(int) })]
+        public class InformNeuroApostleAdded
+        {
+            public static void Postfix(PlagueDoctor __instance, string __result, int index)
+            {
+                string finalResult = __result + "\n";
+                FieldInfo apostleInfo = typeof(PlagueDoctor).GetField("apostleData", BindingFlags.Instance | BindingFlags.NonPublic);
+                List<ApostleData> apostles = (List<ApostleData>)apostleInfo.GetValue(__instance);
+                for (int i = 0; i < 12; i++)
+                {
+                    finalResult += ROMAN_NUMERAL_CLOCK[i];
+                    if (i < apostles.Count)
+                    {
+                        finalResult += apostles[i].Name;
+                        if (i == apostles.Count - 1) finalResult += " <------";
+                        finalResult += "\n";
+                    }
+                    else
+                    {
+                        finalResult += PLACEHOLDER_GARBAGE[i] + "\n";
+                    }
+                }
+                NeuroSDKHandler.SendContext(finalResult, true);
+            }
+
+            private static readonly List<string> PLACEHOLDER_GARBAGE = new List<string>
+            {
+                "bbwwjfakjdfkjdkfjkdja;ksdjf;laksndfiaubvdfhabyfvlakubhdfjagbdfakgubfvlaudfvba",
+                "#&^!($@(",
+                "%*@)#^%!",
+                "*@$(^!#&",
+                "$&!^*($&",
+                ")(&#*(^#",
+                "%$^@(^!%",
+                "@^$(*!%^",
+                "@*^%$*&%",
+                "$@&!)($6",
+                "%^)(&$*6",
+                "!_$&@$^6"
+            };
+
+
+        }
+
+        //Postfix - after generating WhiteNight, store Him. This is so that He may be used to get His apostles in the advent context.
+        private static DeathAngel whiteNightScript;
+        public static void StoreWhiteNight(CreatureModel __result)
+        {
+            //plagueDoctorScript = __instance;
+            whiteNightScript = (__result.script as DeathAngel);
+        }
+
+        //TODO: if whitenight breaches twice in one day, all of the apostles are informed to neuro as spawning twice in rapid succession. fix that
+        //Postfix
+        //if the First Advent Event somehow triggers twice and crashes because I don't reset the apostle index I'm gonna distort
+        private static int apostleIndex = 0;
+        public static void InformNeuroFirstAdventApostleSpawned(AdventClockUI __instance)
+        {
+            string apostleDesc = __instance.Desc.text;
+            string apostleName = "";
+            List<string> apostleNames = whiteNightScript.GetApostleNames();
+            if (apostleNames[apostleIndex] != null) apostleName = apostleNames[apostleIndex];
+            else apostleName = "------";
+            string apostleType = "";
+            switch (apostleIndex + 1)
+            {
+                case 1:
+                case 11:
+                    apostleType = "Guardian Apostle";
+                    break;
+                case 2:
+                case 3:
+                    apostleType = "Scythe Apostle";
+                    break;
+                case 4:
+                case 5:
+                case 6:
+                    apostleType = "Staff Apostle";
+                    break;
+                case 7:
+                case 8:
+                case 9:
+                case 10:
+                    apostleType = "Spear Apostle";
+                    break;
+                case 12:
+                    apostleType = "Heretic";
+                    break;
+                default:
+                    apostleType = "Apostle type could not be found. Complain to the mod developer about it.";
+                    break;
+            }
+            NeuroSDKHandler.SendContext(String.Format("{0}" +
+                "\n{1}{2} <------ {3}", apostleDesc, ROMAN_NUMERAL_CLOCK[apostleIndex], apostleName, apostleType), true);
+            apostleIndex++;
+        }
+
+        //Postfix - do the special Don't Touch Me event if it hasn't crashed the game previously, otherwise, just inform Neuro it has happened.
+        private static bool dontTouchMeEventStarted = false;
+        public static void DontTouchMeWorkWindowOpened(DontTouchMe __instance)
+        {
+            FieldInfo isolateClickedInfo = typeof(DontTouchMe).GetField("isolateClicked", BindingFlags.Instance | BindingFlags.NonPublic);
+            Queue<float> isolateClicked = (Queue<float>)isolateClickedInfo.GetValue(__instance);
+            if (!dontTouchMeEventStarted && isolateClicked.Count < 5 && __instance.model.GetUnitName().Equals("O-05-47"))
+            {
+                dontTouchMeEventStarted = true;
+                NeuroSDKHandler.SendCommand("dont_touch_me_touched_event_start");
+            }
+            else if(__instance.model.GetUnitName().Equals("Don’t Touch Me") && isolateClicked.Count < 5)
+            {
+                NeuroSDKHandler.SendContext("Don't Touch Me has been touched.", true);
+            }
+        }
+
+        public static void DontTouchMeCollectionWindowOpened(DontTouchMe __instance)
+        {
+            FieldInfo isolateClickedInfo = typeof(DontTouchMe).GetField("isolateClicked", BindingFlags.Instance | BindingFlags.NonPublic);
+            Queue<float> isolateClicked = (Queue<float>)isolateClickedInfo.GetValue(__instance);
+            if (!dontTouchMeEventStarted && isolateClicked.Count < 5 && __instance.model.GetUnitName().Equals("O-05-47")) 
+            {
+                dontTouchMeEventStarted = true;
+                NeuroSDKHandler.SendCommand("dont_touch_me_touched_event_start");
+            }
+            else if (__instance.model.GetUnitName().Equals("Don’t Touch Me") && isolateClicked.Count < 5)
+            {
+                NeuroSDKHandler.SendContext("Don't Touch Me's information was accessed, and was therefore touched.", true);
+            }
+            else if (isolateClicked.Count >= 5 && neuroButtonMashTimer != null) neuroButtonMashTimer.StopTimer();
+        }
+
+        private static bool gameIsCrashing = false;
+        public static void DontTouchMeCrashGame()
+        {
+            if (!gameIsCrashing)
+            {
+                gameIsCrashing = true;
+                NeuroSDKHandler.SendCommand("dont_touch_me_touched_event_end");
+            }
+        }
+
+        //Postfix - when Don't Touch Me is first touched, Neuro gets to choose to button mash. This is both for comedy, and because it will unlock Don't Touch Me's info.
+        private static Timer neuroButtonMashTimer;
+        public static void DontTouchMeButtonMash(DontTouchMe __instance)
+        {
+            if (neuroButtonMashTimer != null && neuroButtonMashTimer.started && neuroButtonMashTimer.RunTimer())
+            {
+                __instance.OnOpenCollectionWindow();
+                neuroButtonMashTimer.StartTimer(0.75f);
+            }
         }
     }
 }

@@ -2,8 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using WhiteNightSpace;
 
 namespace NeuroLobotomyCorporation.FacilityManagement
 {
@@ -76,7 +78,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             List<CreatureModel> escapedAbnormalities = Helpers.GetAllSuppressibleAbnormalitiesAndChildren();
             if (escapedAbnormalities.Count > 0)
             {
-                escapedAbnormalities = RemoveSpecialAbnormalities(escapedAbnormalities, specialEnemies); 
+                escapedAbnormalities = RemoveSpecialAbnormalities(escapedAbnormalities, specialEnemies);
                 result += "Breaching Abnormalities\n-------------------------\n";
                 List<Helpers.Entry<SefiraEnum, List<CreatureModel>>> sortedAbnormalities = Helpers.SortAbnormalitiesByDepartment(escapedAbnormalities.ToArray(), true);
                 foreach (Helpers.Entry<SefiraEnum, List<CreatureModel>> sortingEntry in sortedAbnormalities)
@@ -142,7 +144,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
 
         private static bool TryCheckIsSpecialEnemy(UnitModel unit, List<string> specialEnemies)
         {
-
+            if (unit is ChildCreatureModel && (unit as ChildCreatureModel).script is DeathAngelApostle) return true; //special output will be handled by WhiteNight's status
             string name = unit.GetUnitName();
             if (unit is SefiraBossCreatureModel)
             {
@@ -160,7 +162,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     return true;
                 case "T-03-46":
                 case "WhiteNight":
-                    specialEnemies.Add("wiin");
+                    specialEnemies.Add(GetWhiteNightStatus((unit as CreatureModel).script as DeathAngel));
                     return true;
                 /* 
                  * Apocalypse Bird doesn't get correctly added to the output if I check for it last time I tried 
@@ -345,6 +347,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             }
         }
 
+        //TODO: check if twilight has already been obtained before telling neuro it can be obtained
         public static void TellApocalypseBirdNarration(BossBird __instance, BossBird.NarrationState state)
         {
             string narration = String.Format("'{0}'\n", __instance.GetParamData(BossBird.GetNarrationKeyByEnum(state)).Trim());
@@ -379,10 +382,89 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                 case BossBird.NarrationState.SUPPRESSED:
                     narration += "Apocalypse Bird has been successfully suppressed." +
                         "\nAll Agents who have survived the suppression have received the E.G.O Gift \"Through the Dark Twilight\"." +
-                        "\nThe extremely powerful E.G.O Weapon and Suit \"Twilight\" has been obtained.";
+                        "\nThe extremely powerful E.G.O Weapon and Suit \"Twilight\" has been obtained, if they were not owned already.";
                     break;
             }
             NeuroSDKHandler.SendContext(narration, true);
+        }
+
+        private static string GetWhiteNightStatus(DeathAngel whiteNight)
+        {
+            string status = "";
+            string healthPercentRemaining = ((int)((float)(whiteNight.model.hp / whiteNight.model.maxHp) * 100)).ToString();
+            string location = Helpers.GetUnitModelLocationText(whiteNight.model);
+            List<string> defenseInfo = Helpers.GetResistanceTypeValues(whiteNight.model);
+
+            status += String.Format("{0}" +
+                "\nALEPH Level Threat, {1}% HP Remaining, {2}, " + //technically the threat level shouldn't be shown here until unlocked but like. it's kinda obvious. so i don't care.
+                "\n{3}/{4}/{5}/{6} (Red/White/Black/Pale) Resistances\n\n", whiteNight.model.GetUnitName(), healthPercentRemaining, location,
+                defenseInfo[(int)Helpers.ResistanceTypes.RED], defenseInfo[(int)Helpers.ResistanceTypes.WHITE], defenseInfo[(int)Helpers.ResistanceTypes.BLACK], defenseInfo[(int)Helpers.ResistanceTypes.PALE]);
+            FieldInfo apostleInfo = typeof(DeathAngel).GetField("apostles", BindingFlags.Instance | BindingFlags.NonPublic);
+            List<DeathAngelApostle> apostles = (List<DeathAngelApostle>)apostleInfo.GetValue(whiteNight);
+
+            foreach(DeathAngelApostle apostle in apostles)
+            {
+                string name = apostle.GetName();
+                string apostleType = "";
+                location = Helpers.GetUnitModelLocationText(apostle.Model);
+                switch (apostle.apostleType)
+                {
+                    case ApostleType.SCYTHE:
+                        if (apostle.statType == ApostleStatType.GUARDIAN) apostleType = "Guardian";
+                        else apostleType = "Scythe";
+                        break;
+                    case ApostleType.SPEAR:
+                        apostleType = "Spear";
+                        break;
+                    case ApostleType.WAND:
+                        apostleType = "Staff";
+                        break;
+                }
+                status += String.Format("{0}: {1} Apostle, ALEPH Level Threat, {2}\n", name, apostleType, location);
+            }
+            status += "\nEven should you suppress an Apostle, they shall shortly rise when He calls for them. They shall only fall once He is suppressed." +
+                "\nIf you are unable to suppress Him, consider confessing your sins to whomever will listen, for that is the only other hope the facility has left.";
+            return status;
+        }
+
+        //Postfix
+        public static void WhiteNightAdvented(DeathAngel __instance)
+        {
+            if (InventoryModel.Instance.CheckEquipmentCount(200015)) //if paradise lost weapon has not been obtained
+            {
+                NeuroSDKHandler.SendContext(String.Format("{0} has advented, and His 12 Apostles have awoken. " +
+                                "\nIf He is successfully suppressed, a special reward may be extracted." +
+                                "\nIf you are unable to overcome His divine form by yourself, consider confessing your sins to whomever will listen, for that is the only other hope the facility has left.", __instance.GetName()), true);
+            }
+            else
+            {
+                NeuroSDKHandler.SendContext(String.Format("{0} has advented, and His 12 Apostles have awoken. " +
+                "\nIf you are unable to overcome His divine form by yourself, consider confessing your sins to whomever will listen, for that is the only other hope the facility has left.", __instance.GetName()), true);
+            }
+        }
+
+        //Postfix
+        public static void OneSinSuppressedWhiteNight()
+        {
+            //I'm not using a FieldInfo to get One Sin's name. If Vedal doesn't have One Sin's name unlocked by the time he's dealing with WhiteNight, then he's just fucked frankly.
+            if (InventoryModel.Instance.CheckEquipmentCount(200015))
+            {
+                NeuroSDKHandler.SendContext("One Sin and Hundreds of Good Deeds has heard your confession, and will bear the burden of confronting Him for you." +
+                                "\nHe begins rapidly taking 666 damage. No reward shall be granted for your inability to confront Him yourself.", true);
+            }
+            else
+            {
+                NeuroSDKHandler.SendContext("One Sin and Hundreds of Good Deeds has heard your confession, and will bear the burden of confronting Him for you." +
+                                "\nHe begins rapidly taking 666 damage.", true);
+            }
+        }
+
+        //Prefix - needs to be a prefix, so context is sent before paradise lost is given
+        public static void VedalSuppressedWhiteNight()
+        {
+            if (!InventoryModel.Instance.CheckEquipmentCount(200015)) return;
+            NeuroSDKHandler.SendContext("You and the manager have borne the burden of confronting Him, and He has fallen from the skies." +
+                "\nThe extremely powerful E.G.O Weapon \"Paradise Lost\" has been obtained.", true);
         }
     }
 }

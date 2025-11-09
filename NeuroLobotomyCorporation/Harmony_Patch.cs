@@ -32,6 +32,7 @@ using GameStatusUI;
 using NeuroLobotomyCorporation.HokmaSuppression;
 using NeuroLobotomyCorporation.BinahSuppression;
 using BinahBoss;
+using WhiteNightSpace;
 
 namespace NeuroLobotomyCorporation
 {
@@ -157,6 +158,30 @@ namespace NeuroLobotomyCorporation
             harmonyInstance.Patch(typeof(ChokhmahBossBase).GetMethod("OnTryTimePause", AccessTools.all), null,
                 new HarmonyMethod(typeof(HokmaSuppressionScene).GetMethod("InformNeuroPriceOfSilencePaid", AccessTools.all)), null);
             //Price of Silence Information End
+            
+            //WhiteNight context
+            harmonyInstance.Patch(typeof(PlagueDoctor).GetMethod("GenDeathAngel", AccessTools.all), null,
+                new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("StoreWhiteNight", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(AdventClockUI).GetMethod("ExecuteNextAdventTarget", AccessTools.all), null,
+                new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroFirstAdventApostleSpawned", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(DeathAngel).GetMethod("Escape", AccessTools.all), null,
+                new HarmonyMethod(typeof(GetSuppressibleTargets).GetMethod("WhiteNightAdvented", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(DeathAngel).GetMethod("OnSuppressedByConfess", AccessTools.all), null,
+                new HarmonyMethod(typeof(GetSuppressibleTargets).GetMethod("OneSinSuppressedWhiteNight", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(DeathAngel).GetMethod("OnSuppressedByDamage", AccessTools.all), 
+                new HarmonyMethod(typeof(GetSuppressibleTargets).GetMethod("VedalSuppressedWhiteNight", AccessTools.all)), null, null);
+            //WhiteNight context end
+
+            //Don't Touch Me context
+            harmonyInstance.Patch(typeof(DontTouchMe).GetMethod("OnOpenWorkWindow", AccessTools.all),
+                new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("DontTouchMeWorkWindowOpened", AccessTools.all)), null, null);
+            harmonyInstance.Patch(typeof(DontTouchMe).GetMethod("OnOpenCollectionWindow", AccessTools.all),
+                new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("DontTouchMeCollectionWindowOpened", AccessTools.all)), null, null);
+            harmonyInstance.Patch(typeof(DontTouchMe).GetMethod("ExitStart", AccessTools.all),
+                new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("DontTouchMeCrashGame", AccessTools.all)), null, null);
+            harmonyInstance.Patch(typeof(DontTouchMe).GetMethod("OnFixedUpdate", AccessTools.all),
+               new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("DontTouchMeButtonMash", AccessTools.all)), null, null);
+            //Don't Touch Me context end
 
             harmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
 

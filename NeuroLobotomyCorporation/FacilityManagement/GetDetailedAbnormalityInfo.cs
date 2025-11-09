@@ -22,8 +22,20 @@ namespace NeuroLobotomyCorporation.FacilityManagement
 
         public static string Command(string abnormalityName, bool includeBasicInfo, bool includeManagerialGuidelines, bool includeWorkSuccessRates, bool includeEscapeInformation)
         {
-            CreatureModel discard = null;
-            if (!Helpers.AbnormalityExists(abnormalityName, out discard)) return "failure|Action failed. The specified Abnormality does not exist.";
+            CreatureModel abnormality = null;
+            if (!Helpers.AbnormalityExists(abnormalityName, out abnormality)) return "failure|Action failed. The specified Abnormality does not exist.";
+            if (abnormality.script is DontTouchMe)
+            {
+                if (abnormality.GetUnitName().Equals("O-05-47"))
+                {
+                    //Attempting to trigger Don't Touch Me's command window open event from here crashes the game and I can't be bothered to harmony patch fix it.
+                    return "failure|O-05-47's information could not be accessed...how odd. Perhaps work needs to be assigned first?";
+                }
+                else
+                {
+                    return "failure|Checking Don't Touch Me's information would require touching it. I hope I don't have to explain the issue with this.";
+                }
+            }
             ThreadPool.QueueUserWorkItem(CommandExecute, new GetDetailedAbnormalityInfoState(abnormalityName, includeBasicInfo, includeManagerialGuidelines, includeWorkSuccessRates, includeEscapeInformation));
             return String.Format("success|Getting detailed information for {0} to send as context...", abnormalityName);
         }

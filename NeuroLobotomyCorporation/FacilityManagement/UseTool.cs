@@ -31,6 +31,8 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     return "failure|Work could not be assigned because the specified agent is panicking.";
                 case Helpers.AgentWorkingState.UNCONTROLLABLE:
                     return "failure|Work could not be assigned because the specified agent is uncontrollable.";
+                case Helpers.AgentWorkingState.HERETIC:
+                    return "failure|Work could not be assigned because the specified agent is a heretic. They can do naught but hope someone will hear their confession.";
             }
             switch (Helpers.GetAbnormalityWorkingState(abnormality))
             {

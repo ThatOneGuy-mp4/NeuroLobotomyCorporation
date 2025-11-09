@@ -50,6 +50,9 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                         case Helpers.AgentWorkingState.UNCONTROLLABLE:
                             agentStateDesc = "Uncontrollable";
                             break;
+                        case Helpers.AgentWorkingState.HERETIC:
+                            agentStateDesc = "Heretic";
+                            break;
                     }
                     status += String.Format("-{0}: {1}/{2} HP, {3}/{4} SP, Currently {5}\n", name, hp, maxHp, sp, maxSp, agentStateDesc);
                 }

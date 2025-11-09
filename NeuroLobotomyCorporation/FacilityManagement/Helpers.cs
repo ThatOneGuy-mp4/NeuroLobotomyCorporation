@@ -173,11 +173,16 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             SUPPRESSING,
             DEAD,
             PANICKING,
-            UNCONTROLLABLE
+            UNCONTROLLABLE,
+            HERETIC
         }
 
         public static AgentWorkingState GetAgentWorkingState(AgentModel agent)
         {
+            if (agent.HasUnitBuf(UnitBufType.DEATH_ANGEL_BETRAYER))
+            {
+                return AgentWorkingState.HERETIC;
+            }
             if (agent.IsDead())
             {
                 return AgentWorkingState.DEAD;

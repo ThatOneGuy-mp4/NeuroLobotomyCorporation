@@ -53,6 +53,9 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     return "failure|Work could not be assigned because the specified agent is panicking.";
                 case Helpers.AgentWorkingState.UNCONTROLLABLE:
                     return "failure|Work could not be assigned because the specified agent is uncontrollable.";
+                case Helpers.AgentWorkingState.HERETIC:
+                    if (!abnoName.Equals("One Sin and Hundreds of Good Deeds")) return "failure|Work could not be assigned because the specified agent is a heretic. They can do naught but hope someone will hear their confession.";
+                    break;
             }
             switch (Helpers.GetAbnormalityWorkingState(abnormality))
             {
@@ -62,6 +65,16 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     return "failure|Work could not be assigned because the specified Abnormality is already being worked on.";
                 case Helpers.AbnormalityWorkingState.COOLDOWN:
                     return "failure|Work could not be assigned because the specified Abnormality is in cooldown. Try again in a bit.";
+            }
+            string specialResultMessage = "";
+            bool specialResultSuccess = false;
+            if (IsSpecialWork(agent, abnormality, workId, out specialResultMessage, out specialResultSuccess))
+            {
+                if (!specialResultSuccess) return String.Format("failure|{0}", specialResultMessage);
+                if (abnormality.script is OneBadManyGood) workId = 6; //Confession
+                else if (abnormality.script is Piano) workId = 7; //Perform
+                ThreadPool.QueueUserWorkItem(CommandExecute, new AssignWorkState(agent, abnormality, workId));
+                return String.Format("success|{0}", specialResultMessage);
             }
             workId = SefiraBossManager.Instance.GetWorkId(workId);
             string workTypeAfterCheckingForMalkuth = "";
@@ -83,41 +96,97 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     workTypeAfterCheckingForMalkuth = "Unknown. Complain to the mod developer about it.";
                     break;
             }
-            ThreadPool.QueueUserWorkItem(CommandExecute, new AssignWorkState(agentName, abnoName, workType));
+            ThreadPool.QueueUserWorkItem(CommandExecute, new AssignWorkState(agent, abnormality, workId));
             return String.Format("success|{0} begins their {1} Work with {2}.", agentName, workTypeAfterCheckingForMalkuth, abnoName);
+        }
+
+        private static bool IsSpecialWork(AgentModel agent, CreatureModel abnormality, int workId, out string specialResultMessage, out bool specialResultSuccess)
+        {
+            //ID: 1 = Instinct, 2 = Insight, 3 = Attachment, 4 = Repression
+            specialResultMessage = "";
+            specialResultSuccess = false;
+            if (abnormality.script is OneBadManyGood)
+            {
+                //copied from OneBadManyGood's CheckDeathAngel
+                CreatureModel creatureModel = CreatureManager.instance.FindCreature(100015L);
+                if (creatureModel != null && creatureModel.IsEscapedOnlyEscape())
+                {
+                    if (agent.HasUnitBuf(UnitBufType.DEATH_ANGEL_BETRAYER))
+                    {
+                        specialResultMessage = String.Format("{0} begins their Confession Assignment with {1}.", agent.GetUnitName(), abnormality.GetUnitName());
+                        specialResultSuccess = true;
+                        return true;
+                    }
+                    else
+                    {
+                        specialResultMessage = "One Sin and Hundreds of Good Deeds knows a great sin has been committed. It does nothing but wait for your Confession.";
+                        specialResultSuccess = false;
+                        return true;
+                    }
+                }
+                return false;
+            }
+            if (abnormality.script is Piano && workId == 2)
+            {
+                specialResultMessage = String.Format("{0} begins their Performance Assignment with {1}.", agent.GetUnitName(), abnormality.GetUnitName());
+                specialResultSuccess = true;
+                return true;
+            }
+            if (abnormality.script is DontTouchMe)
+            {
+                //If Don't Touch Me's info has not been unlocked, press the button and trigger the special event where Neuro can button mash to crash the game. Otherwise, just prevent her from pressing.
+                if (abnormality.GetUnitName().Equals("O-05-47"))
+                {
+                    (abnormality.script as DontTouchMe).OnOpenWorkWindow();
+                    //No result message needs to be assigned, as the Harmony Patch on Don't Touch me will handle the context.
+                }
+                else
+                {
+                    specialResultMessage = "Performing Work on Don't Touch Me would require touching it. I hope I don't have to explain the issue with this.";
+                }
+                specialResultSuccess = false;
+                return true;
+            }
+            if ((abnormality.script is Freischutz || abnormality.script is RedHood) && workId == 3)
+            {
+                specialResultMessage = String.Format("Attachment Work on {0} is replaced with Request Work, and only the manager may assign it.", abnormality.GetUnitName());
+                specialResultSuccess = false;
+                return true;
+            }
+            if (abnormality.script is NamelessFetus && abnormality.qliphothCounter == 0)
+            {
+                specialResultMessage = String.Format("{0} is crying, and cannot be worked on until the manager performs <Redacted> Work on it.", abnormality.GetUnitName());
+                specialResultSuccess = false;
+                return true;
+            }
+            if (abnormality.script is Censored && workId == 4)
+            {
+                specialResultMessage = String.Format("Repression Work on {0} is replaced with Sacrifice Work, and only the manager may assign it.", abnormality.GetUnitName());
+                specialResultSuccess = false;
+                return true;
+            }
+            if (abnormality.script is PinkCorps && workId == 3)
+            {
+                specialResultMessage = String.Format("Attachment Work on {0} is replaced with Protect Work, and only the manager may assign it.", abnormality.GetUnitName());
+                specialResultSuccess = false;
+                return true;
+            }
+            return false;
         }
 
         private class AssignWorkState
         {
-            public string AgentName
+            public AgentModel Agent { get; private set; }
+
+            public CreatureModel Abnormality { get; private set; }
+
+            public int WorkID { get; private set; }
+
+            public AssignWorkState(AgentModel agent, CreatureModel abnormality, int id)
             {
-                get
-                {
-                    return agentName;
-                }
-            }
-            private string agentName;
-            public string AbnormalityName
-            {
-                get
-                {
-                    return abnormalityName;
-                }
-            }
-            private string abnormalityName;
-            public string WorkType
-            {
-                get
-                {
-                    return workType;
-                }
-            }
-            private string workType;
-            public AssignWorkState(string agentName, string abnormalityName, string workType)
-            {
-                this.agentName = agentName;
-                this.abnormalityName = abnormalityName;
-                this.workType = workType;
+                Agent = agent;
+                Abnormality = abnormality;
+                WorkID = id;
             }
         }
 
@@ -125,31 +194,18 @@ namespace NeuroLobotomyCorporation.FacilityManagement
         public static void CommandExecute(object state)
         {
             AssignWorkState parameters = (AssignWorkState)state;
-            string agentName = parameters.AgentName;
-            string abnormalityName = parameters.AbnormalityName;
-            string workType = parameters.WorkType;
-            int workId = 0;
-            switch (workType)
-            {
-                case "Instinct":
-                    workId = 1;
-                    break;
-                case "Insight":
-                    workId = 2;
-                    break;
-                case "Attachment":
-                    workId = 3;
-                    break;
-                case "Repression":
-                    workId = 4;
-                    break;
-            }
+            AgentModel agent = parameters.Agent;
+            CreatureModel abnormality = parameters.Abnormality;
+            int workId = parameters.WorkID;
 
-            workId = SefiraBossManager.Instance.GetWorkId(workId);
+
+            if (workId < 6) workId = SefiraBossManager.Instance.GetWorkId(workId); //randomize if not special
             SkillTypeInfo data = SkillTypeList.instance.GetData(workId);
-            AgentModel agent = Helpers.GetAgentByName(agentName);
-            CreatureModel abnormality = Helpers.GetAbnormalityByName(abnormalityName);
-            Sprite workSprite = CommandWindow.CommandWindow.CurrentWindow.GetWorkSprite((RwbpType)workId); 
+
+            Sprite workSprite = null;
+            if (workId < 6) workSprite = CommandWindow.CommandWindow.CurrentWindow.GetWorkSprite((RwbpType)workId); //Get sprite if work is not special
+            else if (workId == 6) workSprite = CommandWindow.CommandWindow.CurrentWindow.Work_C; //Confession sprite
+            else workSprite = CommandWindow.CommandWindow.CurrentWindow.Work_I; //Perform sprite
             agent.ManageCreature(abnormality, data, workSprite);
             agent.counterAttackEnabled = false;
             abnormality.Unit.room.OnWorkAllocated(agent);
@@ -166,7 +222,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                 workTypeAfterCheckingForMalkuth = data.calledName;
             }
             LogItemScript neuroLog = logScript.script.MakeText("");
-            neuroLog.SetText(String.Format("▶  <color=#66bfcd>{0}</color> begins their <color=#84bd36>{1}</color> with <color=#ef9696>{2}</color>.", agentName, workTypeAfterCheckingForMalkuth, abnormalityName));
+            neuroLog.SetText(String.Format("▶  <color=#66bfcd>{0}</color> begins their <color=#84bd36>{1}</color> with <color=#ef9696>{2}</color>.", agent.GetUnitName(), workTypeAfterCheckingForMalkuth, abnormality.GetUnitName()));
             SystemLogScript.CreatureSystemLog neuroCreatureLog = GetNeuroCreatureSystemLog(abnormality);
             if (neuroCreatureLog == null)
             {
