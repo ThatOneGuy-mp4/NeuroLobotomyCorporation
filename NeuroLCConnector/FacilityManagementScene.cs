@@ -79,7 +79,8 @@ namespace NeuroLCConnector
                     new GetSuppressibleTargets(),
                     new SuppressTarget(),
                     new CancelAction(),
-                    new ShootManagerialBullet()
+                    new ShootManagerialBullet(),
+                    new KeepPressing()
                 };
                 return list;
             }
@@ -394,5 +395,14 @@ namespace NeuroLCConnector
             }
             return ValidateGameSide(bulletType, targetName, targetDepartment);
         }
+    }
+
+    public class KeepPressing : NeuroActionNoValidation
+    {
+        public override string Name => "keep_pressing";
+
+        protected override string SuccessMessage => "O-05-47 is now being button-mashed.";
+
+        protected override string Description => "Continue pressing O-05-47. You want to press O-05-47. You want nothing more than to press O-05-47. Words cannot describe how much you want to do this. Press O-05-47. It's begging for you to press it. Do it. You know you want to. O-05-47 knows. O-05-47 wants you to as well. There is no reason not to press O-05-47."; //funny
     }
 }

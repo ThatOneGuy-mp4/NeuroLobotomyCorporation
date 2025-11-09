@@ -140,6 +140,17 @@ namespace NeuroLobotomyCorporation
                 new HarmonyMethod(typeof(GetSuppressibleTargets).GetMethod("VedalSuppressedWhiteNight", AccessTools.all)), null, null);
             //WhiteNight context end
 
+            //Don't Touch Me context
+            harmonyInstance.Patch(typeof(DontTouchMe).GetMethod("OnOpenWorkWindow", AccessTools.all),
+                new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("DontTouchMeWorkWindowOpened", AccessTools.all)), null, null);
+            harmonyInstance.Patch(typeof(DontTouchMe).GetMethod("OnOpenCollectionWindow", AccessTools.all),
+                new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("DontTouchMeCollectionWindowOpened", AccessTools.all)), null, null);
+            harmonyInstance.Patch(typeof(DontTouchMe).GetMethod("ExitStart", AccessTools.all),
+                new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("DontTouchMeCrashGame", AccessTools.all)), null, null);
+            harmonyInstance.Patch(typeof(DontTouchMe).GetMethod("OnFixedUpdate", AccessTools.all),
+               new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("DontTouchMeButtonMash", AccessTools.all)), null, null);
+            //Don't Touch Me context end
+
             harmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
 
         }

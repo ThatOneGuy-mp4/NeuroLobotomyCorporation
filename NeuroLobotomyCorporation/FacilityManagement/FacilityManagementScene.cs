@@ -52,6 +52,11 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     return ShootManagerialBullet.IsBulletUnlocked();
                 case "shoot_managerial_bullet":
                     return ShootManagerialBullet.Command(message[(int)ShootManagerialBullet.Parameters.BULLET_TYPE], message[(int)ShootManagerialBullet.Parameters.TARGET_NAME], message[(int)ShootManagerialBullet.Parameters.TARGET_DEPARTMENT]);
+                case "keep_pressing":
+                    neuroButtonMashTimer = new Timer();
+                    neuroButtonMashTimer.autoStop = false;
+                    neuroButtonMashTimer.StartTimer(0.75f);
+                    return "PressPressPressPressPress-";
             }
             return "Command " + message[COMMAND_INDEX] + " does not exist in scene FacilityManagementScene.";
         }
@@ -405,6 +410,60 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             NeuroSDKHandler.SendContext(String.Format("{0}" +
                 "\n{1}{2} <------ {3}", apostleDesc, ROMAN_NUMERAL_CLOCK[apostleIndex], apostleName, apostleType), true);
             apostleIndex++;
+        }
+
+        //Postfix - do the special Don't Touch Me event if it hasn't crashed the game previously, otherwise, just inform Neuro it has happened.
+        private static bool dontTouchMeEventStarted = false;
+        public static void DontTouchMeWorkWindowOpened(DontTouchMe __instance)
+        {
+            FieldInfo isolateClickedInfo = typeof(DontTouchMe).GetField("isolateClicked", BindingFlags.Instance | BindingFlags.NonPublic);
+            Queue<float> isolateClicked = (Queue<float>)isolateClickedInfo.GetValue(__instance);
+            if (!dontTouchMeEventStarted && isolateClicked.Count < 5 && __instance.model.GetUnitName().Equals("O-05-47"))
+            {
+                dontTouchMeEventStarted = true;
+                NeuroSDKHandler.SendCommand("dont_touch_me_touched_event_start");
+            }
+            else if(__instance.model.GetUnitName().Equals("Don’t Touch Me") && isolateClicked.Count < 5)
+            {
+                NeuroSDKHandler.SendContext("Don't Touch Me has been touched.", true);
+            }
+        }
+
+        public static void DontTouchMeCollectionWindowOpened(DontTouchMe __instance)
+        {
+            FieldInfo isolateClickedInfo = typeof(DontTouchMe).GetField("isolateClicked", BindingFlags.Instance | BindingFlags.NonPublic);
+            Queue<float> isolateClicked = (Queue<float>)isolateClickedInfo.GetValue(__instance);
+            if (!dontTouchMeEventStarted && isolateClicked.Count < 5 && __instance.model.GetUnitName().Equals("O-05-47")) 
+            {
+                dontTouchMeEventStarted = true;
+                NeuroSDKHandler.SendCommand("dont_touch_me_touched_event_start");
+            }
+            else if (__instance.model.GetUnitName().Equals("Don’t Touch Me") && isolateClicked.Count < 5)
+            {
+                NeuroSDKHandler.SendContext("Don't Touch Me's information was accessed, and was therefore touched.", true);
+            }
+            else if (isolateClicked.Count >= 5 && neuroButtonMashTimer != null) neuroButtonMashTimer.StopTimer();
+        }
+
+        private static bool gameIsCrashing = false;
+        public static void DontTouchMeCrashGame()
+        {
+            if (!gameIsCrashing)
+            {
+                gameIsCrashing = true;
+                NeuroSDKHandler.SendCommand("dont_touch_me_touched_event_end");
+            }
+        }
+
+        //Postfix - when Don't Touch Me is first touched, Neuro gets to choose to button mash. This is both for comedy, and because it will unlock Don't Touch Me's info.
+        private static Timer neuroButtonMashTimer;
+        public static void DontTouchMeButtonMash(DontTouchMe __instance)
+        {
+            if (neuroButtonMashTimer != null && neuroButtonMashTimer.started && neuroButtonMashTimer.RunTimer())
+            {
+                __instance.OnOpenCollectionWindow();
+                neuroButtonMashTimer.StartTimer(0.75f);
+            }
         }
     }
 }
