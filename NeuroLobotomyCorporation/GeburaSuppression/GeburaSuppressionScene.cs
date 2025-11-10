@@ -41,6 +41,11 @@ namespace NeuroLobotomyCorporation.GeburaSuppression
         {
             if (__instance.model.hp <= 1 && __instance.IsInvincible)
             {
+                if (SefiraBossManager.Instance.IsKetherBoss(KetherBossType.E2))
+                {
+                    NeuroSDKHandler.SendCommand("change_boss_phase_alt");
+                    return;
+                }
                 NeuroSDKHandler.SendCommand("change_boss_phase");
                 if (Poke.RedMistRagebait.Instance != null) Poke.RedMistRagebait.Instance.ResetPhase();
             }
@@ -61,7 +66,7 @@ namespace NeuroLobotomyCorporation.GeburaSuppression
                 NeuroSDKHandler.SendContext(String.Format("\"The Road of Gold opens\"" +
                     "\n\nThe Red Mist has begun charging through several passages with Gold Rush, ending up in the {0} Department.", Helpers.GetDepartmentBySefira(info.end.GetAttachedPassage().GetSefiraEnum())), true);
             }
-            if (!Poke.GivePokeStarted)
+            if (!Poke.GivePokeStarted && !SefiraBossManager.Instance.IsKetherBoss())
             {
                 NeuroSDKHandler.SendCommand("give_poke");
                 Poke.GivePokeStarted = true;

@@ -25,7 +25,6 @@ namespace NeuroLCConnector
      * 
      * TODO (CORE SUPPRESSIONS):
      * [The Core Suppressions will extend this scene, with modified context and actions to help direct Neuro while also making it a proper boss even for her.]
-     * -KETER (ABRAM): All of Briah's gimmicks again, with new context. 
      * -KETER (ADAM): All of Atziluth's gimmicks again, with new context. But maybe disable Hokma's (LEGALLY NONEXISTENT) latency gimmick because day 49 sucks enough as is.
      * -DA'AT: ;)
      */

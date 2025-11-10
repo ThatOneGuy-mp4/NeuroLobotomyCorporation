@@ -36,6 +36,7 @@ using WhiteNightSpace;
 using NeuroLobotomyCorporation.ClawSuppression;
 using KetherBoss;
 using NeuroLobotomyCorporation.AbelSuppression;
+using NeuroLobotomyCorporation.AbramSuppression;
 
 namespace NeuroLobotomyCorporation
 {
@@ -123,6 +124,8 @@ namespace NeuroLobotomyCorporation
                 new HarmonyMethod(typeof(Harmony_Patch).GetMethod("KeterBossCleared", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(GameManager).GetMethod("GameOverEnding", AccessTools.all), null,
                 new HarmonyMethod(typeof(Harmony_Patch).GetMethod("KeterBossFailed", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(KetherMiddleBossBase).GetMethod("GetDescType", AccessTools.all), null,
+               new HarmonyMethod(typeof(AbramSuppressionScene).GetMethod("AbramDescOverride", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(IsolateRoom).GetMethod("Update", AccessTools.all), null,
                 new HarmonyMethod(typeof(CancelAction).GetMethod("CancelChannelledTool", AccessTools.all)), null);
 
@@ -281,7 +284,9 @@ namespace NeuroLobotomyCorporation
                                 NeuroSDKHandler.SendCommand("change_action_scene|abel_suppression");
                                 break;
                             case 47:
-                                //return new KetherMiddleBossBase();
+                                ActionScene.Instance = new AbramSuppressionScene();
+                                NeuroSDKHandler.SendCommand("change_action_scene|abram_suppression");
+                                break;
                             case 48:
                                 //return new KetherLowerBossBase();
                             case 49:
@@ -310,15 +315,16 @@ namespace NeuroLobotomyCorporation
 
         public static void KeterBossCleared()
         {
-            //setup for the alt ending
+            //Gebura and Binah's deaths will trigger the boss clear by themselves, so if the battle was won via their won conditions, don't send the boss clear.
             if (SefiraBossManager.Instance.IsKetherBoss(KetherBossType.E2))
             {
-                return;
+                UnitModel redMistModel = Helpers.TryFindSefiraCoreTarget("The Red Mist");
+                if(redMistModel == null || redMistModel.hp <= 0) return;
             }
-            if (SefiraBossManager.Instance.IsKetherBoss(KetherBossType.E3))
-            {
-                return;
-            }
+            //if (SefiraBossManager.Instance.IsKetherBoss(KetherBossType.E3))
+            //{
+            //    return;
+            //}
             NeuroSDKHandler.SendCommand("boss_cleared");
         }
 

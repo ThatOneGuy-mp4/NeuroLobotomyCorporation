@@ -49,7 +49,7 @@ namespace NeuroLCConnector
             "\nAbel, and the Qlipha of Asiyah, have been permanently suppressed... Curtain Call for Act II of Keter's Core Suppression.";
 
         private string SuppressionFailureDialogue => "...perhaps he was not ready after all." +
-            "\nAct II of Keter's Core Suppression has been cut short. I'm sorry.";
+            "\nAct II of Keter's Core Suppression has been cut short. I am sorry.";
 
         public void FailCoreSuppression()
         {

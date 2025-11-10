@@ -34,7 +34,7 @@ namespace NeuroLobotomyCorporation.GeburaSuppression
 
         public static void CalculateRedMistSuppression(SefiraBossCreatureModel redMistModel, bool isKeter, out int healthPercentRemaining, out int coreSuppressionProgress, out string location, out string equippedEGOGear, out string defenseInfo)
         {
-            healthPercentRemaining = (int)((float)(redMistModel.hp / redMistModel.metaInfo.maxHp) * 100);
+            healthPercentRemaining = (int)((float)(redMistModel.hp / redMistModel.baseMaxHp) * 100);
             coreSuppressionProgress = (100 - healthPercentRemaining) / 4;
             location = Helpers.GetUnitModelLocationText(redMistModel);
             equippedEGOGear = "";

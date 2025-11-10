@@ -1,4 +1,5 @@
 ﻿using Harmony;
+using KetherBoss;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,9 +18,16 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             string result = "";
             List<string> specialEnemies = new List<string>();
             apocalypseBirdAdded = false;
-            if (SefiraBossManager.Instance.IsAnyBossSessionActivated() && SefiraBossManager.Instance.CurrentBossBase.modelList.Count > 0)
+            if (SefiraBossManager.Instance.IsAnyBossSessionActivated())
             {
-                foreach (SefiraBossCreatureModel bossSefira in SefiraBossManager.Instance.CurrentBossBase.modelList)
+                List<SefiraBossCreatureModel> activeBossCreatures = null;
+                if (SefiraBossManager.Instance.CurrentBossBase.modelList.Count > 0) activeBossCreatures = SefiraBossManager.Instance.CurrentBossBase.modelList;
+                if (SefiraBossManager.Instance.IsKetherBoss(KetherBossType.E2))
+                {
+                    activeBossCreatures = (SefiraBossManager.Instance.CurrentBossBase as KetherMiddleBossBase).bossBaseList[2].modelList; //gets GeburahBossBase
+                }
+                //repeat for binah/adam
+                foreach (SefiraBossCreatureModel bossSefira in activeBossCreatures)
                 {
                     TryCheckIsSpecialEnemy(bossSefira, specialEnemies);
                 }
@@ -206,7 +214,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
         {
             SefiraBossCreatureModel redMistModel = (SefiraBossCreatureModel)unit;
             GeburahCoreScript redMistScript = (GeburahCoreScript)redMistModel.script;
-            int healthPercentRemaining = (int)((float)(redMistModel.hp / redMistModel.metaInfo.maxHp) * 100);
+            int healthPercentRemaining = (int)((float)(redMistModel.hp / redMistModel.baseMaxHp) * 100);
             int coreSuppressionProgress = (100 - healthPercentRemaining) / 4;
             string location = Helpers.GetUnitModelLocationText(unit);
             string equippedEGOGear = "";

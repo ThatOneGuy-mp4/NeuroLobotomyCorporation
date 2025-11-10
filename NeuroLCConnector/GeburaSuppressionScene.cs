@@ -12,17 +12,6 @@ namespace NeuroLCConnector
 {
     public class GeburaSuppressionScene : CoreSuppressionBaseScene
     {
-        //protected override List<INeuroAction> InitActions
-        //{
-        //    get
-        //    {
-        //        List<INeuroAction> actions = new List<INeuroAction>();
-        //        actions.AddRange(base.InitActions);
-        //        actions.Add(new Poke());
-        //        return actions;
-        //    }
-        //}
-
         protected override List<INeuroAction> AllPossibleActions
         {
             get

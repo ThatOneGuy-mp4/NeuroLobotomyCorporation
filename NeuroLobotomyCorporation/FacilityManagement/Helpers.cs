@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KetherBoss;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -428,6 +429,16 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             foreach (SefiraBossCreatureModel bossSefira in SefiraBossManager.Instance.CurrentBossBase.modelList)
             {
                 if (bossSefira.script.GetName().Equals(targetName)) return bossSefira;
+            }
+            if (SefiraBossManager.Instance.IsKetherBoss())
+            {
+                foreach(SefiraBossBase bossBase in (SefiraBossManager.Instance.CurrentBossBase as KetherBossBase).bossBaseList)
+                {
+                    foreach (SefiraBossCreatureModel bossSefira in bossBase.modelList)
+                    {
+                        if (bossSefira.script.GetName().Equals(targetName)) return bossSefira;
+                    }
+                }
             }
             return null;
         }

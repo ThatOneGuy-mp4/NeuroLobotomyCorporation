@@ -159,12 +159,16 @@ namespace NeuroLCConnector
                     if (!(ActionScene.CurrentActionScene is CoreSuppressionBaseScene)) return;
                     await (ActionScene.CurrentActionScene as CoreSuppressionBaseScene).ChangePhase();
                     break;
+                case "change_boss_phase_alt":
+                    if (ActionScene.CurrentActionScene is AbramSuppressionScene) await (ActionScene.CurrentActionScene as AbramSuppressionScene).ChangeAltPhase();
+                    break;
                 case "boss_cleared":
                     if (!(ActionScene.CurrentActionScene is CoreSuppressionBaseScene)) return;
                     await (ActionScene.CurrentActionScene as CoreSuppressionBaseScene).CoreSuppressionComplete();
                     break;
                 case "boss_failed":
                     if (ActionScene.CurrentActionScene is AbelSuppressionScene) (ActionScene.CurrentActionScene as AbelSuppressionScene).FailCoreSuppression();
+                    if (ActionScene.CurrentActionScene is AbramSuppressionScene) (ActionScene.CurrentActionScene as AbramSuppressionScene).FailCoreSuppression(); //i forgot to test this before moving onto day 49. go back and test that.
                     break;
                 case "give_poke":
                     if(ActionScene.CurrentActionScene is GeburaSuppressionScene)
@@ -262,6 +266,9 @@ namespace NeuroLCConnector
                     break;
                 case "abel_suppression":
                     ActionScene.ChangeActionScene(new AbelSuppressionScene());
+                    break;
+                case "abram_suppression":
+                    ActionScene.ChangeActionScene(new AbramSuppressionScene());
                     break;
             }
         }

@@ -49,7 +49,7 @@ namespace NeuroLobotomyCorporation.ChesedSuppression
             {
                 return String.Format("{0}, {1}, and {2} type damage will be massively increased.", Helpers.GetDamageColorByRwbpType(activeBoostedColours[0].type), Helpers.GetDamageColorByRwbpType(activeBoostedColours[1].type), Helpers.GetDamageColorByRwbpType(activeBoostedColours[2].type));
             }
-            return "The boosted damage types could not be found. Complain to the mod developer about it.";
+            return ""; //Abram Suppression
         }
     }
 }
