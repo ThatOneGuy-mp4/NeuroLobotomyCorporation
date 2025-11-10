@@ -25,13 +25,6 @@ namespace NeuroLCConnector
      * 
      * TODO (CORE SUPPRESSIONS):
      * [The Core Suppressions will extend this scene, with modified context and actions to help direct Neuro while also making it a proper boss even for her.]
-     * -GEBURA: I don't even know how to translate this one to make Neuro able to do things. She might just have to be moral support for Ved.
-     * -CHESED: No change except for context (GetDayStatus informs her of the currently boosted damage types).
-     * -BINAH: Same problem as Gebura, but she can still help deal with Qliphoth Overloads at least. The Qliphoth Overload info Action will also inform her of the type.
-     * -HOKMA: So I can't exactly speed up Neuro's response to things, so, to truly emulate the boss' time-warping experience, I'd need to like...do...something else...
-     *      (for legal reasons, I am not going to artifically increase Neuro's latency on her Actions. I would never.)
-     * -KETER (A): No change except for context...? Might add something to track the Claw's containment unit targetting, not sure.
-     * -KETER (ABEL): All of Asiyah's gimmicks again, with new context.
      * -KETER (ABRAM): All of Briah's gimmicks again, with new context. 
      * -KETER (ADAM): All of Atziluth's gimmicks again, with new context. But maybe disable Hokma's (LEGALLY NONEXISTENT) latency gimmick because day 49 sucks enough as is.
      * -DA'AT: ;)

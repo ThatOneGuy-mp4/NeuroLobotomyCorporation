@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NeuroLCConnector
 {
-    public class ClawSuppression : CoreSuppressionBaseScene
+    public class ClawSuppressionScene : CoreSuppressionBaseScene
     {
         protected override List<string> PhaseTransitionDialogue => new List<string>
         {

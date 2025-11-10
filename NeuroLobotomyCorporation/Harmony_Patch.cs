@@ -35,6 +35,7 @@ using BinahBoss;
 using WhiteNightSpace;
 using NeuroLobotomyCorporation.ClawSuppression;
 using KetherBoss;
+using NeuroLobotomyCorporation.AbelSuppression;
 
 namespace NeuroLobotomyCorporation
 {
@@ -120,6 +121,8 @@ namespace NeuroLobotomyCorporation
                 new HarmonyMethod(typeof(Harmony_Patch).GetMethod("BossCleared", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(KetherBossBase).GetMethod("OnCleared", AccessTools.all), null,
                 new HarmonyMethod(typeof(Harmony_Patch).GetMethod("KeterBossCleared", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(GameManager).GetMethod("GameOverEnding", AccessTools.all), null,
+                new HarmonyMethod(typeof(Harmony_Patch).GetMethod("KeterBossFailed", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(IsolateRoom).GetMethod("Update", AccessTools.all), null,
                 new HarmonyMethod(typeof(CancelAction).GetMethod("CancelChannelledTool", AccessTools.all)), null);
 
@@ -274,7 +277,9 @@ namespace NeuroLobotomyCorporation
                                 NeuroSDKHandler.SendCommand("change_action_scene|claw_suppression");
                                 break;
                             case 46:
-                                //return new KetherUpperBossBase();
+                                ActionScene.Instance = new AbelSuppressionScene();
+                                NeuroSDKHandler.SendCommand("change_action_scene|abel_suppression");
+                                break;
                             case 47:
                                 //return new KetherMiddleBossBase();
                             case 48:
@@ -315,6 +320,11 @@ namespace NeuroLobotomyCorporation
                 return;
             }
             NeuroSDKHandler.SendCommand("boss_cleared");
+        }
+
+        public static void KeterBossFailed()
+        {
+            NeuroSDKHandler.SendCommand("boss_failed");
         }
     }
 }

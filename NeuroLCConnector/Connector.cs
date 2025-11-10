@@ -163,6 +163,9 @@ namespace NeuroLCConnector
                     if (!(ActionScene.CurrentActionScene is CoreSuppressionBaseScene)) return;
                     await (ActionScene.CurrentActionScene as CoreSuppressionBaseScene).CoreSuppressionComplete();
                     break;
+                case "boss_failed":
+                    if (ActionScene.CurrentActionScene is AbelSuppressionScene) (ActionScene.CurrentActionScene as AbelSuppressionScene).FailCoreSuppression();
+                    break;
                 case "give_poke":
                     if(ActionScene.CurrentActionScene is GeburaSuppressionScene)
                     {
@@ -205,6 +208,7 @@ namespace NeuroLCConnector
             if (parameters.Length < 3) return;
             string message = parameters[(int)SendContextParameters.Message];
             if (ActionScene.CurrentActionScene != null && ActionScene.CurrentActionScene is YesodSuppressionScene) message = (ActionScene.CurrentActionScene as YesodSuppressionScene).GetScrambledMessage(message);
+            else if (ActionScene.CurrentActionScene != null && ActionScene.CurrentActionScene is AbelSuppressionScene) message = (ActionScene.CurrentActionScene as AbelSuppressionScene).GetScrambledMessage(message);
             Context.Send(message, bool.Parse(parameters[(int)SendContextParameters.Silent]));
         }
 
@@ -254,7 +258,10 @@ namespace NeuroLCConnector
                     ActionScene.ChangeActionScene(new HokmaSuppressionScene());
                     break;
                 case "claw_suppression":
-                    ActionScene.ChangeActionScene(new ClawSuppression());
+                    ActionScene.ChangeActionScene(new ClawSuppressionScene());
+                    break;
+                case "abel_suppression":
+                    ActionScene.ChangeActionScene(new AbelSuppressionScene());
                     break;
             }
         }
