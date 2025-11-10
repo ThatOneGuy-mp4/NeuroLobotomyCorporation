@@ -253,6 +253,9 @@ namespace NeuroLCConnector
                 case "hokma_suppression":
                     ActionScene.ChangeActionScene(new HokmaSuppressionScene());
                     break;
+                case "claw_suppression":
+                    ActionScene.ChangeActionScene(new ClawSuppression());
+                    break;
             }
         }
     }

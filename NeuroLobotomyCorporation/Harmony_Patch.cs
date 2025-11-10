@@ -33,6 +33,8 @@ using NeuroLobotomyCorporation.HokmaSuppression;
 using NeuroLobotomyCorporation.BinahSuppression;
 using BinahBoss;
 using WhiteNightSpace;
+using NeuroLobotomyCorporation.ClawSuppression;
+using KetherBoss;
 
 namespace NeuroLobotomyCorporation
 {
@@ -116,6 +118,8 @@ namespace NeuroLobotomyCorporation
 
             harmonyInstance.Patch(typeof(SefiraBossBase).GetMethod("OnCleared", AccessTools.all), null,
                 new HarmonyMethod(typeof(Harmony_Patch).GetMethod("BossCleared", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(KetherBossBase).GetMethod("OnCleared", AccessTools.all), null,
+                new HarmonyMethod(typeof(Harmony_Patch).GetMethod("KeterBossCleared", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(IsolateRoom).GetMethod("Update", AccessTools.all), null,
                 new HarmonyMethod(typeof(CancelAction).GetMethod("CancelChannelledTool", AccessTools.all)), null);
 
@@ -262,6 +266,24 @@ namespace NeuroLobotomyCorporation
                         ActionScene.Instance = new HokmaSuppressionScene();
                         NeuroSDKHandler.SendCommand("change_action_scene|hokma_suppression");
                         break;
+                    case SefiraEnum.KETHER:
+                        switch (PlayerModel.instance.GetDay())
+                        {
+                            case 45:
+                                ActionScene.Instance = new ClawSuppressionScene();
+                                NeuroSDKHandler.SendCommand("change_action_scene|claw_suppression");
+                                break;
+                            case 46:
+                                //return new KetherUpperBossBase();
+                            case 47:
+                                //return new KetherMiddleBossBase();
+                            case 48:
+                                //return new KetherLowerBossBase();
+                            case 49:
+                                //return new KetherLastBossBase();
+                                break;
+                        }
+                        break;
                 }
                 return;
             }
@@ -278,6 +300,20 @@ namespace NeuroLobotomyCorporation
 
         public static void BossCleared()
         {
+            NeuroSDKHandler.SendCommand("boss_cleared");
+        }
+
+        public static void KeterBossCleared()
+        {
+            //setup for the alt ending
+            if (SefiraBossManager.Instance.IsKetherBoss(KetherBossType.E2))
+            {
+                return;
+            }
+            if (SefiraBossManager.Instance.IsKetherBoss(KetherBossType.E3))
+            {
+                return;
+            }
             NeuroSDKHandler.SendCommand("boss_cleared");
         }
     }

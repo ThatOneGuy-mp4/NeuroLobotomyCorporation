@@ -106,7 +106,10 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     List<OrdealCreatureModel> ordealCreaturesInOrdeal = new List<OrdealCreatureModel>();
                     foreach (OrdealCreatureModel ordealCreature in OrdealManager.instance.GetOrdealCreatureList())
                     {
-                        if (ordealCreature.OrdealBase.OrdealTypeText.Equals(ordeal.OrdealTypeText)) ordealCreaturesInOrdeal.Add(ordealCreature);
+                        if (ordealCreature.OrdealBase.OrdealTypeText.Equals(ordeal.OrdealTypeText)) 
+                        { 
+                            ordealCreaturesInOrdeal.Add(ordealCreature); 
+                        }
                     }
                     string ordealTargets = String.Format("{0}\n-------------------------\n", ordeal.OrdealTypeText);
                     foreach (OrdealCreatureModel ordealCreature in ordealCreaturesInOrdeal)
@@ -156,7 +159,6 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                 case "The Red Mist": //bait used to be believable-
                     specialEnemies.Add(GetRedMistStatus(unit));
                     return true;
-                //TODO: fill the rest of these out once you can test them
                 case "An Arbiter":
                     specialEnemies.Add(GetAnArbiterStatus(unit));
                     return true;
@@ -186,12 +188,6 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                         "\n'Once upon a time, three happy birds lived in a warm and lush forest.'" +
                         "\nPrepare yourself for the dark twilight soon to come...", Helpers.GetUnitModelLocationText(unit)));
                     return true;
-                case "The Claw":
-                    specialEnemies.Add("caw");
-                    return true;
-                default:
-                    //specialEnemies.Add(name);
-                    break;
             }
             return false;
         }

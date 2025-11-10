@@ -69,10 +69,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             }
             if (_energyController == null) _energyController = GameObject.FindObjectOfType<EnergyController>();
             int overloadIsolateNum = Int32.Parse(_energyController.OverLoadIsolateNumText.text);
-            string unitOrUnits = "";
-            if (overloadIsolateNum == 1) unitOrUnits = "unit";
-            else unitOrUnits = "units";
-            return String.Format("The next meltdown will cause {0} containment {1} to become overloaded.", overloadIsolateNum, unitOrUnits);
+            return String.Format("The next meltdown will cause {0} containment unit(s) to become overloaded.", overloadIsolateNum);
         }
 
         public static string GetTrumpetInformation()
