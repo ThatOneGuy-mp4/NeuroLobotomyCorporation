@@ -38,6 +38,11 @@ namespace NeuroLobotomyCorporation.BinahSuppression
         {
             if (__instance.model.hp <= 1 && __instance.IsInvincible)
             {
+                if (SefiraBossManager.Instance.IsKetherBoss(KetherBossType.E3))
+                {
+                    NeuroSDKHandler.SendCommand("change_boss_phase_alt");
+                    return;
+                }
                 NeuroSDKHandler.SendCommand("change_boss_phase");
             }
         }

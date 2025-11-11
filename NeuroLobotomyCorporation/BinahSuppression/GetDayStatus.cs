@@ -33,7 +33,7 @@ namespace NeuroLobotomyCorporation.BinahSuppression
 
         public static void CalculateAnArbiterSuppression(SefiraBossCreatureModel anArbiterModel, bool isKeter, out int healthPercentRemaining, out int coreSuppressionProgress, out string location, out string defenseInfo)
         {
-            healthPercentRemaining = (int)((float)(anArbiterModel.hp / anArbiterModel.metaInfo.maxHp) * 100);
+            healthPercentRemaining = (int)((float)(anArbiterModel.hp / anArbiterModel.baseMaxHp) * 100);
             coreSuppressionProgress = (100 - healthPercentRemaining) / 3;
             location = Helpers.GetUnitModelLocationText(anArbiterModel);
             defenseInfo = Helpers.GetResistancesText(Helpers.GetResistanceTypeValues(anArbiterModel));

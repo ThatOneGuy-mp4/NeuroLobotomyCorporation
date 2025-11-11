@@ -26,11 +26,18 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                 {
                     activeBossCreatures = (SefiraBossManager.Instance.CurrentBossBase as KetherMiddleBossBase).bossBaseList[2].modelList; //gets GeburahBossBase
                 }
-                //repeat for binah/adam
-                foreach (SefiraBossCreatureModel bossSefira in activeBossCreatures)
+                if (SefiraBossManager.Instance.IsKetherBoss(KetherBossType.E3) && SefiraBossManager.Instance.CurrentBossBase.QliphothOverloadLevel < 7)
                 {
-                    TryCheckIsSpecialEnemy(bossSefira, specialEnemies);
+                    activeBossCreatures = (SefiraBossManager.Instance.CurrentBossBase as KetherLowerBossBase).bossBaseList[1].modelList; //gets BinahBossBase
                 }
+                if (activeBossCreatures != null)
+                {
+                    foreach (SefiraBossCreatureModel bossSefira in activeBossCreatures)
+                    {
+                        TryCheckIsSpecialEnemy(bossSefira, specialEnemies);
+                    }
+                }
+
             }
             List<AgentModel> panickingAgents = new List<AgentModel>();
             foreach (AgentModel agent in AgentManager.instance.GetAgentList())
@@ -114,9 +121,9 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     List<OrdealCreatureModel> ordealCreaturesInOrdeal = new List<OrdealCreatureModel>();
                     foreach (OrdealCreatureModel ordealCreature in OrdealManager.instance.GetOrdealCreatureList())
                     {
-                        if (ordealCreature.OrdealBase.OrdealTypeText.Equals(ordeal.OrdealTypeText)) 
-                        { 
-                            ordealCreaturesInOrdeal.Add(ordealCreature); 
+                        if (ordealCreature.OrdealBase.OrdealTypeText.Equals(ordeal.OrdealTypeText))
+                        {
+                            ordealCreaturesInOrdeal.Add(ordealCreature);
                         }
                     }
                     string ordealTargets = String.Format("{0}\n-------------------------\n", ordeal.OrdealTypeText);
@@ -252,7 +259,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
         {
             SefiraBossCreatureModel anArbiterModel = (SefiraBossCreatureModel)unit;
             BinahCoreScript anArbiterScript = (BinahCoreScript)anArbiterModel.script;
-            int healthPercentRemaining = (int)((float)(anArbiterModel.hp / anArbiterModel.metaInfo.maxHp) * 100);
+            int healthPercentRemaining = (int)((float)(anArbiterModel.hp / anArbiterModel.baseMaxHp) * 100);
             int coreSuppressionProgress = (100 - healthPercentRemaining) / 3;
             string location = Helpers.GetUnitModelLocationText(unit);
             List<string> defenseInfo = Helpers.GetResistanceTypeValues(anArbiterModel);
@@ -406,7 +413,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             FieldInfo apostleInfo = typeof(DeathAngel).GetField("apostles", BindingFlags.Instance | BindingFlags.NonPublic);
             List<DeathAngelApostle> apostles = (List<DeathAngelApostle>)apostleInfo.GetValue(whiteNight);
 
-            foreach(DeathAngelApostle apostle in apostles)
+            foreach (DeathAngelApostle apostle in apostles)
             {
                 string name = apostle.GetName();
                 string apostleType = "";

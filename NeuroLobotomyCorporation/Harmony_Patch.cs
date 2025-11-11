@@ -37,6 +37,7 @@ using NeuroLobotomyCorporation.ClawSuppression;
 using KetherBoss;
 using NeuroLobotomyCorporation.AbelSuppression;
 using NeuroLobotomyCorporation.AbramSuppression;
+using NeuroLobotomyCorporation.AdamSuppression;
 
 namespace NeuroLobotomyCorporation
 {
@@ -126,6 +127,8 @@ namespace NeuroLobotomyCorporation
                 new HarmonyMethod(typeof(Harmony_Patch).GetMethod("KeterBossFailed", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(KetherMiddleBossBase).GetMethod("GetDescType", AccessTools.all), null,
                new HarmonyMethod(typeof(AbramSuppressionScene).GetMethod("AbramDescOverride", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(KetherLowerBossBase).GetMethod("GetDescType", AccessTools.all), null,
+               new HarmonyMethod(typeof(AdamSuppressionScene).GetMethod("AdamDescOverride", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(IsolateRoom).GetMethod("Update", AccessTools.all), null,
                 new HarmonyMethod(typeof(CancelAction).GetMethod("CancelChannelledTool", AccessTools.all)), null);
 
@@ -288,7 +291,9 @@ namespace NeuroLobotomyCorporation
                                 NeuroSDKHandler.SendCommand("change_action_scene|abram_suppression");
                                 break;
                             case 48:
-                                //return new KetherLowerBossBase();
+                                ActionScene.Instance = new AdamSuppressionScene();
+                                NeuroSDKHandler.SendCommand("change_action_scene|adam_suppression");
+                                break;
                             case 49:
                                 //return new KetherLastBossBase();
                                 break;
@@ -319,12 +324,13 @@ namespace NeuroLobotomyCorporation
             if (SefiraBossManager.Instance.IsKetherBoss(KetherBossType.E2))
             {
                 UnitModel redMistModel = Helpers.TryFindSefiraCoreTarget("The Red Mist");
-                if(redMistModel == null || redMistModel.hp <= 0) return;
+                if (redMistModel == null || redMistModel.hp <= 0) return;
             }
-            //if (SefiraBossManager.Instance.IsKetherBoss(KetherBossType.E3))
-            //{
-            //    return;
-            //}
+            if (SefiraBossManager.Instance.IsKetherBoss(KetherBossType.E3))
+            {
+                UnitModel anArbiterModel = Helpers.TryFindSefiraCoreTarget("An Arbiter");
+                if (anArbiterModel == null || anArbiterModel.hp <= 0) return;
+            }
             NeuroSDKHandler.SendCommand("boss_cleared");
         }
 

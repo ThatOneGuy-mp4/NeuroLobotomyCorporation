@@ -100,6 +100,7 @@ namespace NeuroLCConnector
         public static async Task<string> SendCommand(string command)
         {
             if (ActionScene.CurrentActionScene != null && ActionScene.CurrentActionScene is HokmaSuppressionScene) await (ActionScene.CurrentActionScene as HokmaSuppressionScene).Stall();
+            if (ActionScene.CurrentActionScene != null && ActionScene.CurrentActionScene is AdamSuppressionScene) await (ActionScene.CurrentActionScene as AdamSuppressionScene).Stall();
             ServerOutput = (HttpWebRequest)WebRequest.Create(serverToGameURI);
             ServerOutput.KeepAlive = true;
             ServerOutput.Method = "POST";
@@ -161,6 +162,7 @@ namespace NeuroLCConnector
                     break;
                 case "change_boss_phase_alt":
                     if (ActionScene.CurrentActionScene is AbramSuppressionScene) await (ActionScene.CurrentActionScene as AbramSuppressionScene).ChangeAltPhase();
+                    if (ActionScene.CurrentActionScene is AdamSuppressionScene) await (ActionScene.CurrentActionScene as AdamSuppressionScene).ChangeAltPhase();
                     break;
                 case "boss_cleared":
                     if (!(ActionScene.CurrentActionScene is CoreSuppressionBaseScene)) return;
@@ -169,6 +171,7 @@ namespace NeuroLCConnector
                 case "boss_failed":
                     if (ActionScene.CurrentActionScene is AbelSuppressionScene) (ActionScene.CurrentActionScene as AbelSuppressionScene).FailCoreSuppression();
                     if (ActionScene.CurrentActionScene is AbramSuppressionScene) (ActionScene.CurrentActionScene as AbramSuppressionScene).FailCoreSuppression(); //i forgot to test this before moving onto day 49. go back and test that.
+                    if (ActionScene.CurrentActionScene is AdamSuppressionScene) (ActionScene.CurrentActionScene as AdamSuppressionScene).FailCoreSuppression();
                     break;
                 case "give_poke":
                     if(ActionScene.CurrentActionScene is GeburaSuppressionScene)
@@ -269,6 +272,9 @@ namespace NeuroLCConnector
                     break;
                 case "abram_suppression":
                     ActionScene.ChangeActionScene(new AbramSuppressionScene());
+                    break;
+                case "adam_suppression":
+                    ActionScene.ChangeActionScene(new AdamSuppressionScene());
                     break;
             }
         }
