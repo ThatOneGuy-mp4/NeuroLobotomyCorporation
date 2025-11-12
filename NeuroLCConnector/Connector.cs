@@ -276,6 +276,9 @@ namespace NeuroLCConnector
                 case "adam_suppression":
                     ActionScene.ChangeActionScene(new AdamSuppressionScene());
                     break;
+                case "daat_suppression":
+                    ActionScene.ChangeActionScene(new DaatSuppressionScene());
+                    break;
             }
         }
     }

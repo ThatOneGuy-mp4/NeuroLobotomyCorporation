@@ -22,11 +22,6 @@ namespace NeuroLCConnector
      * -Add an Action to order Rabbit Team Deployment...? (perhaps not?)
      * -Could be interesting to give her the ability to read an Abnormality's lore (not needed though)
      * -Could also give her the ability to unlock an Abnormality's observation info / craft E.G.O, but I think that might be better for just ved to be able to do (so she doesn't waste it)
-     * 
-     * TODO (CORE SUPPRESSIONS):
-     * [The Core Suppressions will extend this scene, with modified context and actions to help direct Neuro while also making it a proper boss even for her.]
-     * -KETER (ADAM): All of Atziluth's gimmicks again, with new context. But maybe disable Hokma's (LEGALLY NONEXISTENT) latency gimmick because day 49 sucks enough as is.
-     * -DA'AT: ;)
      */
     public class FacilityManagementScene : ActionScene
     {

@@ -44,6 +44,7 @@ namespace NeuroLobotomyCorporation.GeburaSuppression
                 if (SefiraBossManager.Instance.IsKetherBoss(KetherBossType.E2))
                 {
                     NeuroSDKHandler.SendCommand("change_boss_phase_alt");
+                    if (Poke.RedMistRagebait.Instance != null) Poke.RedMistRagebait.Instance.ResetPhase();
                     return;
                 }
                 NeuroSDKHandler.SendCommand("change_boss_phase");

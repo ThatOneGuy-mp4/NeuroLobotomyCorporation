@@ -38,6 +38,8 @@ using KetherBoss;
 using NeuroLobotomyCorporation.AbelSuppression;
 using NeuroLobotomyCorporation.AbramSuppression;
 using NeuroLobotomyCorporation.AdamSuppression;
+using NeuroLobotomyCorporation.DaatSuppression;
+using Credit;
 
 namespace NeuroLobotomyCorporation
 {
@@ -64,8 +66,7 @@ namespace NeuroLobotomyCorporation
                 new HarmonyMethod(typeof(AssignWork).GetMethod("UpdateNeuroLogsObservationLevel", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(GlobalBulletWindow).GetMethod("Update", AccessTools.all), null,
                 new HarmonyMethod(typeof(ShootManagerialBullet).GetMethod("NeuroShootBullet", AccessTools.all)), null);
-            harmonyInstance.Patch(typeof(SefiraBossManager).GetMethod("OnOverloadActivated", AccessTools.all), null,
-                new HarmonyMethod(typeof(Harmony_Patch).GetMethod("ChangeBossPhaseMeltdown", AccessTools.all)), null);
+
             
             //Give Neuro context for all of Gebura's special attacks + phase changes
             harmonyInstance.Patch(typeof(GeburahCoreScript).GetMethod("OnTakeDamage", AccessTools.all), null,
@@ -119,8 +120,14 @@ namespace NeuroLobotomyCorporation
                 new HarmonyMethod(typeof(BinahSuppressionScene).GetMethod("InformNeuroMeltdownPillarsNotCleared", AccessTools.all)), null);
             //end Binah context
 
+            //Core Suppression fixes
+            harmonyInstance.Patch(typeof(SefiraBossManager).GetMethod("OnOverloadActivated", AccessTools.all), null,
+                new HarmonyMethod(typeof(Harmony_Patch).GetMethod("ChangeBossPhaseMeltdown", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(SefiraBossBase).GetMethod("OnCleared", AccessTools.all), null,
                 new HarmonyMethod(typeof(Harmony_Patch).GetMethod("BossCleared", AccessTools.all)), null);
+            //end Core Suppression fixes
+
+            //Keter Suppression fixes
             harmonyInstance.Patch(typeof(KetherBossBase).GetMethod("OnCleared", AccessTools.all), null,
                 new HarmonyMethod(typeof(Harmony_Patch).GetMethod("KeterBossCleared", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(GameManager).GetMethod("GameOverEnding", AccessTools.all), null,
@@ -129,6 +136,22 @@ namespace NeuroLobotomyCorporation
                new HarmonyMethod(typeof(AbramSuppressionScene).GetMethod("AbramDescOverride", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(KetherLowerBossBase).GetMethod("GetDescType", AccessTools.all), null,
                new HarmonyMethod(typeof(AdamSuppressionScene).GetMethod("AdamDescOverride", AccessTools.all)), null);
+            //end Keter Suppression fixes
+
+            //Da'at Suppression fixes/Spinning
+            harmonyInstance.Patch(typeof(KetherLastBossBase).GetMethod("EnergyUpdate", AccessTools.all), new HarmonyMethod(typeof(DaatSuppressionScene).GetMethod("ChangePhaseDaatPrefix", AccessTools.all)),
+                new HarmonyMethod(typeof(DaatSuppressionScene).GetMethod("ChangePhaseDaatPostfix", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(KetherLastBossBase).GetMethod("Update", AccessTools.all),
+                new HarmonyMethod(typeof(Spin).GetMethod("InitiateNURU", AccessTools.all)), null, null);
+            harmonyInstance.Patch(typeof(KetherLastBossBase).GetMethod("EnergyLevelChange", AccessTools.all), 
+                new HarmonyMethod(typeof(Spin).GetMethod("ReplaceCameraRotate", AccessTools.all)), null, null);
+            harmonyInstance.Patch(typeof(CreditConversationController).GetMethod("GetText", AccessTools.all), null,
+               new HarmonyMethod(typeof(DaatSuppressionScene).GetMethod("InformNeuroFinalAyinConversation", AccessTools.all)), null);
+            //also, disable post-credit sequence requirement
+            harmonyInstance.Patch(typeof(CreatureManager).GetMethod("IsMaxHiddenProgress", AccessTools.all), null,
+               new HarmonyMethod(typeof(DaatSuppressionScene).GetMethod("RemoveHiddenEndingCondition", AccessTools.all)), null);
+            //end Da'at Suppression fixes
+
             harmonyInstance.Patch(typeof(IsolateRoom).GetMethod("Update", AccessTools.all), null,
                 new HarmonyMethod(typeof(CancelAction).GetMethod("CancelChannelledTool", AccessTools.all)), null);
 
@@ -295,7 +318,9 @@ namespace NeuroLobotomyCorporation
                                 NeuroSDKHandler.SendCommand("change_action_scene|adam_suppression");
                                 break;
                             case 49:
-                                //return new KetherLastBossBase();
+                                ActionScene.Instance = new DaatSuppressionScene();
+                                NeuroSDKHandler.SendCommand("change_action_scene|daat_suppression");
+                                Spin.NeuroCameraRotationEvent.ResetSpinParams(); //y'know i've been using a lot of static variables in this mod but i haven't been clearing any of them. might wanna do that so there isn't any issues between days.
                                 break;
                         }
                         break;
@@ -310,6 +335,7 @@ namespace NeuroLobotomyCorporation
         {
             if (!SefiraBossManager.Instance.IsAnyBossSessionActivated()) return;
             if (SefiraBossManager.Instance.CheckBossActivation(SefiraEnum.GEBURAH) || SefiraBossManager.Instance.CheckBossActivation(SefiraEnum.BINAH)) return;
+            if (SefiraBossManager.Instance.IsKetherBoss(KetherBossType.E4)) return;
             NeuroSDKHandler.SendCommand("change_boss_phase");
         }
 
@@ -330,6 +356,10 @@ namespace NeuroLobotomyCorporation
             {
                 UnitModel anArbiterModel = Helpers.TryFindSefiraCoreTarget("An Arbiter");
                 if (anArbiterModel == null || anArbiterModel.hp <= 0) return;
+            }
+            if (SefiraBossManager.Instance.IsKetherBoss(KetherBossType.E4))
+            {
+                DaatSuppressionScene.DaatSuppressed = true;
             }
             NeuroSDKHandler.SendCommand("boss_cleared");
         }
