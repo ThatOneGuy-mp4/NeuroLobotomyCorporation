@@ -213,14 +213,7 @@ namespace NeuroLCConnector
             switch (parameters[(int)ProcessGameMessageParameters.Command_Parameter])
             {
                 case "abnormality_extraction":
-                    List<string> abnoNames = new List<string>();
-                    //Loop through the names of the Abnormalities and add them to the name list before creating the scene
-                    //Most scene changes do not require additional parameters prior to initialization but the extraction command lists the names, so
-                    for (int i = 2; i < parameters.Length; i++)
-                    {
-                        abnoNames.Add(parameters[i]);
-                    }
-                    AbnormalityExtractionScene.AbnoNames = abnoNames;
+                    AbnormalityExtractionScene.ParseParameters(parameters);
                     ActionScene.ChangeActionScene(new AbnormalityExtractionScene());
                     break;
                 case "facility_management":
