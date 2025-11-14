@@ -10,10 +10,6 @@ using System.Threading.Tasks;
 
 namespace NeuroLCConnector
 {
-    /*
-     * TODO: 
-     * -Add Action to reextract once unlocked
-     */
     public class AbnormalityExtractionScene : ActionScene
     {
         protected override List<INeuroAction> InitActions
