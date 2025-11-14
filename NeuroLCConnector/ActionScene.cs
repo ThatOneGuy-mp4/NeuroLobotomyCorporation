@@ -24,7 +24,6 @@ namespace NeuroLCConnector
 
     /*
      * TODO:
-     * -Add ActionScene for watching the story (either just to make sure she doesn't have another scene's actions avaliable while ved is reading, or to let her read or choose dialogue)
      * -Add ActionScene for department expansion (same reason as above, but for choosing the next department)
      * -Add ActionScene for pre-management preparation 
      * --Add a similar scene specific to E.G.O. equipping? 

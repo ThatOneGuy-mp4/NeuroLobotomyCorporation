@@ -33,6 +33,7 @@ using NeuroLobotomyCorporation.HokmaSuppression;
 using NeuroLobotomyCorporation.BinahSuppression;
 using BinahBoss;
 using WhiteNightSpace;
+using NeuroLobotomyCorporation.WatchStory;
 
 namespace NeuroLobotomyCorporation
 {
@@ -63,6 +64,30 @@ namespace NeuroLobotomyCorporation
             harmonyInstance.Patch(typeof(CreatureSelectUnit).GetMethod("GetText", AccessTools.all), null,
                 new HarmonyMethod(typeof(Harmony_Patch).GetMethod("VeryVeryVeryImportantTextPostfix")), null);
             //Abnormality Selection fixes end
+
+            //Story fixes
+            harmonyInstance.Patch(typeof(StoryUI).GetMethod("LoadStory", AccessTools.all), null,
+                new HarmonyMethod(typeof(Harmony_Patch).GetMethod("StoryStart")), null);
+            harmonyInstance.Patch(typeof(StoryCGFadeEffecter).GetMethod("ChangeCG", AccessTools.all), null,
+                new HarmonyMethod(typeof(WatchStory.Patches).GetMethod("ContextBackground")), null);
+            harmonyInstance.Patch(typeof(StoryDialogueUI).GetMethod("Speak", AccessTools.all), null,
+                new HarmonyMethod(typeof(WatchStory.Patches).GetMethod("ContextSpeak")), null);
+            harmonyInstance.Patch(typeof(StoryUI).GetMethod("Command_select", AccessTools.all), null,
+                new HarmonyMethod(typeof(WatchStory.Patches).GetMethod("ContextDialogueOption")), null);
+            harmonyInstance.Patch(typeof(StorySelectionUI).GetMethod("ShowSelection", AccessTools.all), null,
+                new HarmonyMethod(typeof(WatchStory.Patches).GetMethod("StartDialogueOption")), null);
+            harmonyInstance.Patch(typeof(StoryUI).GetMethod("FixedUpdate", AccessTools.all), null,
+                new HarmonyMethod(typeof(WatchStory.SelectDialogue).GetMethod("NeuroSelectDialogueOption")), null);
+            harmonyInstance.Patch(typeof(BossMissionAppearUI).GetMethod("Show", AccessTools.all), null,
+                new HarmonyMethod(typeof(WatchStory.Patches).GetMethod("ContextBossMission")), null);
+            harmonyInstance.Patch(typeof(StorySeedUI).GetMethod("Show", AccessTools.all), null,
+                new HarmonyMethod(typeof(WatchStory.Patches).GetMethod("ContextSeedOfLightGermination")), null);
+            harmonyInstance.Patch(typeof(StoryUI).GetMethod("Command_ending", AccessTools.all), null,
+                new HarmonyMethod(typeof(WatchStory.Patches).GetMethod("ContextLORForeshadowing")), null);
+            harmonyInstance.Patch(typeof(StorySceneController).GetMethod("OnEndStory", AccessTools.all), null,
+                new HarmonyMethod(typeof(WatchStory.Patches).GetMethod("EndStorySegment")), null);
+            //Story fixes end
+
             harmonyInstance.Patch(typeof(DeployUI).GetMethod("OnManagementStart", AccessTools.all), null,
                 new HarmonyMethod(typeof(Harmony_Patch).GetMethod("BeginFacilityManagement", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(LoggingScript).GetMethod("MakeText", AccessTools.all), null,
@@ -259,6 +284,12 @@ namespace NeuroLobotomyCorporation
         public static void VeryVeryVeryImportantTextPostfix(CreatureSelectUnit __instance, ref string __result)
         {
             if (__instance.IdText.text.Equals("Bald-is-awesome!") || __instance.IdText.text.Equals("Literally-Vedal")) __result = "It's literally him.";
+        }
+
+        public static void StoryStart()
+        {
+            ActionScene.Instance = new WatchStoryScene();
+            NeuroSDKHandler.SendCommand("change_action_scene|watch_story");
         }
 
         public static void BeginFacilityManagement()
