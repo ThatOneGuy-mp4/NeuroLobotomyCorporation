@@ -68,6 +68,10 @@ namespace NeuroLobotomyCorporation
             //Story fixes
             harmonyInstance.Patch(typeof(StoryUI).GetMethod("LoadStory", AccessTools.all), null,
                 new HarmonyMethod(typeof(Harmony_Patch).GetMethod("StoryStart")), null);
+            harmonyInstance.Patch(typeof(StoryUI).GetMethod("OnClickSkip", AccessTools.all), null,
+               new HarmonyMethod(typeof(WatchStory.Patches).GetMethod("StopContextWhileSkipping")), null);
+            harmonyInstance.Patch(typeof(StoryUI).GetMethod("OnClickDialogue", AccessTools.all), null,
+               new HarmonyMethod(typeof(WatchStory.Patches).GetMethod("StartContextWhenSkippingDisabled")), null);
             harmonyInstance.Patch(typeof(StoryCGFadeEffecter).GetMethod("ChangeCG", AccessTools.all), null,
                 new HarmonyMethod(typeof(WatchStory.Patches).GetMethod("ContextBackground")), null);
             harmonyInstance.Patch(typeof(StoryDialogueUI).GetMethod("Speak", AccessTools.all), null,
