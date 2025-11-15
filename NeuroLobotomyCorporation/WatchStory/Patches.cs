@@ -9,10 +9,26 @@ namespace NeuroLobotomyCorporation.WatchStory
     //All dialogue is loosely formatted like a play, as the story is constantly equated to one in-universe.
     public class Patches
     {
+        //don't use the game's _skipping because for one it's private, and two it gets disabled when dialogue options happen and we don't want that here
+        private static bool isSkipping = false;
+
+        //Postfix - disable sending story while skipping
+        public static void StopContextWhileSkipping()
+        {
+            isSkipping = true;
+        }
+
+        //Postfix - enable sending story when no longer skipping
+        public static void StartContextWhenSkippingDisabled()
+        {
+            isSkipping = false;
+        }
+
         //Postfix - send descriptions of CGs as context when the CG changes, both the background and unique images.
         private static string lastCG = "";
         public static void ContextBackground(string spriteSrc)
         {
+            if (isSkipping) return;
             string location = GetLocationFromSpriteName(spriteSrc);
             if (String.IsNullOrEmpty(location)) return; //skip CGs that aren't worth describing
             //There was a weird issue where Angela's Office would be randomly printed even in scenes where it did not appear.
@@ -201,6 +217,7 @@ namespace NeuroLobotomyCorporation.WatchStory
         private static bool lastSpeakerWasRobotSephira;
         public static void ContextSpeak(StoryDialogueUI __instance, StoryUI.CharacterVar charVar, string text)
         {
+            if (isSkipping) return;
             string finalDialogue = "";
             switch (GetDialogueType(__instance))
             {
@@ -279,6 +296,7 @@ namespace NeuroLobotomyCorporation.WatchStory
                 return;
             }
             if (!__result) return;
+            if (isSkipping) return;
             int selectedDialogueIndex = ((int)e - 2);
             NeuroSDKHandler.SendCommand("dialogue_option_end");
             string dialogue = dialogueOptions[selectedDialogueIndex];
@@ -298,6 +316,7 @@ namespace NeuroLobotomyCorporation.WatchStory
                 dialogueOptions.Add(dialogue);
                 finalMessage += "|" + dialogue;
             }
+            if (isSkipping) return;
             NeuroSDKHandler.SendCommand(finalMessage);
         }
 
@@ -335,6 +354,7 @@ namespace NeuroLobotomyCorporation.WatchStory
             lastCG = "";
             lastSpeaker = "";
             lastSpeakerWasRobotSephira = false;
+            isSkipping = false;
             NeuroSDKHandler.SendContext("END SCENE", true);
         }
     }
