@@ -185,6 +185,13 @@ namespace NeuroLCConnector
                 case "dont_touch_me_touched_event_end":
                     DontTouchMeTouchedEventEnd();
                     break;
+                case "start_dialogue_option":
+                    (ActionScene.CurrentActionScene as WatchStoryScene).SetDialogueOptions(parameters);
+                    ActionScene.CurrentActionScene.RegisterAction("select_dialogue");
+                    break;
+                case "dialogue_option_end":
+                    ActionScene.CurrentActionScene.UnregisterAction("select_dialogue");
+                    break;
                 default:
                     Console.WriteLine("The command " + parameters[(int)ProcessGameMessageParameters.Command] + " was not found. Ensure it is spelt correctly on both game and server side.");
                     break;
@@ -224,15 +231,11 @@ namespace NeuroLCConnector
             switch (parameters[(int)ProcessGameMessageParameters.Command_Parameter])
             {
                 case "abnormality_extraction":
-                    List<string> abnoNames = new List<string>();
-                    //Loop through the names of the Abnormalities and add them to the name list before creating the scene
-                    //Most scene changes do not require additional parameters prior to initialization but the extraction command lists the names, so
-                    for (int i = 2; i < parameters.Length; i++)
-                    {
-                        abnoNames.Add(parameters[i]);
-                    }
-                    AbnormalityExtractionScene.AbnoNames = abnoNames;
+                    AbnormalityExtractionScene.ParseParameters(parameters);
                     ActionScene.ChangeActionScene(new AbnormalityExtractionScene());
+                    break;
+                case "watch_story":
+                    ActionScene.ChangeActionScene(new WatchStoryScene());
                     break;
                 case "facility_management":
                     ActionScene.ChangeActionScene(new FacilityManagementScene());

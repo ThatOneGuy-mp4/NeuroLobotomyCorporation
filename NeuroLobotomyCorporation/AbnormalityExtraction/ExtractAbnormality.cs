@@ -21,7 +21,7 @@ namespace NeuroLobotomyCorporation.AbnormalityExtraction
             {
                 selected.OnPointerClick();
             }
-            return null;
+            return "";
         }
     }
 }

@@ -15,6 +15,8 @@ namespace NeuroLobotomyCorporation.AbnormalityExtraction
             {
                 case "extract_abnormality":
                     return ExtractAbnormality.Command(message[ExtractAbnormality.ABNORMALITY_NAME_INDEX]);
+                case "reextract_abnormalities":
+                    return ReextractAbnormalities.Command();
             }
             return "Command " + message[COMMAND_INDEX] + " does not exist in scene AbnormalityExtractionScene.";
         }

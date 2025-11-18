@@ -10,21 +10,16 @@ using System.Threading.Tasks;
 
 namespace NeuroLCConnector
 {
-    /*
-     * TODO: 
-     * -Add Action to reextract once unlocked
-     */
     public class AbnormalityExtractionScene : ActionScene
     {
         protected override List<INeuroAction> InitActions
         {
             get
             {
-                List<INeuroAction> actions = new List<INeuroAction>
+                List<INeuroAction> list = new List<INeuroAction>
                 {
-                    new ExtractAbnormality()
                 };
-                return actions;
+                return list;
             }
         }
 
@@ -32,40 +27,76 @@ namespace NeuroLCConnector
         {
             get
             {
-                if(allPossibleActions == null)
+                List<INeuroAction> list = new List<INeuroAction>
                 {
-                    allPossibleActions = new List<INeuroAction>
-                    {
-                        new ExtractAbnormality()
-                    };
-                }
-                return allPossibleActions;
+                    new ExtractAbnormality(),
+                    new ReextractAbnormalities()
+                };
+                return list;
             }
         }
 
-        public static List<string> AbnoNames
+        private static bool canExtract;
+        private static bool canReextract;
+
+        public static void ParseParameters(string[] parameters)
+        {
+            if (parameters[2].Equals("true")) canReextract = true;
+            else canReextract = false;
+            if (parameters[3].Equals("NO_EXTRACTION")) { canExtract = false; return; }//depending on whether extraction is possible, parameter[3] is either the first abnormality's name or "NO_EXTRACTION"
+            else canExtract = true;
+            List<string> names = new List<string>();
+            List<string> taglines = new List<string>();
+            for(int i = 3; i < parameters.Length; i += 2)
+            {
+                names.Add(parameters[i]);
+                taglines.Add(parameters[i + 1]);
+            }
+            AbnormalityNames = names;
+            AbnormalityTaglines = taglines;
+        }
+
+        public static List<string> AbnormalityNames
         {
             get
             {
-                return abnoNames;
+                return abnormalityNames;
             }
             set
             {
-                abnoNames = value;
+                abnormalityNames = value;
             }
         }
-        private static List<string> abnoNames;
+        private static List<string> abnormalityNames;
 
-        //TODO: add the ability to reextract
-        private bool canReextract;
+        public static List<string> AbnormalityTaglines
+        {
+            get
+            {
+                return abnormalityTaglines;
+            }
+            set
+            {
+                abnormalityTaglines = value;
+            }
+        }
+        private static List<string> abnormalityTaglines;
 
-        //TODO: add the taglines for the abnormalities to the context
+        public override void InitializeOptionalActions()
+        {
+            if (canExtract) RegisterAction("extract_abnormality");
+            else return;
+            if (canReextract) RegisterAction("reextract_abnormalities");
+        }
+
         protected override string GetActionSceneStartContext()
         {
+            if (!canExtract) return "";
             string context = "It is time to extract a new Abnormality to add to the facility. Your choices are: ";
-            foreach(string name in AbnoNames)
+
+            for(int i = 0; i < AbnormalityNames.Count; i++)
             {
-                context += "\n" + name;
+                context += String.Format("\n{0}: {1}", AbnormalityNames[i], AbnormalityTaglines[i]);
             }
             return context;
         }
@@ -81,16 +112,16 @@ namespace NeuroLCConnector
             Required = new List<string> { "abnormality_name" },
             Properties = new Dictionary<string, JsonSchema>
             {
-                ["abnormality_name"] = QJS.Enum(AbnormalityExtractionScene.AbnoNames)
+                ["abnormality_name"] = QJS.Enum(AbnormalityExtractionScene.AbnormalityNames)
             }
         };
 
         protected override ExecutionResult Validate(ActionData actionData, out string? resultData)
         {
-            string? chosenAbno = actionData.Data?["abnormality_name"]?.Value<string>();
-            resultData = chosenAbno;
-            if (String.IsNullOrEmpty(chosenAbno)) return ExecutionResult.Failure("Action failed. Missing required parameter 'abnormality_name'.");
-            if (AbnormalityExtractionScene.AbnoNames.Contains(chosenAbno)) return ExecutionResult.Success();
+            string? chosenAbnormality = actionData.Data?["abnormality_name"]?.Value<string>();
+            resultData = chosenAbnormality;
+            if (String.IsNullOrEmpty(chosenAbnormality)) return ExecutionResult.Failure("Action failed. Missing required parameter 'abnormality_name'.");
+            if (AbnormalityExtractionScene.AbnormalityNames.Contains(chosenAbnormality)) return ExecutionResult.Success();
             return ExecutionResult.Failure("Action failed. Invalid parameter 'abnormality_name'");
         }
 
@@ -98,5 +129,14 @@ namespace NeuroLCConnector
         {
             return NeuroLCConnector.Connector.SendCommand("extract_abnormality|" + resultData);
         }
+    }
+
+    public class ReextractAbnormalities : NeuroActionNoValidation
+    {
+        public override string Name => "reextract_abnormalities";
+
+        protected override string SuccessMessage => "Refreshing...";
+
+        protected override string Description => "Gain a new set of Abnormalities which may be extracted.";
     }
 }

@@ -40,6 +40,7 @@ using NeuroLobotomyCorporation.AbramSuppression;
 using NeuroLobotomyCorporation.AdamSuppression;
 using NeuroLobotomyCorporation.DaatSuppression;
 using Credit;
+using NeuroLobotomyCorporation.WatchStory;
 
 namespace NeuroLobotomyCorporation
 {
@@ -56,8 +57,48 @@ namespace NeuroLobotomyCorporation
             HarmonyInstance harmonyInstance = HarmonyInstance.Create("ThatOneGuy.NeuroLobotomyCorporation");
             harmonyInstance.Patch(typeof(NewTitleScript).GetMethod("Update", AccessTools.all), null,
                 new HarmonyMethod(typeof(Harmony_Patch).GetMethod("InitializeSDK")), null);
+
+            //Abnormality Selection fixes 
             harmonyInstance.Patch(typeof(CreatureSelectUI).GetMethod("Init", AccessTools.all), null,
                 new HarmonyMethod(typeof(Harmony_Patch).GetMethod("AbnormalityChoiceSelectStart")), null);
+            harmonyInstance.Patch(typeof(CreatureSelectUI).GetMethod("OnClickReExtract", AccessTools.all), null,
+                new HarmonyMethod(typeof(Harmony_Patch).GetMethod("StoreAbnormalitiesToReextract")), null);
+            harmonyInstance.Patch(typeof(CreatureSelectUnit).GetMethod("LateInit", AccessTools.all), null,
+                new HarmonyMethod(typeof(Harmony_Patch).GetMethod("AbnormalityFinishedReextracting")), null);
+            //very very very important. neuroTomfoolery
+            harmonyInstance.Patch(typeof(CreatureSelectUnit).GetMethod("GetName", AccessTools.all), null,
+                new HarmonyMethod(typeof(Harmony_Patch).GetMethod("VeryVeryVeryImportantNamePostfix")), null);
+            harmonyInstance.Patch(typeof(CreatureSelectUnit).GetMethod("GetText", AccessTools.all), null,
+                new HarmonyMethod(typeof(Harmony_Patch).GetMethod("VeryVeryVeryImportantTextPostfix")), null);
+            //Abnormality Selection fixes end
+
+            //Story fixes
+            harmonyInstance.Patch(typeof(StoryUI).GetMethod("LoadStory", AccessTools.all), null,
+                new HarmonyMethod(typeof(Harmony_Patch).GetMethod("StoryStart")), null);
+            harmonyInstance.Patch(typeof(StoryUI).GetMethod("OnClickSkip", AccessTools.all), null,
+               new HarmonyMethod(typeof(WatchStory.Patches).GetMethod("StopContextWhileSkipping")), null);
+            harmonyInstance.Patch(typeof(StoryUI).GetMethod("OnClickDialogue", AccessTools.all), null,
+               new HarmonyMethod(typeof(WatchStory.Patches).GetMethod("StartContextWhenSkippingDisabled")), null);
+            harmonyInstance.Patch(typeof(StoryCGFadeEffecter).GetMethod("ChangeCG", AccessTools.all), null,
+                new HarmonyMethod(typeof(WatchStory.Patches).GetMethod("ContextBackground")), null);
+            harmonyInstance.Patch(typeof(StoryDialogueUI).GetMethod("Speak", AccessTools.all), null,
+                new HarmonyMethod(typeof(WatchStory.Patches).GetMethod("ContextSpeak")), null);
+            harmonyInstance.Patch(typeof(StoryUI).GetMethod("Command_select", AccessTools.all), null,
+                new HarmonyMethod(typeof(WatchStory.Patches).GetMethod("ContextDialogueOption")), null);
+            harmonyInstance.Patch(typeof(StorySelectionUI).GetMethod("ShowSelection", AccessTools.all), null,
+                new HarmonyMethod(typeof(WatchStory.Patches).GetMethod("StartDialogueOption")), null);
+            harmonyInstance.Patch(typeof(StoryUI).GetMethod("FixedUpdate", AccessTools.all), null,
+                new HarmonyMethod(typeof(WatchStory.SelectDialogue).GetMethod("NeuroSelectDialogueOption")), null);
+            harmonyInstance.Patch(typeof(BossMissionAppearUI).GetMethod("Show", AccessTools.all), null,
+                new HarmonyMethod(typeof(WatchStory.Patches).GetMethod("ContextBossMission")), null);
+            harmonyInstance.Patch(typeof(StorySeedUI).GetMethod("Show", AccessTools.all), null,
+                new HarmonyMethod(typeof(WatchStory.Patches).GetMethod("ContextSeedOfLightGermination")), null);
+            harmonyInstance.Patch(typeof(StoryUI).GetMethod("Command_ending", AccessTools.all), null,
+                new HarmonyMethod(typeof(WatchStory.Patches).GetMethod("ContextLORForeshadowing")), null);
+            harmonyInstance.Patch(typeof(StorySceneController).GetMethod("OnEndStory", AccessTools.all), null,
+                new HarmonyMethod(typeof(WatchStory.Patches).GetMethod("EndStorySegment")), null);
+            //Story fixes end
+
             harmonyInstance.Patch(typeof(DeployUI).GetMethod("OnManagementStart", AccessTools.all), null,
                 new HarmonyMethod(typeof(Harmony_Patch).GetMethod("BeginFacilityManagement", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(LoggingScript).GetMethod("MakeText", AccessTools.all), null,
@@ -68,6 +109,9 @@ namespace NeuroLobotomyCorporation
                 new HarmonyMethod(typeof(ShootManagerialBullet).GetMethod("NeuroShootBullet", AccessTools.all)), null);
 
             
+            harmonyInstance.Patch(typeof(SefiraBossManager).GetMethod("OnOverloadActivated", AccessTools.all), null,
+                new HarmonyMethod(typeof(Harmony_Patch).GetMethod("ChangeBossPhaseMeltdown", AccessTools.all)), null);
+
             //Give Neuro context for all of Gebura's special attacks + phase changes
             harmonyInstance.Patch(typeof(GeburahCoreScript).GetMethod("OnTakeDamage", AccessTools.all), null,
                 new HarmonyMethod(typeof(GeburaSuppressionScene).GetMethod("PhaseChangeGebura", AccessTools.all)), null);
@@ -164,7 +208,7 @@ namespace NeuroLobotomyCorporation
                 new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroAgentPanicked", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(AgentModel).GetMethod("LoseControl", AccessTools.all), null,
                 new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroAgentBecomesUncontrollable", AccessTools.all)), null);
-            harmonyInstance.Patch(typeof(AgentModel).GetMethod("StopPanic", AccessTools.all), 
+            harmonyInstance.Patch(typeof(AgentModel).GetMethod("StopPanic", AccessTools.all),
                 new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroAgentRecoverPanic", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(AgentModel).GetMethod("GetControl", AccessTools.all),
                 new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroAgentBecomesControllable", AccessTools.all)), null);
@@ -194,7 +238,7 @@ namespace NeuroLobotomyCorporation
             harmonyInstance.Patch(typeof(ChokhmahBossBase).GetMethod("OnTryTimePause", AccessTools.all), null,
                 new HarmonyMethod(typeof(HokmaSuppressionScene).GetMethod("InformNeuroPriceOfSilencePaid", AccessTools.all)), null);
             //Price of Silence Information End
-            
+
             //WhiteNight context
             harmonyInstance.Patch(typeof(PlagueDoctor).GetMethod("GenDeathAngel", AccessTools.all), null,
                 new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("StoreWhiteNight", AccessTools.all)), null);
@@ -204,7 +248,7 @@ namespace NeuroLobotomyCorporation
                 new HarmonyMethod(typeof(GetSuppressibleTargets).GetMethod("WhiteNightAdvented", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(DeathAngel).GetMethod("OnSuppressedByConfess", AccessTools.all), null,
                 new HarmonyMethod(typeof(GetSuppressibleTargets).GetMethod("OneSinSuppressedWhiteNight", AccessTools.all)), null);
-            harmonyInstance.Patch(typeof(DeathAngel).GetMethod("OnSuppressedByDamage", AccessTools.all), 
+            harmonyInstance.Patch(typeof(DeathAngel).GetMethod("OnSuppressedByDamage", AccessTools.all),
                 new HarmonyMethod(typeof(GetSuppressibleTargets).GetMethod("VedalSuppressedWhiteNight", AccessTools.all)), null, null);
             //WhiteNight context end
 
@@ -240,19 +284,55 @@ namespace NeuroLobotomyCorporation
             }
         }
 
-        public static void AbnormalityChoiceSelectStart(CreatureSelectUI __instance)
+        public static void AbnormalityChoiceSelectStart()
         {
-            string command = "change_action_scene|abnormality_extraction";
+            string command = "change_action_scene|abnormality_extraction|";
+            string canReextract = "false";
+            if (CreatureSelectUI.instance.reExtractController.isShow) canReextract = "true";
+            string avaliableAbnormalitiesAndTaglines = "";
             foreach (CreatureSelectUnit unit in CreatureSelectUI.instance.Units)
             {
                 if (unit.gameObject.activeSelf)
                 {
-                    command += "|" + unit.IdText.text;
+                    if (unit.IdText.text.Equals("0-00-00-A")) continue;
+                    avaliableAbnormalitiesAndTaglines = String.Format("|{0}|{1}", unit.IdText.text, unit.GetText()) + avaliableAbnormalitiesAndTaglines;
                 }
             }
-            //TODO: add whether or not re-extraction will be possible here
+            if (String.IsNullOrEmpty(avaliableAbnormalitiesAndTaglines)) avaliableAbnormalitiesAndTaglines = "|NO_EXTRACTION";
+            command += canReextract + avaliableAbnormalitiesAndTaglines;
             ActionScene.Instance = new AbnormalityExtraction.AbnormalityExtractionScene();
             NeuroSDKHandler.SendCommand(command);
+        }
+
+        private static int abnormalitiesBeingReextracted = 0;
+        public static void StoreAbnormalitiesToReextract()
+        {
+            foreach(CreatureSelectUnit unit in CreatureSelectUI.instance.Units)
+            {
+                if (unit.gameObject.activeSelf) abnormalitiesBeingReextracted++;
+            }
+        }
+
+        public static void AbnormalityFinishedReextracting(CreatureSelectUnit __instance)
+        {
+            if(__instance.gameObject.activeSelf) abnormalitiesBeingReextracted--;
+            if (abnormalitiesBeingReextracted == 0) AbnormalityChoiceSelectStart();
+        }
+
+        public static void VeryVeryVeryImportantNamePostfix(ref string __result)
+        {
+            if (__result.Equals("Bald-is-awesome!")) __result = "Literally-Vedal";
+        }
+
+        public static void VeryVeryVeryImportantTextPostfix(CreatureSelectUnit __instance, ref string __result)
+        {
+            if (__instance.IdText.text.Equals("Bald-is-awesome!") || __instance.IdText.text.Equals("Literally-Vedal")) __result = "It's literally him.";
+        }
+
+        public static void StoryStart()
+        {
+            ActionScene.Instance = new WatchStoryScene();
+            NeuroSDKHandler.SendCommand("change_action_scene|watch_story");
         }
 
         public static void BeginFacilityManagement()
