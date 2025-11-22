@@ -25,8 +25,6 @@ namespace NeuroLCConnector
     /*
      * TODO:
      * -Add ActionScene for department expansion (same reason as above, but for choosing the next department)
-     * -Add ActionScene for pre-management preparation 
-     * --Add a similar scene specific to E.G.O. equipping? 
      */
     public abstract class ActionScene
     {

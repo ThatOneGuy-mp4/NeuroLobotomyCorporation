@@ -41,6 +41,8 @@ using NeuroLobotomyCorporation.AdamSuppression;
 using NeuroLobotomyCorporation.DaatSuppression;
 using Credit;
 using NeuroLobotomyCorporation.WatchStory;
+using NeuroLobotomyCorporation.DayPreparation;
+using Customizing;
 
 namespace NeuroLobotomyCorporation
 {
@@ -98,6 +100,23 @@ namespace NeuroLobotomyCorporation
             harmonyInstance.Patch(typeof(StorySceneController).GetMethod("OnEndStory", AccessTools.all), null,
                 new HarmonyMethod(typeof(WatchStory.Patches).GetMethod("EndStorySegment")), null);
             //Story fixes end
+
+            //Day Preparation fixes
+            harmonyInstance.Patch(typeof(DeployUI).GetMethod("Init", AccessTools.all), new HarmonyMethod(typeof(Harmony_Patch).GetMethod("DayPreparationStart", AccessTools.all)),
+                new HarmonyMethod(typeof(DayPreparation.Patches).GetMethod("ResearchPhaseProgress", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(DeployUI).GetMethod("CheckResearch", AccessTools.all), null,
+                new HarmonyMethod(typeof(DayPreparation.Patches).GetMethod("ResearchCheck", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(SefiraPanel).GetMethod("OnStartBossSession", AccessTools.all), null,
+                new HarmonyMethod(typeof(DayPreparation.Patches).GetMethod("CoreSuppressionEnabledDisabled", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(ResearchWindow).GetMethod("MakeSefiraBossReward", AccessTools.all), null,
+                new HarmonyMethod(typeof(DayPreparation.Patches).GetMethod("CoreSuppressionRewardContext", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(AppearanceUI).GetMethod("OpenWindow", AccessTools.all), null,
+                new HarmonyMethod(typeof(DayPreparation.Patches).GetMethod("EnableCustomizeAgent", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(CustomizingWindow).GetMethod("Cancel", AccessTools.all), null,
+                new HarmonyMethod(typeof(DayPreparation.Patches).GetMethod("DisableCustomizeAgent", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(CustomizingWindow).GetMethod("Update", AccessTools.all), null,
+                new HarmonyMethod(typeof(CustomizeAgent).GetMethod("SetCustomAppearance", AccessTools.all)), null);
+            //Day Preparation fixes end
 
             harmonyInstance.Patch(typeof(DeployUI).GetMethod("OnManagementStart", AccessTools.all), null,
                 new HarmonyMethod(typeof(Harmony_Patch).GetMethod("BeginFacilityManagement", AccessTools.all)), null);
@@ -333,6 +352,12 @@ namespace NeuroLobotomyCorporation
         {
             ActionScene.Instance = new WatchStoryScene();
             NeuroSDKHandler.SendCommand("change_action_scene|watch_story");
+        }
+
+        public static void DayPreparationStart()
+        {
+            ActionScene.Instance = new DayPreparationScene();
+            NeuroSDKHandler.SendCommand("change_action_scene|day_preparation");
         }
 
         public static void BeginFacilityManagement()

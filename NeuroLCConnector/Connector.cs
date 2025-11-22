@@ -156,6 +156,27 @@ namespace NeuroLCConnector
                 case "change_action_scene":
                     await ChangeCurrentActionScene(parameters);
                     break;
+                case "enable_customize_agent":
+                    ActionScene.CurrentActionScene.RegisterAction("customize_agent");
+                    break;
+                case "disable_customize_agent":
+                    ActionScene.CurrentActionScene.UnregisterAction("customize_agent");
+                    break;
+                case "enable_activate_core_suppression":
+                    if (parameters.Length > 1)
+                    {
+                        DayPreparationScene.ActivateCoreSuppression.SephirahReadyToSuppress = new List<string>();
+                        for (int i = 1; i < parameters.Length; i++)
+                        {
+                            DayPreparationScene.ActivateCoreSuppression.SephirahReadyToSuppress.Add(parameters[i]);
+                        }
+                        Context.Send("A Sephirah's core requires suppression...");
+                    }
+                    ActionScene.CurrentActionScene.RegisterAction("activate_core_suppression");
+                    break;
+                case "disable_activate_core_suppression":
+                    ActionScene.CurrentActionScene.UnregisterAction("activate_core_suppression");
+                    break;
                 case "change_boss_phase":
                     if (!(ActionScene.CurrentActionScene is CoreSuppressionBaseScene)) return;
                     await (ActionScene.CurrentActionScene as CoreSuppressionBaseScene).ChangePhase();
@@ -174,7 +195,7 @@ namespace NeuroLCConnector
                     if (ActionScene.CurrentActionScene is AdamSuppressionScene) (ActionScene.CurrentActionScene as AdamSuppressionScene).FailCoreSuppression();
                     break;
                 case "give_poke":
-                    if(ActionScene.CurrentActionScene is GeburaSuppressionScene)
+                    if (ActionScene.CurrentActionScene is GeburaSuppressionScene)
                     {
                         Task.Run(new Func<Task>((ActionScene.CurrentActionScene as GeburaSuppressionScene).GivePokeAction));
                     }
@@ -236,6 +257,9 @@ namespace NeuroLCConnector
                     break;
                 case "watch_story":
                     ActionScene.ChangeActionScene(new WatchStoryScene());
+                    break;
+                case "day_preparation":
+                    ActionScene.ChangeActionScene(new DayPreparationScene());
                     break;
                 case "facility_management":
                     ActionScene.ChangeActionScene(new FacilityManagementScene());
