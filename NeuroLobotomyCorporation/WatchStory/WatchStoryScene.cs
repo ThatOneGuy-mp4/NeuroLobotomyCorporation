@@ -17,5 +17,10 @@ namespace NeuroLobotomyCorporation.WatchStory
             }
             return "Command " + message[COMMAND_INDEX] + " does not exist in scene WatchStoryScene.";
         }
+
+        public override string RestartConnectorCommand()
+        {
+            return "change_action_scene|watch_story";
+        }
     }
 }

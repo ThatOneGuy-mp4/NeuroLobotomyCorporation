@@ -31,5 +31,10 @@ namespace NeuroLobotomyCorporation.TipherethSuppression
                 "\n\n\"We are two, but one. Do you know what this means?\"" +
                 "\n\"Every Containment Unit is under my reign.\"", currentDay);
         }
+
+        public override string RestartConnectorCommand()
+        {
+            return "change_action_scene|tiphereth_suppression|" + (CreatureOverloadManager.instance.GetQliphothOverloadLevel() - 1).ToString();
+        }
     }
 }

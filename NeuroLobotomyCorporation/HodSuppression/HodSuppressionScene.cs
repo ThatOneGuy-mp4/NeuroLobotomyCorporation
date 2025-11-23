@@ -32,5 +32,10 @@ namespace NeuroLobotomyCorporation.HodSuppression
                 "\n\n\"Well, shall we film the corporate educational video together? ...Alright everyone, look here! Smile, say cheese!\"" +
                 "\n\"Please make sure to do it carefully, and don’t mess up! Every employee will watch this educational video and refer back to it!\"", currentDay, energyRequired);
         }
+
+        public override string RestartConnectorCommand()
+        {
+            return "change_action_scene|hod_suppression|" + (CreatureOverloadManager.instance.GetQliphothOverloadLevel() - 1).ToString();
+        }
     }
 }

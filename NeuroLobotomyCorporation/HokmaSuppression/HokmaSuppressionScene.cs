@@ -34,6 +34,11 @@ namespace NeuroLobotomyCorporation.HokmaSuppression
                 "\nce delays in your actions.", currentDay, energyRequired); //haha get it because the other half of the sentence was delayed. g.get it. whatever.
         }
 
+        public override string RestartConnectorCommand()
+        {
+            return "change_action_scene|hokma_suppression|" + (CreatureOverloadManager.instance.GetQliphothOverloadLevel() - 1).ToString();
+        }
+
         //Postfix - save the price of silence dialogue for later
         private static string silenceDialogue = "";
         public static void SavePriceOfSilenceDialogue(string text)

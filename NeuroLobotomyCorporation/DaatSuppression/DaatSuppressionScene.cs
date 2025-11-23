@@ -27,12 +27,19 @@ namespace NeuroLobotomyCorporation.DaatSuppression
             return base.ProcessServerInput(message);
         }
 
+        private static int phase = 0;
         private string GetDayStartContext()
         {
+            phase = 0;
             return "\"Shall we get to work? All we need to do is what we’ve always done.\"" +
                 "\n\nCore Suppression...hm, I suppose it's not a suppression at this point, is it? Then..." +
                 "\nDa'at Realization has begun on Day 50." +
                 "\nNo errors or meltdowns of any kind are detected. All you must do...is manage the Abnormalities, and collect the last 1500 P.E. Boxes we need.";
+        }
+
+        public override string RestartConnectorCommand()
+        {
+            return "change_action_scene|daat_suppression|" + phase.ToString();
         }
 
         //Prefix - save the current next energy threshold; it it differs from the next energy threshold after updating, then a dialogue played, and therefore, increase phase.
@@ -48,8 +55,7 @@ namespace NeuroLobotomyCorporation.DaatSuppression
         {
             FieldInfo conversationEnergyQueueInfo = typeof(KetherLastBossBase).GetField("convEnergyQueue", BindingFlags.Instance | BindingFlags.NonPublic);
             Queue<float> queue = (Queue<float>)conversationEnergyQueueInfo.GetValue(__instance);
-            if (queue.Peek() != __state && __state >= 0.1f) NeuroSDKHandler.SendCommand("change_boss_phase");
-            //if (__state == 0.7f) Spin.NeuroCameraRotationEvent.CorrectRotation(); //facility begins moving; reset rotation so the emotional impact is not lost
+            if (queue.Peek() != __state && __state >= 0.1f) { NeuroSDKHandler.SendCommand("change_boss_phase"); phase++; }
         }
 
         public static void InformNeuroFinalAyinConversation(string __result, int index)

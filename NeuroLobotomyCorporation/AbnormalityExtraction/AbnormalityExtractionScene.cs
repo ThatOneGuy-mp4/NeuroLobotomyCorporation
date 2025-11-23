@@ -20,5 +20,10 @@ namespace NeuroLobotomyCorporation.AbnormalityExtraction
             }
             return "Command " + message[COMMAND_INDEX] + " does not exist in scene AbnormalityExtractionScene.";
         }
+
+        public override string RestartConnectorCommand()
+        {
+            return Harmony_Patch.GetAbnormalityStartCommand();
+        }
     }
 }

@@ -39,9 +39,20 @@ namespace NeuroLobotomyCorporation.AdamSuppression
                 "\n\n\"...And thus, I have revealed myself. I, who shant cling onto the mere past, the regrets, or the trifling memories.\"";
         }
 
+        public override string RestartConnectorCommand()
+        {
+            SefiraBossCreatureModel anArbiter = Helpers.TryFindSefiraCoreTarget("An Arbiter") as SefiraBossCreatureModel;
+            int altPhase = 0;
+            if (anArbiter != null)
+            {
+                altPhase = (int)((BinahCoreScript)anArbiter.script).Phase - 1;
+            }
+            return "change_action_scene|adam_suppression|" + (CreatureOverloadManager.instance.GetQliphothOverloadLevel() - 1).ToString() + "|" + altPhase.ToString();
+        }
+
         /*
          * I include the on-screen text into Neuro's context because I want her to see all the dialogue Vedal does. 
-         * However, in this suppression, there is on-screen text that doesn't appear if you fight the Red Mist, 
+         * However, in this suppression, there is on-screen text that doesn't appear if you fight An Arbiter, 
          * meaning Vedal would not see dialogue Neuro does. And that doesn't make sense now does it?
          * This postfix will override that, and have the on-screen text change regardless of if you're fighting An Arbiter or doing meltdowns.
          * It also makes the level 5 meltdown text occur earlier to, again, better line up with the dialogue Neuro is receiving.

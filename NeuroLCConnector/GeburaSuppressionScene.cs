@@ -26,7 +26,7 @@ namespace NeuroLCConnector
         public override void InitializeActionScene()
         {
             base.InitializeActionScene();
-            if (angelaConversationSaidBefore)
+            if (angelaConversationSaidBefore || phase > 0) //phase > 0 when connector is restarted mid battle
             {
                 RegisterAction("poke");
                 Context.Send("The 'poke' command has been reauthorized. May the suppression proceed smoothly.", true);

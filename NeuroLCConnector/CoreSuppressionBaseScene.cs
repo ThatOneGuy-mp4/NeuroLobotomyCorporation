@@ -31,6 +31,17 @@ namespace NeuroLCConnector
             }
         }
 
+        public void SetPhase(int phase)
+        {
+            this.phase = phase;
+        }
+
+        protected override string GetActionSceneStartContext()
+        {
+            if (phase > 0) return "";
+            return base.GetActionSceneStartContext();
+        }
+
         public async Task CoreSuppressionComplete()
         {
             CleanUpActionScene();

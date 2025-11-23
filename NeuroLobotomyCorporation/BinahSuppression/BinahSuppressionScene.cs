@@ -33,6 +33,17 @@ namespace NeuroLobotomyCorporation.BinahSuppression
                 "\n\n\"Now... can you stop me on your own two feet, with your own power?\"", currentDay);
         }
 
+        public override string RestartConnectorCommand()
+        {
+            SefiraBossCreatureModel anArbiter = Helpers.TryFindSefiraCoreTarget("An Arbiter") as SefiraBossCreatureModel;
+            int phase = 0;
+            if (anArbiter != null)
+            {
+                phase = (int)((BinahCoreScript)anArbiter.script).Phase - 1;
+            }
+            return "change_action_scene|binah_suppression|" + phase.ToString();
+        }
+
         //i'm slightly concerned this may trigger more than once. i still don't have evidence of it but i'm suspicious anyways.
         public static void PhaseChangeBinah(BinahCoreScript __instance)
         {

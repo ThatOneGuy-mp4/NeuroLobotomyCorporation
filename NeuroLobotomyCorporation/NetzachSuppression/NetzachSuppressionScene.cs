@@ -32,5 +32,10 @@ namespace NeuroLobotomyCorporation.NetzachSuppression
                 "\n\n\"No one is actually safe here. You know that the Safety Team is just for show, right?\"" +
                 "\n\"Why do you want to continue prolonging these undesired lives? What’d you expect to see at the end of all this?\"", currentDay, energyRequired);
         }
+
+        public override string RestartConnectorCommand()
+        {
+            return "change_action_scene|netzach_suppression|" + (CreatureOverloadManager.instance.GetQliphothOverloadLevel() - 1).ToString();
+        }
     }
 }

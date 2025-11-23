@@ -29,5 +29,7 @@ namespace NeuroLobotomyCorporation
         protected const int COMMAND_INDEX = 0;
 
         public abstract string ProcessServerInput(string[] message);
+
+        public abstract string RestartConnectorCommand();
     }
 }

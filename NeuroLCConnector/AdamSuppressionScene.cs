@@ -106,6 +106,11 @@ namespace NeuroLCConnector
             }
         }
 
+        public void SetAltPhase(int phase)
+        {
+            altPhase = Math.Min(this.phase, 4) + phase;
+        }
+
         public void FailCoreSuppression()
         {
             CleanUpActionScene();

@@ -79,6 +79,12 @@ namespace NeuroLCConnector
         private string SuppressionFailureDialogue => "...Bloodbath calls to him." +
             "\nAct III of Keter's Core Suppression has been cut short. I am sorry.";
 
+        public override void InitializeActionScene()
+        {
+            base.InitializeActionScene();
+            if (phase >= 4) RegisterAction("poke");
+        }
+
         public override async Task ChangePhase()
         {
             if (phase < 4)
@@ -119,6 +125,11 @@ namespace NeuroLCConnector
                 dialogue += RedMistPhaseTransitionDialogueSuffix[altPhase];
                 Context.Send(dialogue, true);
             }
+        }
+
+        public void SetAltPhase(int phase)
+        {
+            altPhase = Math.Min(this.phase, 4) + phase;
         }
 
         public void FailCoreSuppression()

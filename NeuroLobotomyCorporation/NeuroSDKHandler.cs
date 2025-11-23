@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -16,12 +17,12 @@ namespace NeuroLobotomyCorporation
      */
     public class NeuroSDKHandler : MonoBehaviour
     {
-        private static NeuroSDKHandler _instance;
+        private static NeuroSDKHandler _instance = null;
         public static NeuroSDKHandler Instance
         {
             get
             {
-                if (_instance == null) Debug.LogWarning("Accessed the SDK Handler without an instance being present.");
+                if (_instance == null) UnityEngine.Debug.LogWarning("Accessed the SDK Handler without an instance being present.");
                 return _instance;
             }
             set
@@ -47,7 +48,7 @@ namespace NeuroLobotomyCorporation
         {
             get
             {
-                if (serverInput == null) Debug.LogWarning("Accessed the ServerInput object while it was null.");
+                if (serverInput == null) UnityEngine.Debug.LogWarning("Accessed the ServerInput object while it was null.");
                 return serverInput;
             }
             set
@@ -104,7 +105,6 @@ namespace NeuroLobotomyCorporation
 
         private void ProcessServerInput(IAsyncResult result)
         {
-
             HttpListenerContext context = ServerInput.EndGetContext(result);
             HttpListenerRequest request = context.Request;
             StreamReader input = new StreamReader(request.InputStream, request.ContentEncoding);
@@ -148,6 +148,7 @@ namespace NeuroLobotomyCorporation
 
         public static void SendCommand(string command)
         {
+            if (Instance == null) return;
             NeuroSDKHandler.Instance.QueuedCommands.Add(command);
         }
 
@@ -155,6 +156,116 @@ namespace NeuroLobotomyCorporation
         {
             string fullCommand = "send_context|" + message + "|" + silent.ToString();
             SendCommand(fullCommand);
+        }
+
+        private void OnApplicationQuit()
+        {
+            KillConnector();
+        }
+
+        private static Process ConnectorInstance = null;
+        private static bool initialized = false;
+        public static void InitializeSDK()
+        {
+            if (!initialized)
+            {
+                StartConnector();
+                StartSDKHandler();
+                initialized = true;
+            }
+        }
+
+        private static void StartConnector()
+        {
+            if (ConnectorInstance != null) return;
+            ConnectorInstance = new Process();
+            //TODO: prolly make this settable somewhere else in case this is Not the user's (ved's) file structure
+            ConnectorInstance.StartInfo.FileName = Application.dataPath + @"\BaseMods\ThatOneGuy_NeuroLobotomyCorporation\Connector\NeuroLCConnector.exe";
+            ConnectorInstance.StartInfo.UseShellExecute = false;
+            ConnectorInstance.StartInfo.CreateNoWindow = false;
+            ConnectorInstance.Start();
+        }
+
+        private static void StartSDKHandler()
+        {
+            if (Instance != null) return;
+            GameObject sdkHandler = new GameObject("NeuroSDKHandler");
+            sdkHandler.AddComponent<NeuroSDKHandler>();
+        }
+
+        private static void KillConnector()
+        {
+            if (ConnectorInstance == null) return;
+            ConnectorInstance.Kill();
+            ConnectorInstance = null;
+        }
+
+        private static void KillSDKHandler()
+        {
+            if (Instance == null) return;
+            Instance.ServerInput.Stop();
+            Instance.QueuedCommands.Clear();
+            UnityEngine.Object.Destroy(Instance.gameObject);
+            Instance = null;
+        }
+
+        //Postfix - use the special mod commands
+        public static void SDKConsoleCommand(string command)
+        {
+            string[] parameters = command.Split(' ');
+            if (parameters.Length < 2 || !parameters[0].Equals("neurosdk")) return;
+            switch (parameters[1])
+            {
+                case "start":
+                    if (parameters.Length < 3) return;
+                    CommandStart(parameters[2]);
+                    return;
+                case "kill":
+                    if (parameters.Length < 3) return;
+                    CommandKill(parameters[2]);
+                    return;
+                case "restart":
+                    if (parameters.Length < 3) return;
+                    CommandRestart(parameters[2]);
+                    return;
+            }
+        }
+
+        //"neurosdk start {connector/handler/all}"
+        private static void CommandStart(string target)
+        {
+            if(target.Equals("connector") || target.Equals("all"))
+            {
+                StartConnector();
+            }
+            if (target.Equals("handler") || target.Equals("all"))
+            {
+                StartSDKHandler();
+            }
+        }
+
+        //"neurosdk kill {connector/handler/all}"
+        private static void CommandKill(string target)
+        {
+            if (target.Equals("connector") || target.Equals("all"))
+            {
+                KillConnector();
+            }
+            if (target.Equals("handler") || target.Equals("all"))
+            {
+                KillSDKHandler();
+            }
+        }
+
+        //"neurosdk restart {connector/handler/all}"
+        private static void CommandRestart(string target)
+        {
+            CommandKill(target);
+            CommandStart(target);
+            if((target.Equals("connector") || target.Equals("all")) && ActionScene.Instance != null)
+            {
+                NeuroSDKHandler.SendCommand(ActionScene.Instance.RestartConnectorCommand());
+            }
         }
     }
 }

@@ -148,7 +148,9 @@ namespace NeuroLCConnector
         {
             string parsedMessage = Encoding.UTF8.GetString(message);
             string[] parameters = parsedMessage.Split("|");
-            switch (parameters[(int)ProcessGameMessageParameters.Command])
+            string command = parameters[(int)ProcessGameMessageParameters.Command];
+            if (ActionScene.CurrentActionScene == null && !(command.Equals("send_context") || command.Equals("change_action_scene"))) return;
+            switch (command)
             {
                 case "send_context":
                     await SendContext(parameters);
@@ -247,6 +249,11 @@ namespace NeuroLCConnector
             Context.Send(message, bool.Parse(parameters[(int)SendContextParameters.Silent]));
         }
 
+        public enum BossPhase
+        {
+            Phase = 2, 
+            AltPhase = 3
+        }
         private static async Task ChangeCurrentActionScene(string[] parameters)
         {
             switch (parameters[(int)ProcessGameMessageParameters.Command_Parameter])
@@ -265,46 +272,82 @@ namespace NeuroLCConnector
                     ActionScene.ChangeActionScene(new FacilityManagementScene());
                     break;
                 case "malkuth_suppression":
-                    ActionScene.ChangeActionScene(new MalkuthSuppressionScene());
+                    MalkuthSuppressionScene malkuth = new MalkuthSuppressionScene();
+                    if (parameters.Length > 2) malkuth.SetPhase(Int32.Parse(parameters[(int)BossPhase.Phase]));
+                    ActionScene.ChangeActionScene(malkuth);
                     break;
                 case "yesod_suppression":
-                    ActionScene.ChangeActionScene(new YesodSuppressionScene());
+                    YesodSuppressionScene yesod = new YesodSuppressionScene();
+                    if (parameters.Length > 2) yesod.SetPhase(Int32.Parse(parameters[(int)BossPhase.Phase]));
+                    ActionScene.ChangeActionScene(yesod);
                     break;
                 case "hod_suppression":
-                    ActionScene.ChangeActionScene(new HodSuppressionScene());
+                    HodSuppressionScene hod = new HodSuppressionScene();
+                    if (parameters.Length > 2) hod.SetPhase(Int32.Parse(parameters[(int)BossPhase.Phase]));
+                    ActionScene.ChangeActionScene(hod);
                     break;
                 case "netzach_suppression":
-                    ActionScene.ChangeActionScene(new NetzachSuppressionScene());
+                    NetzachSuppressionScene netzach = new NetzachSuppressionScene();
+                    if (parameters.Length > 2) netzach.SetPhase(Int32.Parse(parameters[(int)BossPhase.Phase]));
+                    ActionScene.ChangeActionScene(netzach);
                     break;
                 case "tiphereth_suppression":
-                    ActionScene.ChangeActionScene(new TipherethSuppressionScene());
+                    TipherethSuppressionScene tiphereth = new TipherethSuppressionScene();
+                    if (parameters.Length > 2) tiphereth.SetPhase(Int32.Parse(parameters[(int)BossPhase.Phase]));
+                    ActionScene.ChangeActionScene(tiphereth);
                     break;
                 case "gebura_suppression":
-                    ActionScene.ChangeActionScene(new GeburaSuppressionScene());
+                    GeburaSuppressionScene gebura = new GeburaSuppressionScene();
+                    if (parameters.Length > 2) gebura.SetPhase(Int32.Parse(parameters[(int)BossPhase.Phase]));
+                    ActionScene.ChangeActionScene(gebura);
                     break;
                 case "chesed_suppression":
-                    ActionScene.ChangeActionScene(new ChesedSuppressionScene());
+                    ChesedSuppressionScene chesed = new ChesedSuppressionScene();
+                    if (parameters.Length > 2) chesed.SetPhase(Int32.Parse(parameters[(int)BossPhase.Phase]));
+                    ActionScene.ChangeActionScene(chesed);
                     break;
                 case "binah_suppression":
-                    ActionScene.ChangeActionScene(new BinahSuppressionScene());
+                    BinahSuppressionScene binah = new BinahSuppressionScene();
+                    if (parameters.Length > 2) binah.SetPhase(Int32.Parse(parameters[(int)BossPhase.Phase]));
+                    ActionScene.ChangeActionScene(binah);
                     break;
                 case "hokma_suppression":
-                    ActionScene.ChangeActionScene(new HokmaSuppressionScene());
+                    HokmaSuppressionScene hokma = new HokmaSuppressionScene();
+                    if (parameters.Length > 2) hokma.SetPhase(Int32.Parse(parameters[(int)BossPhase.Phase]));
+                    ActionScene.ChangeActionScene(hokma);
                     break;
                 case "claw_suppression":
-                    ActionScene.ChangeActionScene(new ClawSuppressionScene());
+                    ClawSuppressionScene claw = new ClawSuppressionScene();
+                    if (parameters.Length > 2) claw.SetPhase(Int32.Parse(parameters[(int)BossPhase.Phase]));
+                    ActionScene.ChangeActionScene(claw);
                     break;
                 case "abel_suppression":
-                    ActionScene.ChangeActionScene(new AbelSuppressionScene());
+                    AbelSuppressionScene abel = new AbelSuppressionScene();
+                    if (parameters.Length > 2) abel.SetPhase(Int32.Parse(parameters[(int)BossPhase.Phase]));
+                    ActionScene.ChangeActionScene(abel);
                     break;
                 case "abram_suppression":
-                    ActionScene.ChangeActionScene(new AbramSuppressionScene());
+                    AbramSuppressionScene abram = new AbramSuppressionScene();
+                    if (parameters.Length > 2)
+                    {
+                        abram.SetPhase(Int32.Parse(parameters[(int)BossPhase.Phase]));
+                        abram.SetAltPhase(Int32.Parse(parameters[(int)BossPhase.AltPhase]));
+                    }
+                    ActionScene.ChangeActionScene(abram);
                     break;
                 case "adam_suppression":
-                    ActionScene.ChangeActionScene(new AdamSuppressionScene());
+                    AdamSuppressionScene adam = new AdamSuppressionScene();
+                    if (parameters.Length > 2)
+                    {
+                        adam.SetPhase(Int32.Parse(parameters[(int)BossPhase.Phase]));
+                        adam.SetAltPhase(Int32.Parse(parameters[(int)BossPhase.AltPhase]));
+                    }
+                    ActionScene.ChangeActionScene(adam);
                     break;
                 case "daat_suppression":
-                    ActionScene.ChangeActionScene(new DaatSuppressionScene());
+                    DaatSuppressionScene daat = new DaatSuppressionScene();
+                    if (parameters.Length > 2) daat.SetPhase(Int32.Parse(parameters[(int)BossPhase.Phase]));
+                    ActionScene.ChangeActionScene(daat);
                     break;
             }
         }

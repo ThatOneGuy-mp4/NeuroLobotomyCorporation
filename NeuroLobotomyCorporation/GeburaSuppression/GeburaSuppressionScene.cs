@@ -36,6 +36,17 @@ namespace NeuroLobotomyCorporation.GeburaSuppression
                 "\n\"Do you really think feeble cowards like you can stop me?\"", currentDay);
         }
 
+        public override string RestartConnectorCommand()
+        {
+            SefiraBossCreatureModel redMistModel = Helpers.TryFindSefiraCoreTarget("The Red Mist") as SefiraBossCreatureModel;
+            int phase = 0;
+            if(redMistModel != null)
+            {
+                phase = (int)((GeburahCoreScript)redMistModel.script).Phase - 1;
+            }
+            return "change_action_scene|gebura_suppression|" + phase.ToString();
+        }
+
         //i'm slightly concerned this may trigger more than once. i don't have evidence of it but i'm suspicious anyways.
         public static void PhaseChangeGebura(GeburahCoreScript __instance)
         {

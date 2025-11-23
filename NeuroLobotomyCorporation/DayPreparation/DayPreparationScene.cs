@@ -22,5 +22,10 @@ namespace NeuroLobotomyCorporation.DayPreparation
             }
             return "Command " + message[COMMAND_INDEX] + " does not exist in scene DayPreparationScene.";
         }
+
+        public override string RestartConnectorCommand()
+        {
+            return "change_action_scene|day_preparation";
+        }
     }
 }

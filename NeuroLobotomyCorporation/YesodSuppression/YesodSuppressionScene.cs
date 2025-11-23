@@ -29,5 +29,10 @@ namespace NeuroLobotomyCorporation.YesodSuppression
                 "\nWarning! Yesod's Qlipha has manifested in the Information Department. Suppression will be complete once {1} P.E. Boxes have been generated and Qliphoth Meltdown Level 6 has been achieved." +
                 "\nAn error with the information and camera systems is detected.", currentDay, energyRequired);
         }
+
+        public override string RestartConnectorCommand()
+        {
+            return "change_action_scene|yesod_suppression|" + (CreatureOverloadManager.instance.GetQliphothOverloadLevel() - 1).ToString();
+        }
     }
 }

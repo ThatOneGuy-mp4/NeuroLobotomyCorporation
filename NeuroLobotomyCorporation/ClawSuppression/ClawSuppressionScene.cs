@@ -29,5 +29,10 @@ namespace NeuroLobotomyCorporation.ClawSuppression
                 "\nA must prove he can handle the trials ahead. From this point on, all Ordeals shall be replaced with White Ordeals, and no department shall be immune to Qliphoth Overloads, save for the Architecture Department." +
                 "\nPlease, for both of our sakes...bring this play to its climax.";
         }
+
+        public override string RestartConnectorCommand()
+        {
+            return "change_action_scene|claw_suppression|" + (CreatureOverloadManager.instance.GetQliphothOverloadLevel() - 1).ToString();
+        }
     }
 }

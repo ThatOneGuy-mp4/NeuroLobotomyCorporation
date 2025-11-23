@@ -58,7 +58,12 @@ namespace NeuroLobotomyCorporation
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             HarmonyInstance harmonyInstance = HarmonyInstance.Create("ThatOneGuy.NeuroLobotomyCorporation");
             harmonyInstance.Patch(typeof(NewTitleScript).GetMethod("Update", AccessTools.all), null,
-                new HarmonyMethod(typeof(Harmony_Patch).GetMethod("InitializeSDK")), null);
+                new HarmonyMethod(typeof(Harmony_Patch).GetMethod("InitializePreEndingTitleScreen")), null);
+            harmonyInstance.Patch(typeof(AlterTitleController).GetMethod("Update", AccessTools.all), null,
+                new HarmonyMethod(typeof(Harmony_Patch).GetMethod("InitializePostEndingTitleScreen")), null);
+            harmonyInstance.Patch(typeof(ConsoleScript).GetMethod("OnExitEdit", AccessTools.all), null,
+                new HarmonyMethod(typeof(NeuroSDKHandler).GetMethod("SDKConsoleCommand")), null);
+
 
             //Abnormality Selection fixes 
             harmonyInstance.Patch(typeof(CreatureSelectUI).GetMethod("Init", AccessTools.all), null,
@@ -286,24 +291,24 @@ namespace NeuroLobotomyCorporation
 
         }
 
-        private static bool initialized = false;
-        public static void InitializeSDK()
+        public static void InitializePreEndingTitleScreen()
         {
-            if (!initialized)
-            {
-                Process connector = new Process();
-                //TODO: prolly make this settable somewhere else in case this is Not the user's (ved's) file structure
-                connector.StartInfo.FileName = Application.dataPath + @"\BaseMods\ThatOneGuy_NeuroLobotomyCorporation\Connector\NeuroLCConnector.exe";
-                connector.StartInfo.UseShellExecute = false;
-                connector.StartInfo.CreateNoWindow = false;
-                connector.Start();
-                GameObject sdkHandler = new GameObject("NeuroSDKHandler");
-                sdkHandler.AddComponent<NeuroSDKHandler>();
-                initialized = true;
-            }
+            NeuroSDKHandler.InitializeSDK();
+        }
+
+        public static void InitializePostEndingTitleScreen()
+        {
+            NeuroSDKHandler.InitializeSDK();
         }
 
         public static void AbnormalityChoiceSelectStart()
+        {
+            string command = GetAbnormalityStartCommand();
+            ActionScene.Instance = new AbnormalityExtraction.AbnormalityExtractionScene();
+            NeuroSDKHandler.SendCommand(command);
+        }
+
+        public static string GetAbnormalityStartCommand()
         {
             string command = "change_action_scene|abnormality_extraction|";
             string canReextract = "false";
@@ -319,8 +324,7 @@ namespace NeuroLobotomyCorporation
             }
             if (String.IsNullOrEmpty(avaliableAbnormalitiesAndTaglines)) avaliableAbnormalitiesAndTaglines = "|NO_EXTRACTION";
             command += canReextract + avaliableAbnormalitiesAndTaglines;
-            ActionScene.Instance = new AbnormalityExtraction.AbnormalityExtractionScene();
-            NeuroSDKHandler.SendCommand(command);
+            return command;
         }
 
         private static int abnormalitiesBeingReextracted = 0;

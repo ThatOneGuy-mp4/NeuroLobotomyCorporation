@@ -62,6 +62,11 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             return "Command " + message[COMMAND_INDEX] + " does not exist in scene FacilityManagementScene.";
         }
 
+        public override string RestartConnectorCommand()
+        {
+            return "change_action_scene|facility_management";
+        }
+
         private string GetDayStartContext()
         {
             int currentDay = PlayerModel.instance.GetDay() + 1;

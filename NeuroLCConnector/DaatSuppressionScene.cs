@@ -94,14 +94,23 @@ namespace NeuroLCConnector
         public override void InitializeActionScene()
         {
             base.InitializeActionScene();
-            Task.Run(new Func<Task>(PlayAngelaCycleDialogue));
+            if(phase < 1)
+            {
+                Task.Run(new Func<Task>(PlayAngelaCycleDialogue));
+            }
+            else if(phase < 6) //restarted connector during spin time
+            {
+                cycleDialogueIndex = 727;
+                spinTimeDialogueIndex = 727; //set these high so the dialogue will continue normally
+                ActionScene.CurrentActionScene.RegisterAction("spin");
+            }
         }
 
         public override async Task ChangePhase()
         {
             await base.ChangePhase();
             if(phase == 1) Task.Run(new Func<Task>(PlayAngelaSpinTimeDialogue));
-            if (phase == 7) Task.Run(new Func<Task>(PlayAngelaSpinTimeOverDialogue));
+            if (phase == 6) Task.Run(new Func<Task>(PlayAngelaSpinTimeOverDialogue));
         }
 
         public async Task PlayAngelaCycleDialogue()

@@ -32,5 +32,10 @@ namespace NeuroLobotomyCorporation.MalkuthSupression
                 "\n\n\"This is what you call a truly uncontrollable situation, manager. ...It's unpredictable, isn't it?\"" +
                 "\n\"Everything’s all jumbled up, messed up, flustered... hahaha...\"", currentDay, energyRequired);
         }
+
+        public override string RestartConnectorCommand()
+        {
+            return "change_action_scene|malkuth_suppression|" + (CreatureOverloadManager.instance.GetQliphothOverloadLevel() - 1).ToString();
+        }
     }
 }

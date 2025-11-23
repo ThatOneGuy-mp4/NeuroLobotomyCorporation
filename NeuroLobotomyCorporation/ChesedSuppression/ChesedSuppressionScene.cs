@@ -35,5 +35,10 @@ namespace NeuroLobotomyCorporation.ChesedSuppression
                 "\n\n\"Let my employees rest in peace, won’t you?\"" +
                 "\n\"Feel this vast pain...\"", currentDay, energyRequired, boostedDamage);
         }
+
+        public override string RestartConnectorCommand()
+        {
+            return "change_action_scene|chesed_suppression|" + (CreatureOverloadManager.instance.GetQliphothOverloadLevel() - 1).ToString();
+        }
     }
 }

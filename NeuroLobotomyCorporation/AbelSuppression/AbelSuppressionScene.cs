@@ -30,5 +30,10 @@ namespace NeuroLobotomyCorporation.AbelSuppression
                 "\nAn error with the work assignment system is detected. Expect further mutations as curtain call approaches." +
                 "\n\n\"It is best for everyone if we just turn back to the first act now. Who knows, our unforgivable sin may lighten just a tiny bit if you do.\"";
         }
+
+        public override string RestartConnectorCommand()
+        {
+            return "change_action_scene|abel_suppression|" + (CreatureOverloadManager.instance.GetQliphothOverloadLevel() - 1).ToString();
+        }
     }
 }

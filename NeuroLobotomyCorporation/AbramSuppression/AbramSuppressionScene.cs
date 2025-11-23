@@ -37,6 +37,17 @@ namespace NeuroLobotomyCorporation.AbramSuppression
                 "\n\n\"Do not fear the submergence. Accept it. Let us sink together at Carmen’s side.\"";
         }
 
+        public override string RestartConnectorCommand()
+        {
+            SefiraBossCreatureModel redMistModel = Helpers.TryFindSefiraCoreTarget("The Red Mist") as SefiraBossCreatureModel;
+            int altPhase = 0;
+            if (redMistModel != null)
+            {
+                altPhase = (int)((GeburahCoreScript)redMistModel.script).Phase - 1;
+            }
+            return "change_action_scene|abram_suppression|" + (CreatureOverloadManager.instance.GetQliphothOverloadLevel() - 1).ToString() + "|" + altPhase.ToString();
+        }
+
         /*
          * I include the on-screen text into Neuro's context because I want her to see all the dialogue Vedal does. 
          * However, in this suppression, there is on-screen text that doesn't appear if you fight the Red Mist, 
