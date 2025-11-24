@@ -14,6 +14,8 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             return GlobalBulletWindow.CurrentWindow.ActiveControl.activeSelf.ToString().ToLower();
         }
 
+        public static bool CanUseExecutionBullets = false;
+
         public enum Parameters
         {
             BULLET_TYPE = 1,
@@ -77,7 +79,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     bullet = GlobalBulletType.SLOW;
                     break;
                 case "Execution":
-                    if (true) return "failure|You are not allowed to fire Execution Bullets."; //TODO: change neuro's ability to fire execution bullets to be a config option. a highly disincentivized option but an option nonetheless.
+                    if (!CanUseExecutionBullets) return "failure|You are not allowed to fire Execution Bullets."; 
                     if (!ResearchDataModel.instance.IsUpgradedBullet(GlobalBulletType.EXCUTE)) return "failure|Execution Bullets have not been researched yet. Continue completing Gebura's missions if you wish to make use of them.";
                     if (agent == null) return "failure|An employee must be the target of a Execution Bullet."; //TODO: allow clerks to be targetted...? might be hard for neuro to keep track of though.
                     bullet = GlobalBulletType.EXCUTE;
@@ -99,7 +101,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             if (ResearchDataModel.instance.IsUpgradedBullet(GlobalBulletType.RESIST_B)) unlockedTypes.Add("Black Shield");
             if (ResearchDataModel.instance.IsUpgradedBullet(GlobalBulletType.RESIST_P)) unlockedTypes.Add("Pale Shield");
             if (ResearchDataModel.instance.IsUpgradedBullet(GlobalBulletType.SLOW)) unlockedTypes.Add("Slow");
-            if (ResearchDataModel.instance.IsUpgradedBullet(GlobalBulletType.EXCUTE) && !true) unlockedTypes.Add("Execute"); //TODO: config option again
+            if (ResearchDataModel.instance.IsUpgradedBullet(GlobalBulletType.EXCUTE) && CanUseExecutionBullets) unlockedTypes.Add("Execution");
             string result = "";
             for (int i = 0; i < unlockedTypes.Count; i++)
             {
@@ -171,6 +173,8 @@ namespace NeuroLobotomyCorporation.FacilityManagement
          * So CommandExecute instead saves the type of bullet Neuro is trying to fire and the targets that will be hit,
          * then this method, which is a postfix for GlobalBulletWindow's Update, will check to see if Neuro is trying to fire
          * (by checking if the type of bullet she wants to fire is set), and calls ActivateBullet from there.
+         * 
+         * Also, this doesn't play the Execution Bullet animation but I don't care enough to fix it. If Vedal's smart he'll leave that as disabled anyways.
         */
         public static void NeuroShootBullet()
         {

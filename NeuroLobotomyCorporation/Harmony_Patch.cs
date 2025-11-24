@@ -48,11 +48,6 @@ namespace NeuroLobotomyCorporation
 {
     public class Harmony_Patch
     {
-        //TODO: Make this settable somewhere else later
-        public static string gameToServerURI = "http://localhost:8080";
-        //TODO: this too
-        public static string serverToGameURI = "http://localhost:8081/";
-
         public Harmony_Patch()
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;

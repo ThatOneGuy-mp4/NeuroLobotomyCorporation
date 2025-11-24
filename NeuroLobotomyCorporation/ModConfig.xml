@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<!--The following must be http or https URIs which exactly match the ones in the Connector's config file.-->
+	<!--Please note that neither of these are equivalent to NEURO_SDK_WS_URL, check the Connector's config for that.-->
+	<!--URI for the game's connection to the server.-->
+	<gameToServerURI>http://localhost:8080</gameToServerURI>
+	<!--URI for the server's connection to the game.-->
+	<serverToGameURI>http://localhost:8081</serverToGameURI>
+	
+	<!--Allows Neuro/Evil to fire the 8th type of Managerial Bullet once unlocked. It is highly recommended to leave as false.-->
+	<allowExBullet>False</allowExBullet>
+</settings>

@@ -83,12 +83,6 @@ namespace NeuroLCConnector
         {
             return NeuroLCConnector.Connector.SendCommand("get_day_start_context").Result;
         }
-
-        //public override void InitializeActionScene()
-        //{
-        //    base.InitializeActionScene();
-
-        //}
     }
 
     public class GetDayStatus : NeuroActionNoValidation

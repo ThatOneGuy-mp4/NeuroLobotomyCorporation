@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeuroLobotomyCorporation.FacilityManagement;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using UnityEngine;
 
 namespace NeuroLobotomyCorporation
@@ -71,19 +73,63 @@ namespace NeuroLobotomyCorporation
         }
         private List<string> queuedCommands;
 
+        public static string gameToServerURI = "";
+        private static readonly string DEFAULT_GAME_TO_SERVER_URI = "http://localhost:8080";
+
+        public static string serverToGameURI = "";
+        private static readonly string DEFAULT_SERVER_TO_GAME_URI = "http://localhost:8081/";
+
+
         private void Awake()
         {
             DontDestroyOnLoad(gameObject);
             Instance = this;
+            LoadConfig();
             awaitingInputDone = true;
             awaitingOutputDone = true;
             StartListeningForServer();
         }
 
+        private static readonly string fileName = Application.dataPath + "/BaseMods/ThatOneGuy_NeuroLobotomyCorporation/ModConfig.xml";
+        private static readonly string _rootName = "settings";
+        private static readonly string _gameToServerUri = "gameToServerURI";
+        private static readonly string _serverToGameUri = "serverToGameURI";
+        private static readonly string _allowExecutionBullet = "allowExBullet";
+
+        private static void LoadConfig()
+        {
+            if (!File.Exists(fileName)) return;
+            XmlDocument configFile = new XmlDocument();
+            configFile.LoadXml(File.ReadAllText(fileName));
+            XmlNode settingsNode = configFile.SelectSingleNode(_rootName);
+            if (settingsNode == null) return;
+            XmlNode gtsURI = settingsNode.SelectSingleNode(_gameToServerUri);
+            if (gtsURI != null)
+            {
+                if (gtsURI.InnerText.StartsWith("http://") || gtsURI.InnerText.StartsWith("https://")) gameToServerURI = gtsURI.InnerText;
+                else gameToServerURI = DEFAULT_GAME_TO_SERVER_URI;
+            }
+            else gameToServerURI = DEFAULT_GAME_TO_SERVER_URI;
+            XmlNode stgURI = settingsNode.SelectSingleNode(_serverToGameUri);
+            if (stgURI != null)
+            {
+                if (stgURI.InnerText.StartsWith("http://") || stgURI.InnerText.StartsWith("https://")) serverToGameURI = stgURI.InnerText + "/";
+                else serverToGameURI = DEFAULT_SERVER_TO_GAME_URI;
+            }
+            else serverToGameURI = DEFAULT_SERVER_TO_GAME_URI;
+
+            XmlNode allowExBullet = settingsNode.SelectSingleNode(_allowExecutionBullet);
+            ShootManagerialBullet.CanUseExecutionBullets = false;
+            if(allowExBullet != null)
+            {
+                if (allowExBullet.InnerText.ToLower().Equals("true")) ShootManagerialBullet.CanUseExecutionBullets = true;
+            }
+        }
+
         private void StartListeningForServer()
         {
             ServerInput = new HttpListener();
-            ServerInput.Prefixes.Add(Harmony_Patch.serverToGameURI);
+            ServerInput.Prefixes.Add(serverToGameURI);
             ServerInput.Start();
         }
 
@@ -126,7 +172,7 @@ namespace NeuroLobotomyCorporation
 
         private void ProcessGameOutput(string command)
         {
-            GameOutput = (HttpWebRequest)WebRequest.Create(Harmony_Patch.gameToServerURI);
+            GameOutput = (HttpWebRequest)WebRequest.Create(gameToServerURI);
             GameOutput.KeepAlive = true;
             GameOutput.Method = "POST";
             GameOutput.BeginGetRequestStream((asyncResult) =>
@@ -179,7 +225,6 @@ namespace NeuroLobotomyCorporation
         {
             if (ConnectorInstance != null) return;
             ConnectorInstance = new Process();
-            //TODO: prolly make this settable somewhere else in case this is Not the user's (ved's) file structure
             ConnectorInstance.StartInfo.FileName = Application.dataPath + @"\BaseMods\ThatOneGuy_NeuroLobotomyCorporation\Connector\NeuroLCConnector.exe";
             ConnectorInstance.StartInfo.UseShellExecute = false;
             ConnectorInstance.StartInfo.CreateNoWindow = false;

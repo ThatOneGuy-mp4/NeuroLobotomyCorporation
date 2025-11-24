@@ -4,6 +4,7 @@ using NeuroSDKCsharp.Messages.Outgoing;
 using NeuroSDKCsharp.Websocket;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.IO.Pipes;
 using System.Linq;
@@ -24,15 +25,14 @@ namespace NeuroLCConnector
     * This adds some latency but like. I could not for the life of me figure out another way to do it. So.
     */
 
-    //TODO: probably include some methods to reconnect if a disconnect happens. 
     public class Connector
     {
-        //TODO: Make this settable somewhere else later
-        public static string gameToServerURI = "http://localhost:8080/";
-        //TODO: this one too
-        public static string serverToGameURI = "http://localhost:8081";
+        public static string gameToServerURI = "";
+        private static readonly string DEFAULT_GAME_TO_SERVER_URI = "http://localhost:8080/";
 
-        //TODO: Make this settable as well, or don't, whatever
+        public static string serverToGameURI = "";
+        private static readonly string DEFAULT_SERVER_TO_GAME_URI = "http://localhost:8081";
+
         public static string neuroURI = null;
         public static HttpListener GameInput
         {
@@ -71,7 +71,25 @@ namespace NeuroLCConnector
 
         public static async Task Init()
         {
-            SdkSetup.Initialize("Lobotomy Corporation", neuroURI);
+            string? nURI = ConfigurationManager.AppSettings["NeuroURI"];
+            if (!String.IsNullOrEmpty(nURI)) neuroURI = nURI;
+            string? gtsURI = ConfigurationManager.AppSettings["GameToServerURI"];
+            if (!String.IsNullOrEmpty(gtsURI))
+            {
+                if (gtsURI.StartsWith("http://") || gtsURI.StartsWith("https://")) gameToServerURI = gtsURI + "/";
+                else Console.WriteLine("The GameToServerURI config option was not an http or https URI. Using http://localhost:8080 as a default.");
+            }
+            else Console.WriteLine("The GameToServerURI config option was not set. Using http://localhost:8080 as a default.");
+            if (String.IsNullOrEmpty(gameToServerURI)) gameToServerURI = DEFAULT_GAME_TO_SERVER_URI;
+            string? stgURI = ConfigurationManager.AppSettings["ServerToGameURI"];
+            if (!String.IsNullOrEmpty(stgURI))
+            {
+                if (stgURI.StartsWith("http://") || stgURI.StartsWith("https://")) serverToGameURI = stgURI;
+                else Console.WriteLine("The ServerToGameURI config option was not an http or https URI. Using http://localhost:8081 as a default.");
+            }
+            else Console.WriteLine("The ServerToGame config option was not set. Using http://localhost:8081 as a default.");
+            if (String.IsNullOrEmpty(serverToGameURI)) serverToGameURI = DEFAULT_SERVER_TO_GAME_URI;
+            SdkSetup.Initialize("Lobotomy", neuroURI);
             try
             {
                 GameInput = new HttpListener();
