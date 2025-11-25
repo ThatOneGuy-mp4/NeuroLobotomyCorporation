@@ -177,6 +177,8 @@ namespace NeuroLCConnector
                     await ChangeCurrentActionScene(parameters);
                     break;
                 case "enable_customize_agent":
+                    if (parameters[1].Equals("true")) DayPreparationScene.CustomizeAgent.IsBongBong = true;
+                    else DayPreparationScene.CustomizeAgent.IsBongBong = false;
                     ActionScene.CurrentActionScene.RegisterAction("customize_agent");
                     break;
                 case "disable_customize_agent":

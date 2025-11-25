@@ -72,6 +72,10 @@ namespace NeuroLCConnector
                 }
             };
 
+            //very very VERY important: if the original Agent is BongBong, forcefully set them to their true form.
+            public static bool IsBongBong = false;
+            private const string BONGBONG_OVERRIDE_COMMAND = "customize_agent|BongBong|0|0|255|11|11|31|7|5";
+
             private const int MAX_FRONT_HAIR_INDEX = 48;
             private const int MAX_BACK_HAIR_INDEX = 28;
             private const int MAX_EYE_INDEX = 44;
@@ -80,6 +84,12 @@ namespace NeuroLCConnector
             protected override ExecutionResult Validate(ActionData actionData, out string? resultData)
             {
                 resultData = "";
+                if (IsBongBong)
+                {
+                    resultData = BONGBONG_OVERRIDE_COMMAND;
+                    ActionScene.CurrentActionScene.UnregisterAction("customize_agent");
+                    return ExecutionResult.Success("Customizing BongBong...");
+                }
                 string? agentName = actionData.Data?["agent_name"]?.Value<string>();
                 if (String.IsNullOrEmpty(agentName)) return ExecutionResult.Failure("Action failed. Missing required parameter 'agent_name'.");
                 int? hairColorRed = actionData.Data?["hair_color_red"]?.Value<int>();

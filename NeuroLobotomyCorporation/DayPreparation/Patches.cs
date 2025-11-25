@@ -163,9 +163,11 @@ namespace NeuroLobotomyCorporation.DayPreparation
         }
 
         //Postfix - give Neuro the ability to customize Agents
-        public static void EnableCustomizeAgent()
+        public static void EnableCustomizeAgent(AppearanceUI __instance)
         {
-            NeuroSDKHandler.SendCommand("enable_customize_agent");
+            string isBongBong = "false";
+            if (__instance.original != null && __instance.original.agentName != null && __instance.original.agentName.GetName().Equals("BongBong")) isBongBong = "true";
+            NeuroSDKHandler.SendCommand("enable_customize_agent|" + isBongBong);
         }
 
         //Postfix - remove Neuro's ability to customize Agents

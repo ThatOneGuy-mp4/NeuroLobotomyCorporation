@@ -81,6 +81,15 @@ namespace NeuroLobotomyCorporation.DayPreparation
             if (customizedAppearance.EyeIndex != -1) currentAppearance.eye_Def.OnClickMovement(currentAppearance.eye_Def.CurrentIndex - customizedAppearance.EyeIndex);
             if (customizedAppearance.EyebrowIndex != -1) currentAppearance.eyebrow_Def.OnClickMovement(currentAppearance.eyebrow_Def.CurrentIndex - customizedAppearance.EyebrowIndex);
             if (customizedAppearance.MouthIndex != -1) currentAppearance.mouth_Def.OnClickMovement(currentAppearance.mouth_Def.CurrentIndex - customizedAppearance.MouthIndex);
+
+            if (customizedAppearance.AgentName.Equals("BongBong")) //we must ensure no aspect of bongbong is left behind, even though Neuro cannot manipulate
+            {
+                currentAppearance.eye_Panic.OnClickMovement(currentAppearance.eye_Panic.CurrentIndex - 4);
+                currentAppearance.eye_Dead.OnClickMovement(currentAppearance.eye_Dead.CurrentIndex - 1);
+                currentAppearance.eyebrow_Battle.OnClickMovement(currentAppearance.eyebrow_Battle.CurrentIndex - 7);
+                currentAppearance.eyebrow_Panic.OnClickMovement(currentAppearance.eyebrow_Panic.CurrentIndex - 5);
+                currentAppearance.mouth_Battle.OnClickMovement(currentAppearance.mouth_Battle.CurrentIndex - 7);
+            }
             customizedAppearance = null;
         }
     }
