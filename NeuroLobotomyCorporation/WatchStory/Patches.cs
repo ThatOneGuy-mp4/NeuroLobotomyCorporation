@@ -44,6 +44,7 @@ namespace NeuroLobotomyCorporation.WatchStory
 
         private static string GetLocationFromSpriteName(string spriteSrc)
         {
+            sceneJustEnded = false;
             switch (spriteSrc)
             {
                 case "blackCG":
@@ -287,8 +288,15 @@ namespace NeuroLobotomyCorporation.WatchStory
             return StoryDialogueBoxType.HIDE;
         }
 
+        //Prefix - if the current story scene is Angela-to-Neuro conversation, prevent Ved from choosing dialogue
+        public static bool responseFromNeuro = false;
+        public static void IsNeuroOnlyResponse(ref int index)
+        {
+            if(IntegrationLore.OnlyNeuroCanRespond() && !responseFromNeuro) index = -1;
+        }
+
         //Postfix - send the selected dialogue option directly to Neuro. also, remove her ability to choose dialogue after it has been selected.
-        public static List<string> dialogueOptions = new List<string>(); 
+        public static List<string> dialogueOptions = new List<string>();
         public static void ContextDialogueOption(StoryUI __instance, StoryUI.StoryScriptCommandEventEnum e, bool __result)
         {
             if(e == StoryUI.StoryScriptCommandEventEnum.EXECUTE)
@@ -297,6 +305,7 @@ namespace NeuroLobotomyCorporation.WatchStory
             }
             if (!__result) return;
             if (isSkipping) return;
+            responseFromNeuro = false;
             int selectedDialogueIndex = ((int)e - 2);
             NeuroSDKHandler.SendCommand("dialogue_option_end");
             string dialogue = dialogueOptions[selectedDialogueIndex];
@@ -317,6 +326,7 @@ namespace NeuroLobotomyCorporation.WatchStory
                 finalMessage += "|" + dialogue;
             }
             if (isSkipping) return;
+            if (!IntegrationLore.LoreIntegrationEnabled()) return;
             NeuroSDKHandler.SendCommand(finalMessage);
         }
 
@@ -349,12 +359,16 @@ namespace NeuroLobotomyCorporation.WatchStory
         }
 
         //Postfix - tell Neuro when the current story segment ends
+        private static bool sceneJustEnded = false;
         public static void EndStorySegment()
         {
             lastCG = "";
             lastSpeaker = "";
             lastSpeakerWasRobotSephira = false;
             isSkipping = false;
+            IntegrationLore.DecreaseNeuroResponseState();
+            if (sceneJustEnded) return; //END SCENE plays twice once all story segments are done due to odd PM coding. this prevents that hopefully.
+            sceneJustEnded = true;
             NeuroSDKHandler.SendContext("END SCENE", true);
         }
     }

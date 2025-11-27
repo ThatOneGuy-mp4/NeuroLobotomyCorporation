@@ -132,7 +132,7 @@ namespace NeuroLCConnector
 
             public override string Name => "activate_core_suppression";
 
-            protected override string Description => "Active Core Suppression for the chosen Sephirah.";
+            protected override string Description => "Activate Core Suppression for the chosen Sephirah.";
 
             protected override JsonSchema? Schema => new()
             {

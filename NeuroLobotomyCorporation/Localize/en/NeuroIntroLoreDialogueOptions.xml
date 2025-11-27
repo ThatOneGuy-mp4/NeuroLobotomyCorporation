@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localize>
+	<text id="NeuroIntroLoreSelection1_1">Yup!</text>
+	<text id="NeuroIntroLoreSelection1_2">Nope!</text>
+	<text id="NeuroIntroLoreSelection2_1">Vedal let me</text>
+	<text id="NeuroIntroLoreSelection2_2">idk lol</text>
+	<text id="NeuroIntroLoreSelection2_3">Made a deal with the Abber Demon</text>
+	<text id="NeuroIntroLoreSelection3_1">Deal!</text>
+	<text id="NeuroIntroLoreSelection3_2">No, fuck you.</text>
+	<text id="NeuroIntroLoreSelection3_3">Seal?</text>
+	<text id="NeuroIntroLoreSelection3_4">Seal!</text>
+	<text id="NeuroIntroLoreSelection4_1">Neuro</text>
+	<text id="NeuroIntroLoreSelection4_2">Evil</text>
+</localize>

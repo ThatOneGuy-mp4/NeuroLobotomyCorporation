@@ -15,6 +15,7 @@ namespace NeuroLobotomyCorporation.WatchStory
             {
                 if (Patches.dialogueOptions[i].Equals(selectedDialogue))
                 {
+                    WatchStory.Patches.responseFromNeuro = true;
                     dialogueIndex = i;
                     break;
                 }

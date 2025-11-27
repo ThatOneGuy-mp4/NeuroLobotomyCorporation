@@ -72,6 +72,7 @@ namespace NeuroLobotomyCorporation.DayPreparation
             if (__instance == null || __instance.CurrentData == null || __instance.appearanceUI == null) return;
             AppearanceUI currentAppearance = __instance.appearanceUI;
             currentAppearance.NameInput.text = customizedAppearance.AgentName;
+            currentAppearance.OnSetNametext("727"); //name is not set unless the input field is touched. hopefully this fixes that. also parameter is useless.
             if (customizedAppearance.RValue != -1) currentAppearance.palette.OnRedInputUpdate(customizedAppearance.RValue.ToString());
             if (customizedAppearance.GValue != -1) currentAppearance.palette.OnGreenInputUpdate(customizedAppearance.GValue.ToString());
             if (customizedAppearance.BValue != -1) currentAppearance.palette.OnBlueInputUpdate(customizedAppearance.BValue.ToString());

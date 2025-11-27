@@ -187,7 +187,7 @@ namespace NeuroLCConnector
                 case "enable_activate_core_suppression":
                     if (parameters.Length > 1)
                     {
-                        DayPreparationScene.ActivateCoreSuppression.SephirahReadyToSuppress = new List<string>();
+                        if (DayPreparationScene.ActivateCoreSuppression.SephirahReadyToSuppress.Count > 0) break;
                         for (int i = 1; i < parameters.Length; i++)
                         {
                             DayPreparationScene.ActivateCoreSuppression.SephirahReadyToSuppress.Add(parameters[i]);
@@ -286,6 +286,7 @@ namespace NeuroLCConnector
                     ActionScene.ChangeActionScene(new WatchStoryScene());
                     break;
                 case "day_preparation":
+                    DayPreparationScene.ActivateCoreSuppression.SephirahReadyToSuppress.Clear();
                     ActionScene.ChangeActionScene(new DayPreparationScene());
                     break;
                 case "facility_management":

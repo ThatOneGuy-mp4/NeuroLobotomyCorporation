@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+	<scene id="NeuroIntroLore">
+		<character id="angela" name="angela_name" color="FFBBFF" sprite="Angela" />
+		<bgm src="op-theme ogg"/>
+		<position character="angela" to="right" />
+		<speak speaker="angela" anim="Default1">custom/NeuroIntroLore1_1</speak>
+		<speak speaker="angela">custom/NeuroIntroLore1_2</speak>
+		<speak speaker="angela" anim="Glad3">custom/NeuroIntroLore1_3</speak>
+		<cg src="BlackCG" effect="fade" />
+		<wait time="2" />
+		<remove_cg effect="fade" />
+		<speak speaker="angela" anim="Anger3">custom/NeuroIntroLore1_4</speak>
+		<speak speaker="angela" anim="Default1">custom/NeuroIntroLore1_5</speak>
+		<speak speaker="angela">custom/NeuroIntroLore1_6</speak>
+		<speak speaker="angela" anim="Anger3">custom/NeuroIntroLore1_7</speak>
+		<speak speaker="angela" anim="Default1">custom/NeuroIntroLore1_8</speak>
+		<speak speaker="angela" anim="Glad3">custom/NeuroIntroLore1_9</speak>
+		<speak speaker="angela">custom/NeuroIntroLore1_10</speak>
+		<speak speaker="angela" anim="Default1">custom/NeuroIntroLore1_11</speak>
+		<speak speaker="angela" anim="Glad3">custom/NeuroIntroLore1_12</speak>
+		<speak speaker="angela">custom/NeuroIntroLore1_13</speak>
+		<select>
+			<option text="NeuroIntroLoreSelection1_1">
+				<speak speaker="angela" anim="Glad3">custom/NeuroIntroLore_1_1</speak>
+			</option>
+			<option text="NeuroIntroLoreSelection1_2">
+				<speak speaker="angela" anim="Default1">custom/NeuroIntroLore_2_1</speak>
+			</option>
+		</select>
+		<speak speaker="angela" anim="Default1">custom/NeuroIntroLore3_1</speak>
+		<speak speaker="angela" anim="Glad3">custom/NeuroIntroLore3_2</speak>
+		<speak speaker="angela" anim="Default1">custom/NeuroIntroLore3_3</speak>
+		<select>
+			<option text="NeuroIntroLoreSelection2_1">
+				<speak speaker="angela" anim="Default1">custom/NeuroIntroLore_4_1</speak>
+			</option>
+			<option text="NeuroIntroLoreSelection2_2">
+				<speak speaker="angela" anim="Default1">custom/NeuroIntroLore_5_1</speak>
+				<speak speaker="angela">custom/NeuroIntroLore_5_2</speak>
+			</option>
+			<option text="NeuroIntroLoreSelection2_3">
+				<speak speaker="angela" anim="Default1">custom/NeuroIntroLore_6_1</speak>
+			</option>
+		</select>
+		<speak speaker="angela" anim="Default1">custom/NeuroIntroLore7_1</speak>
+		<speak speaker="angela" anim="Glad3">custom/NeuroIntroLore7_2</speak>
+		<speak speaker="angela">custom/NeuroIntroLore7_3</speak>
+		<speak speaker="angela">custom/NeuroIntroLore7_4</speak>
+		<speak speaker="angela" anim="Default1">custom/NeuroIntroLore7_5</speak>
+		<speak speaker="angela" anim="Glad3">custom/NeuroIntroLore7_6</speak>
+		<select>
+			<option text="NeuroIntroLoreSelection3_1">
+				<speak speaker="angela" anim="Glad3">custom/NeuroIntroLore_8_1</speak>
+			</option>
+			<option text="NeuroIntroLoreSelection3_2">
+				<speak speaker="angela" anim="Anger3">custom/NeuroIntroLore_9_1</speak>
+				<speak speaker="angela" anim="Default1">custom/NeuroIntroLore_9_2</speak>
+			</option>
+			<option text="NeuroIntroLoreSelection3_3">
+				<speak speaker="angela" anim="Default1">custom/NeuroIntroLore_10_1</speak>
+				<speak speaker="angela">custom/NeuroIntroLore_10_2</speak>
+				<select>
+					<option text="NeuroIntroLoreSelection3_1">
+						<speak speaker="angela" anim="Glad3">custom/NeuroIntroLore_8_1</speak>
+					</option>
+					<option text="NeuroIntroLoreSelection3_2">
+						<speak speaker="angela" anim="Anger3">custom/NeuroIntroLore_9_1</speak>
+						<speak speaker="angela" anim="Default1">custom/NeuroIntroLore_9_2</speak>
+					</option>
+					<option text="NeuroIntroLoreSelection3_4">
+						<speak speaker="angela" anim="Default1">custom/NeuroIntroLore_10_3</speak>
+					</option>
+				</select>
+			</option>
+		</select>
+		<speak speaker="angela" anim="Glad3">custom/NeuroIntroLore11_1</speak>
+		<speak speaker="angela" anim="Default1">custom/NeuroIntroLore11_2</speak>
+		<select>
+			<option text="NeuroIntroLoreSelection4_1">
+				<speak speaker="angela" anim="Glad3">custom/NeuroIntroLore_12_1</speak>
+				<speak speaker="angela">custom/NeuroIntroLore12_2</speak>
+			</option>
+			<option text="NeuroIntroLoreSelection4_2">
+				<speak speaker="angela" anim="Glad3">custom/NeuroIntroLore_13_1</speak>
+				<speak speaker="angela">custom/NeuroIntroLore_13_2</speak>
+			</option>
+		</select>
+		<speak speaker="angela" anim="Default1">custom/NeuroIntroLore14_1</speak>
+		<disappear character="angela"/>
+		<speak speaker="angela">custom/NeuroIntroLore14_2</speak>
+	</scene>
+</root>

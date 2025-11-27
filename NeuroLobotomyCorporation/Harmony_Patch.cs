@@ -85,6 +85,8 @@ namespace NeuroLobotomyCorporation
                 new HarmonyMethod(typeof(WatchStory.Patches).GetMethod("ContextBackground")), null);
             harmonyInstance.Patch(typeof(StoryDialogueUI).GetMethod("Speak", AccessTools.all), null,
                 new HarmonyMethod(typeof(WatchStory.Patches).GetMethod("ContextSpeak")), null);
+            harmonyInstance.Patch(typeof(StoryUI).GetMethod("OnSelectSelection", AccessTools.all),
+                new HarmonyMethod(typeof(WatchStory.Patches).GetMethod("IsNeuroOnlyResponse")), null, null);
             harmonyInstance.Patch(typeof(StoryUI).GetMethod("Command_select", AccessTools.all), null,
                 new HarmonyMethod(typeof(WatchStory.Patches).GetMethod("ContextDialogueOption")), null);
             harmonyInstance.Patch(typeof(StorySelectionUI).GetMethod("ShowSelection", AccessTools.all), null,
@@ -99,6 +101,10 @@ namespace NeuroLobotomyCorporation
                 new HarmonyMethod(typeof(WatchStory.Patches).GetMethod("ContextLORForeshadowing")), null);
             harmonyInstance.Patch(typeof(StorySceneController).GetMethod("OnEndStory", AccessTools.all), null,
                 new HarmonyMethod(typeof(WatchStory.Patches).GetMethod("EndStorySegment")), null);
+            //Play Integration Lore
+            harmonyInstance.Patch(typeof(StorySceneController).GetMethod("TryPlayNextSubStory", AccessTools.all), 
+                new HarmonyMethod(typeof(IntegrationLore).GetMethod("PlayIntegrationLore")),
+                null, null);
             //Story fixes end
 
             //Day Preparation fixes
@@ -298,6 +304,7 @@ namespace NeuroLobotomyCorporation
 
         public static void AbnormalityChoiceSelectStart()
         {
+            if (!IntegrationLore.LoreIntegrationEnabled()) return;
             string command = GetAbnormalityStartCommand();
             ActionScene.Instance = new AbnormalityExtraction.AbnormalityExtractionScene();
             NeuroSDKHandler.SendCommand(command);
