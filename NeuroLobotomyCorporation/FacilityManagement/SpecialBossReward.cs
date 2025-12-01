@@ -97,7 +97,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             private UnitModel neuroAssignedTarget = null;
         }
 
-        private static readonly float EGO_CHANCE = 0.95f;
+        private static readonly float EGO_CHANCE = 0.01f;
         private static readonly int NEURO_HAIRPIN_FAKE_ID = 412192022;
         private static readonly int NEURO_HAIRPIN_REAL_ID = 412192024;
         private static readonly int EVIL_HAIRPIN_FAKE_ID = 43252024;
