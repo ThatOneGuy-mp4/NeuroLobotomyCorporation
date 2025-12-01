@@ -39,6 +39,42 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Equipment\Sprite\Attachment\EvilHairpin_real.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Equipment\Sprite\Attachment\EvilHairpin_fake.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Equipment\Sprite\Attachment\NeuroHairpin_real.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Equipment\Sprite\Attachment\NeuroHairpin_fake.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Equipment\txts\EvilHairpin_fake.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Equipment\txts\EvilHairpin_real.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Equipment\txts\NeuroHairpin_fake.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Equipment\txts\NeuroHairpin_real.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Equipment\xmls\en\EvilHairpin_real.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Equipment\xmls\en\EvilHairpin_fake.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Equipment\xmls\en\NeuroHairpin_real.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Equipment\xmls\en\NeuroHairpin_fake.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Info\en\Info.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -48,7 +84,13 @@
     <None Update="Localize\en\NeuroIntroLoreDialogueOptions.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Localize\en\SpecialBossReward.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="ModConfig.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\NeuroSprite.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="StoryData\NeuroIntroLore.xml">

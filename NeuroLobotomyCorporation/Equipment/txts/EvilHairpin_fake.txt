@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<equipment_list>
+	<equipment id="43252024" type="special">
+		<name>evilhairpin_fake_name</name>
+		<desc>evilhairpin_fake_desc</desc>
+		<attachPos>hair</attachPos>
+		<attachType>add</attachType>
+		<bonus>
+			<hp>0</hp>
+		</bonus>
+		<sprite>EvilHairpin_fake</sprite>
+	</equipment>
+</equipment_list>

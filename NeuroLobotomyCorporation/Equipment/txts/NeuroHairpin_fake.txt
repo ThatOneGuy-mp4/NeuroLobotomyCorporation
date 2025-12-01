@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<equipment_list>
+	<equipment id="412192022" type="special">
+		<name>neurohairpin_fake_name</name>
+		<desc>neurohairpin_fake_desc</desc>
+		<attachPos>hair</attachPos>
+		<attachType>add</attachType>
+		<bonus>
+			<hp>0</hp>
+		</bonus>
+		<sprite>NeuroHairpin_fake</sprite>
+	</equipment>
+</equipment_list>

@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<equipment_list>
+	<equipment id="43252025" type="special">
+		<name>evilhairpin_real_name</name>
+		<desc>evilhairpin_real_desc</desc>
+		<attachPos>hair</attachPos>
+		<attachType>add</attachType>
+		<bonus>
+			<hp>10</hp>
+			<mental>10</mental>
+			<workProb>10</workProb>
+			<cubeSpeed>10</cubeSpeed>
+			<movement>10</movement>
+			<attackSpeed>10</attackSpeed>
+		</bonus>
+		<sprite>EvilHairpin_real</sprite>
+	</equipment>
+</equipment_list>

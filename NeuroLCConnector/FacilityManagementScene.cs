@@ -15,14 +15,6 @@ namespace NeuroLCConnector
      * This ActionScene covers the main gameplay phase of Lobotomy Corporation, the management of Abnormalities.
      * This scene contains a lot more actions overall than most scenes, and a lot of actions which only get data in particular.
      */
-
-    /*
-     * TODO: 
-     * -Add a config option to allow execution bullets.
-     * -Add an Action to order Rabbit Team Deployment...? (perhaps not?)
-     * -Could be interesting to give her the ability to read an Abnormality's lore (not needed though)
-     * -Could also give her the ability to unlock an Abnormality's observation info / craft E.G.O, but I think that might be better for just ved to be able to do (so she doesn't waste it)
-     */
     public class FacilityManagementScene : ActionScene
     {
         protected override List<INeuroAction> InitActions
@@ -31,7 +23,6 @@ namespace NeuroLCConnector
             {
                 List<INeuroAction> list = new List<INeuroAction>
                 {
-                    new DEBUGFuckingKillsYou(),
                     new GetDayStatus(),
                     new GetAgentStatuses(),
                     new GetDetailedAgentInfo(),
@@ -54,7 +45,6 @@ namespace NeuroLCConnector
             {
                 List<INeuroAction> list = new List<INeuroAction>
                 {
-                    new DEBUGFuckingKillsYou(),
                     new GetDayStatus(),
                     new GetAgentStatuses(),
                     new GetDetailedAgentInfo(),
@@ -95,27 +85,6 @@ namespace NeuroLCConnector
 
     }
 
-    public class DEBUGFuckingKillsYou : NeuroActionExternalExecute
-    {
-        public override string Name => "DEBUG_fucking_kills_you";
-
-        protected override string Description => "Fucking kill that guy. Kill 'em dead.";
-
-        protected override JsonSchema? Schema => new()
-        {
-            Type = JsonSchemaType.Object,
-            Required = new List<string> { "target_name" },
-            Properties = new Dictionary<string, JsonSchema>
-            {
-                ["target_name"] = QJS.Type(JsonSchemaType.String)
-            }
-        };
-
-        protected override ExecutionResult Validate(ActionData actionData)
-        {
-            return ValidateGameSide(actionData.Data?["target_name"]?.Value<string>());
-        }
-    }
     public class GetAgentStatuses : NeuroActionNoValidation
     {
         public override string Name => "get_agent_statuses";

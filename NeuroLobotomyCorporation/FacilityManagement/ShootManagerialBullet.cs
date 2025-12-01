@@ -180,6 +180,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
         {
             if(neuroFiredBullet != GlobalBulletType.NONE)
             {
+                if (SpecialBossReward.NoBulletConsumed()) GlobalBulletManager.instance.currentBullet++;
                 GlobalBulletManager.instance.ActivateBullet(neuroFiredBullet, neuroFiredTargets);
                 neuroFiredBullet = GlobalBulletType.NONE;
                 neuroFiredTargets = new List<UnitModel>();

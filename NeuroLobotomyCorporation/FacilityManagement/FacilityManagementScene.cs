@@ -23,8 +23,6 @@ namespace NeuroLobotomyCorporation.FacilityManagement
         {
             switch (message[COMMAND_INDEX])
             {
-                case "DEBUG_fucking_kills_you":
-                    return DEBUGFuckingKillsYou.Command(message[(int)DEBUGFuckingKillsYou.Parameters.GUY_TO_FUCKING_KILL]);
                 case "get_day_start_context":
                     return GetDayStartContext();
                 case "get_day_status":

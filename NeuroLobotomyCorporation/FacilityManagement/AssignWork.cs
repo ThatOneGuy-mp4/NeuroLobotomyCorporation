@@ -224,6 +224,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             agent.counterAttackEnabled = false;
             abnormality.Unit.room.OnWorkAllocated(agent);
             abnormality.script.OnWorkAllocated(data, agent);
+            agent.AddUnitBuf(new SpecialBossReward.NeuroAssignmentBuf(abnormality));
 
             SystemLogScript logScript = GameObject.FindObjectOfType<SystemLogScript>();
             string workTypeAfterCheckingForMalkuth = "";

@@ -79,6 +79,7 @@ namespace NeuroLobotomyCorporation
         public static string serverToGameURI = "";
         private static readonly string DEFAULT_SERVER_TO_GAME_URI = "http://localhost:8081/";
 
+        public static string AiPlaying = "Neuro";
 
         private void Awake()
         {
@@ -94,6 +95,7 @@ namespace NeuroLobotomyCorporation
         private static readonly string _rootName = "settings";
         private static readonly string _gameToServerUri = "gameToServerURI";
         private static readonly string _serverToGameUri = "serverToGameURI";
+        private static readonly string _aiPlaying = "aiPlaying";
         private static readonly string _allowExecutionBullet = "allowExBullet";
 
         private static void LoadConfig()
@@ -118,11 +120,36 @@ namespace NeuroLobotomyCorporation
             }
             else serverToGameURI = DEFAULT_SERVER_TO_GAME_URI;
 
+            XmlNode aiPlaying = settingsNode.SelectSingleNode(_aiPlaying);
+            if(aiPlaying != null)
+            {
+                if (!aiPlaying.InnerText.Equals("Neuro") && !aiPlaying.InnerText.Equals("Evil")) AiPlaying = "Neuro";
+                else AiPlaying = aiPlaying.InnerText;
+            }
+            
             XmlNode allowExBullet = settingsNode.SelectSingleNode(_allowExecutionBullet);
             ShootManagerialBullet.CanUseExecutionBullets = false;
             if(allowExBullet != null)
             {
                 if (allowExBullet.InnerText.ToLower().Equals("true")) ShootManagerialBullet.CanUseExecutionBullets = true;
+            }
+        }
+
+        public static void SetAIPlaying(string aiName)
+        {
+            AiPlaying = aiName;
+
+            if (!File.Exists(fileName)) return;
+            XmlDocument configFile = new XmlDocument();
+            configFile.LoadXml(File.ReadAllText(fileName));
+            XmlNode settingsNode = configFile.SelectSingleNode(_rootName);
+            if (settingsNode == null) return;
+
+            XmlNode aiPlaying = settingsNode.SelectSingleNode(_aiPlaying);
+            if (aiPlaying != null)
+            {
+                aiPlaying.InnerText = aiName;
+                configFile.Save(fileName);
             }
         }
 
@@ -217,6 +244,7 @@ namespace NeuroLobotomyCorporation
             {
                 StartConnector();
                 StartSDKHandler();
+                SpecialBossReward.EvaluateSynchronizationStatus();
                 initialized = true;
             }
         }

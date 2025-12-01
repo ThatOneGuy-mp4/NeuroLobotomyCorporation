@@ -7,6 +7,9 @@
 	<!--URI for the server's connection to the game.-->
 	<serverToGameURI>http://localhost:8081</serverToGameURI>
 	
+	<!--Which of Neuro/Evil is playing the game. This will be automatically set during Day 1. Only change it if the twin playing sets it incorrectly.-->
+	<aiPlaying></aiPlaying>
+	
 	<!--Allows Neuro/Evil to fire the 8th type of Managerial Bullet once unlocked. It is highly recommended to leave as false.-->
 	<allowExBullet>False</allowExBullet>
 </settings>

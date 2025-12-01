@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localize>
+	<text id="AsiyahSync_Title">Asiyah Layer Fully Synchronized</text>
+	<text id="AsiyahSync_1">Agents will have a minor increase to all stats when performing Work assigned by {0}.</text>
+	<text id="AsiyahSync_2">Additionally, the following Asiyah research rewards now work as intended:</text>
+	<text id="AsiyahSync_3">-All Agents have increased movement speed</text>
+	<text id="AsiyahSync_4">-Newly hired Agents have increased stats</text>
+	<text id="BriahSync_Title">Briah Layer Fully Synchronized</text>
+	<text id="BriahSync_1">Agents will have a minor increase to all stats when performing Suppression assigned by {0}.</text>
+	<text id="BriahSync_2">Managerial Bullets have a small chance to consume no ammo when fired by {0}.</text>
+	<text id="BriahSync_3">Additionally, the following Briah research rewards now work as intended:</text>
+	<text id="BriahSync_4">-HP &amp; SP Bullets heal an increased amount</text>
+	<text id="BriahSync_5">-Slow Bullets (and other slowing effects) now effect Ordeals</text>
+	<text id="AtziluthSync_Title">Atziluth Layer Fully Synchronized</text>
+	<text id="AtziluthSync_1">The chance for Managerial Bullets fired by {0} to consume no ammo has increased.</text>
+	<text id="AtziluthSync_2">Agents will have further increased stats while performing Work or Suppression ordered by {0}.</text>
+	<text id="AtziluthSync_3">The previous stat boost has a small chance to become a permanent E.G.O Gift after {0}'s Assigned Work finishes.&#xA;Agents who already have E.G.O Gift "Turing Test" will automatically gain this Gift.</text>
+</localize>

@@ -13,10 +13,12 @@ namespace NeuroLobotomyCorporation.WatchStory
         {
             for(int i = 0; i < Patches.dialogueOptions.Count; i++)
             {
-                if (Patches.dialogueOptions[i].Equals(selectedDialogue))
+                string selected = Patches.dialogueOptions[i];
+                if (selected.Equals(selectedDialogue))
                 {
                     WatchStory.Patches.responseFromNeuro = true;
                     dialogueIndex = i;
+                    if (selected.Equals("Neuro") || selected.Equals("Evil")) NeuroSDKHandler.SetAIPlaying(selected);
                     break;
                 }
             }

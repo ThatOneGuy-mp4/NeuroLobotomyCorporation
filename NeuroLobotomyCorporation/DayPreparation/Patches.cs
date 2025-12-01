@@ -1,4 +1,5 @@
 ﻿using Customizing;
+using NeuroLobotomyCorporation.FacilityManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +10,26 @@ namespace NeuroLobotomyCorporation.DayPreparation
 {
     public class Patches
     {
+        //set add da'at sefira to research queue
+        //prefix - when da'at appears in research queue do a custom Init 
+        //then do the boss custom boss reward
+
+        //on confirm prefix
+        public static bool InterruptResearchWithSpecialBossReward(ResearchWindow __instance)
+        {
+            if (!SpecialBossReward.ReevaluateSynchronizationStatus()) return true;
+            SpecialBossReward.MakeSpecialBossRewardNotice(__instance);
+            return false;
+        }
+
+
         //Postfix - check what stage of the research phase we're at when the game does
         public static void ResearchCheck()
         {
             ResearchPhaseProgress();
         }
 
+        private static bool waitingForSpecialBossReward = false;
         //Postfix - perform actions based on the stage of the research phase
         public static void ResearchPhaseProgress()
         {

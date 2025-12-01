@@ -122,6 +122,8 @@ namespace NeuroLobotomyCorporation
                 new HarmonyMethod(typeof(DayPreparation.Patches).GetMethod("DisableCustomizeAgent", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(CustomizingWindow).GetMethod("Update", AccessTools.all), null,
                 new HarmonyMethod(typeof(CustomizeAgent).GetMethod("SetCustomAppearance", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(ResearchWindow).GetMethod("OnConfirm", AccessTools.all),
+                new HarmonyMethod(typeof(DayPreparation.Patches).GetMethod("InterruptResearchWithSpecialBossReward", AccessTools.all)), null, null);
             //Day Preparation fixes end
 
             harmonyInstance.Patch(typeof(DeployUI).GetMethod("OnManagementStart", AccessTools.all), null,
@@ -136,6 +138,7 @@ namespace NeuroLobotomyCorporation
             
             harmonyInstance.Patch(typeof(SefiraBossManager).GetMethod("OnOverloadActivated", AccessTools.all), null,
                 new HarmonyMethod(typeof(Harmony_Patch).GetMethod("ChangeBossPhaseMeltdown", AccessTools.all)), null);
+
 
             //Give Neuro context for all of Gebura's special attacks + phase changes
             harmonyInstance.Patch(typeof(GeburahCoreScript).GetMethod("OnTakeDamage", AccessTools.all), null,
@@ -220,6 +223,21 @@ namespace NeuroLobotomyCorporation
             harmonyInstance.Patch(typeof(CreatureManager).GetMethod("IsMaxHiddenProgress", AccessTools.all), null,
                new HarmonyMethod(typeof(DaatSuppressionScene).GetMethod("RemoveHiddenEndingCondition", AccessTools.all)), null);
             //end Da'at Suppression fixes
+
+            //Special Boss Rewards (a.k.a., research bugfixes)
+            harmonyInstance.Patch(typeof(AgentModel).GetMethod("GetMovementValue", AccessTools.all), null, 
+                new HarmonyMethod(typeof(SpecialBossReward).GetMethod("FixMalkuthSyncReward", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(CustomizingWindow).GetMethod("SetRandomStatValue", AccessTools.all), null, 
+                new HarmonyMethod(typeof(SpecialBossReward).GetMethod("FixHodResearchReward", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(GlobalBulletManager).GetMethod("RecoverHPBullet", AccessTools.all),
+                new HarmonyMethod(typeof(SpecialBossReward).GetMethod("FixChesedHPResearchReward", AccessTools.all)), null, null);
+            harmonyInstance.Patch(typeof(GlobalBulletManager).GetMethod("RecoverMentalBullet", AccessTools.all), 
+                new HarmonyMethod(typeof(SpecialBossReward).GetMethod("FixChesedSPResearchReward", AccessTools.all)), null, null);
+            harmonyInstance.Patch(typeof(MovableObjectNode).GetMethod("ProcessMoveNode", AccessTools.all),
+                new HarmonyMethod(typeof(SpecialBossReward).GetMethod("FixGeburaResearchReward", AccessTools.all)), null, null);
+            harmonyInstance.Patch(typeof(UseSkill).GetMethod("FinishWorkSuccessfully", AccessTools.all), null,
+                new HarmonyMethod(typeof(SpecialBossReward).GetMethod("TryGiveHairpinEGO", AccessTools.all)), null);
+            //end Special Boss Reward fixes
 
             harmonyInstance.Patch(typeof(IsolateRoom).GetMethod("Update", AccessTools.all), null,
                 new HarmonyMethod(typeof(CancelAction).GetMethod("CancelChannelledTool", AccessTools.all)), null);
