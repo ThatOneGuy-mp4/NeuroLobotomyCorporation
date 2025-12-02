@@ -25,7 +25,7 @@ namespace NeuroLobotomyCorporation.GeburaSuppression
             return base.ProcessServerInput(message);
         }
 
-        private string GetDayStartContext()
+        public override string GetDayStartContext()
         {
             int currentDay = PlayerModel.instance.GetDay() + 1;
             return String.Format("\"I’m back; the Red Mist has walked out from a sea of pain. ...I’m no longer weak like I used to be; I can replace any body part even if it gets cut off, and I can be repaired even if I’m broken.\"" +
@@ -44,7 +44,7 @@ namespace NeuroLobotomyCorporation.GeburaSuppression
             {
                 phase = (int)((GeburahCoreScript)redMistModel.script).Phase - 1;
             }
-            return "change_action_scene|gebura_suppression|" + phase.ToString();
+            return "change_action_scene|gebura_suppression|" + ShootManagerialBullet.IsBulletUnlocked() + "|" + GetDayStartContext() + "|" + phase.ToString();
         }
 
         //i'm slightly concerned this may trigger more than once. i don't have evidence of it but i'm suspicious anyways.

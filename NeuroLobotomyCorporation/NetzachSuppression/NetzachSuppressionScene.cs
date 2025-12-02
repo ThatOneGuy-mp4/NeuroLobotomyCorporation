@@ -21,7 +21,7 @@ namespace NeuroLobotomyCorporation.NetzachSuppression
             return base.ProcessServerInput(message);
         }
 
-        private string GetDayStartContext()
+        public override string GetDayStartContext()
         {
             int currentDay = PlayerModel.instance.GetDay() + 1;
             int energyRequired = (int)StageTypeInfo.instnace.GetEnergyNeed(currentDay - 1);
@@ -35,7 +35,7 @@ namespace NeuroLobotomyCorporation.NetzachSuppression
 
         public override string RestartConnectorCommand()
         {
-            return "change_action_scene|netzach_suppression|" + (CreatureOverloadManager.instance.GetQliphothOverloadLevel() - 1).ToString();
+            return "change_action_scene|netzach_suppression|" + ShootManagerialBullet.IsBulletUnlocked() + "|" + GetDayStartContext() + "|" + (CreatureOverloadManager.instance.GetQliphothOverloadLevel() - 1).ToString();
         }
     }
 }

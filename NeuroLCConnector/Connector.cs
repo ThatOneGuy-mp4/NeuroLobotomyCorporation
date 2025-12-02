@@ -152,7 +152,14 @@ namespace NeuroLCConnector
                 {
                     //nothing lule. just using this to dispose of the response.
                 }
-                await ProcessGameMessage(clientMessage);
+                try
+                {
+                    await ProcessGameMessage(clientMessage);
+                }
+                catch(Exception e)
+                {
+                    Context.Send("An unknown, unhandled exception occurred while processing a game message.", true);
+                }
             }
         }
 
@@ -175,6 +182,9 @@ namespace NeuroLCConnector
                     break;
                 case "change_action_scene":
                     await ChangeCurrentActionScene(parameters);
+                    break;
+                case "clear_actions":
+                    ActionScene.CurrentActionScene.CleanUpActionScene();
                     break;
                 case "enable_customize_agent":
                     if (parameters[1].Equals("true")) DayPreparationScene.CustomizeAgent.IsBongBong = true;
@@ -269,108 +279,89 @@ namespace NeuroLCConnector
             Context.Send(message, bool.Parse(parameters[(int)SendContextParameters.Silent]));
         }
 
-        public enum BossPhase
+        public enum FacilityManagementStartParams
         {
-            Phase = 2, 
-            AltPhase = 3
+            IsBulletUnlocked = 2,
+            DayStartContext = 3,
+            BossPhase = 4, 
+            AltPhase = 5
         }
         private static async Task ChangeCurrentActionScene(string[] parameters)
         {
+
+            ActionScene nextScene = null;
             switch (parameters[(int)ProcessGameMessageParameters.Command_Parameter])
             {
                 case "abnormality_extraction":
                     AbnormalityExtractionScene.ParseParameters(parameters);
-                    ActionScene.ChangeActionScene(new AbnormalityExtractionScene());
+                    nextScene = new AbnormalityExtractionScene();
                     break;
                 case "watch_story":
-                    ActionScene.ChangeActionScene(new WatchStoryScene());
+                    nextScene = new WatchStoryScene();
                     break;
                 case "day_preparation":
                     DayPreparationScene.ActivateCoreSuppression.SephirahReadyToSuppress.Clear();
-                    ActionScene.ChangeActionScene(new DayPreparationScene());
+                    nextScene = new DayPreparationScene();
                     break;
                 case "facility_management":
-                    ActionScene.ChangeActionScene(new FacilityManagementScene());
+                    nextScene = new FacilityManagementScene();
                     break;
                 case "malkuth_suppression":
-                    MalkuthSuppressionScene malkuth = new MalkuthSuppressionScene();
-                    if (parameters.Length > 2) malkuth.SetPhase(Int32.Parse(parameters[(int)BossPhase.Phase]));
-                    ActionScene.ChangeActionScene(malkuth);
+                    nextScene = new MalkuthSuppressionScene();
                     break;
                 case "yesod_suppression":
-                    YesodSuppressionScene yesod = new YesodSuppressionScene();
-                    if (parameters.Length > 2) yesod.SetPhase(Int32.Parse(parameters[(int)BossPhase.Phase]));
-                    ActionScene.ChangeActionScene(yesod);
+                    nextScene = new YesodSuppressionScene();
                     break;
                 case "hod_suppression":
-                    HodSuppressionScene hod = new HodSuppressionScene();
-                    if (parameters.Length > 2) hod.SetPhase(Int32.Parse(parameters[(int)BossPhase.Phase]));
-                    ActionScene.ChangeActionScene(hod);
+                    nextScene = new HodSuppressionScene();
                     break;
                 case "netzach_suppression":
-                    NetzachSuppressionScene netzach = new NetzachSuppressionScene();
-                    if (parameters.Length > 2) netzach.SetPhase(Int32.Parse(parameters[(int)BossPhase.Phase]));
-                    ActionScene.ChangeActionScene(netzach);
+                    nextScene = new NetzachSuppressionScene();
                     break;
                 case "tiphereth_suppression":
-                    TipherethSuppressionScene tiphereth = new TipherethSuppressionScene();
-                    if (parameters.Length > 2) tiphereth.SetPhase(Int32.Parse(parameters[(int)BossPhase.Phase]));
-                    ActionScene.ChangeActionScene(tiphereth);
+                    nextScene = new TipherethSuppressionScene();
                     break;
                 case "gebura_suppression":
-                    GeburaSuppressionScene gebura = new GeburaSuppressionScene();
-                    if (parameters.Length > 2) gebura.SetPhase(Int32.Parse(parameters[(int)BossPhase.Phase]));
-                    ActionScene.ChangeActionScene(gebura);
+                    nextScene = new GeburaSuppressionScene();
                     break;
                 case "chesed_suppression":
-                    ChesedSuppressionScene chesed = new ChesedSuppressionScene();
-                    if (parameters.Length > 2) chesed.SetPhase(Int32.Parse(parameters[(int)BossPhase.Phase]));
-                    ActionScene.ChangeActionScene(chesed);
+                    nextScene = new ChesedSuppressionScene();
                     break;
                 case "binah_suppression":
-                    BinahSuppressionScene binah = new BinahSuppressionScene();
-                    if (parameters.Length > 2) binah.SetPhase(Int32.Parse(parameters[(int)BossPhase.Phase]));
-                    ActionScene.ChangeActionScene(binah);
+                    nextScene = new BinahSuppressionScene();
                     break;
                 case "hokma_suppression":
-                    HokmaSuppressionScene hokma = new HokmaSuppressionScene();
-                    if (parameters.Length > 2) hokma.SetPhase(Int32.Parse(parameters[(int)BossPhase.Phase]));
-                    ActionScene.ChangeActionScene(hokma);
+                    nextScene = new HokmaSuppressionScene();
                     break;
                 case "claw_suppression":
-                    ClawSuppressionScene claw = new ClawSuppressionScene();
-                    if (parameters.Length > 2) claw.SetPhase(Int32.Parse(parameters[(int)BossPhase.Phase]));
-                    ActionScene.ChangeActionScene(claw);
+                    nextScene = new ClawSuppressionScene();
                     break;
                 case "abel_suppression":
-                    AbelSuppressionScene abel = new AbelSuppressionScene();
-                    if (parameters.Length > 2) abel.SetPhase(Int32.Parse(parameters[(int)BossPhase.Phase]));
-                    ActionScene.ChangeActionScene(abel);
+                    nextScene = new AbelSuppressionScene();
                     break;
                 case "abram_suppression":
                     AbramSuppressionScene abram = new AbramSuppressionScene();
-                    if (parameters.Length > 2)
+                    if (parameters.Length > 4)
                     {
-                        abram.SetPhase(Int32.Parse(parameters[(int)BossPhase.Phase]));
-                        abram.SetAltPhase(Int32.Parse(parameters[(int)BossPhase.AltPhase]));
+                        abram.SetAltPhase(Int32.Parse(parameters[(int)FacilityManagementStartParams.AltPhase]));
                     }
-                    ActionScene.ChangeActionScene(abram);
+                    nextScene = abram;
                     break;
                 case "adam_suppression":
                     AdamSuppressionScene adam = new AdamSuppressionScene();
-                    if (parameters.Length > 2)
+                    if (parameters.Length > 4)
                     {
-                        adam.SetPhase(Int32.Parse(parameters[(int)BossPhase.Phase]));
-                        adam.SetAltPhase(Int32.Parse(parameters[(int)BossPhase.AltPhase]));
+                        adam.SetAltPhase(Int32.Parse(parameters[(int)FacilityManagementStartParams.AltPhase]));
                     }
-                    ActionScene.ChangeActionScene(adam);
+                    nextScene = adam;
                     break;
                 case "daat_suppression":
-                    DaatSuppressionScene daat = new DaatSuppressionScene();
-                    if (parameters.Length > 2) daat.SetPhase(Int32.Parse(parameters[(int)BossPhase.Phase]));
-                    ActionScene.ChangeActionScene(daat);
+                    nextScene = new DaatSuppressionScene();
                     break;
             }
+            if (nextScene != null && nextScene is FacilityManagementScene) (nextScene as FacilityManagementScene).ParseParameters(parameters);
+            if (nextScene != null && nextScene is CoreSuppressionBaseScene && parameters.Length > 4) (nextScene as CoreSuppressionBaseScene).SetPhase(Int32.Parse(parameters[(int)FacilityManagementStartParams.BossPhase]));
+            if (nextScene != null) ActionScene.ChangeActionScene(nextScene);
         }
     }
 }

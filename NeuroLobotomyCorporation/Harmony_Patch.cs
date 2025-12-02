@@ -59,6 +59,14 @@ namespace NeuroLobotomyCorporation
             harmonyInstance.Patch(typeof(ConsoleScript).GetMethod("OnExitEdit", AccessTools.all), null,
                 new HarmonyMethod(typeof(NeuroSDKHandler).GetMethod("SDKConsoleCommand")), null);
 
+            //Remove actions while the pause menu effects are happening
+            harmonyInstance.Patch(typeof(EscapeUI).GetMethod("RestartAtCheckpoint", AccessTools.all),
+                new HarmonyMethod(typeof(Harmony_Patch).GetMethod("ClearActionsRetryDay")), null, null);
+            harmonyInstance.Patch(typeof(EscapeUI).GetMethod("OnClickCheckPointConfirm", AccessTools.all),
+                new HarmonyMethod(typeof(Harmony_Patch).GetMethod("ClearActionsMemoryRepository")), null, null);
+            harmonyInstance.Patch(typeof(EscapeUI).GetMethod("MoveTitle", AccessTools.all),
+                new HarmonyMethod(typeof(Harmony_Patch).GetMethod("ClearActionsMoveToTitle")), null, null);
+            //End Pause Menu fixes
 
             //Abnormality Selection fixes 
             harmonyInstance.Patch(typeof(CreatureSelectUI).GetMethod("Init", AccessTools.all), null,
@@ -134,11 +142,6 @@ namespace NeuroLobotomyCorporation
                 new HarmonyMethod(typeof(AssignWork).GetMethod("UpdateNeuroLogsObservationLevel", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(GlobalBulletWindow).GetMethod("Update", AccessTools.all), null,
                 new HarmonyMethod(typeof(ShootManagerialBullet).GetMethod("NeuroShootBullet", AccessTools.all)), null);
-
-            
-            harmonyInstance.Patch(typeof(SefiraBossManager).GetMethod("OnOverloadActivated", AccessTools.all), null,
-                new HarmonyMethod(typeof(Harmony_Patch).GetMethod("ChangeBossPhaseMeltdown", AccessTools.all)), null);
-
 
             //Give Neuro context for all of Gebura's special attacks + phase changes
             harmonyInstance.Patch(typeof(GeburahCoreScript).GetMethod("OnTakeDamage", AccessTools.all), null,
@@ -320,6 +323,20 @@ namespace NeuroLobotomyCorporation
             NeuroSDKHandler.InitializeSDK();
         }
 
+        public static void ClearActionsRetryDay()
+        {
+            NeuroSDKHandler.SendCommand("clear_actions");
+        }
+
+        public static void ClearActionsMemoryRepository()
+        {
+            NeuroSDKHandler.SendCommand("clear_actions");
+        }
+
+        public static void ClearActionsMoveToTitle()
+        {
+            NeuroSDKHandler.SendCommand("clear_actions");
+        }
         public static void AbnormalityChoiceSelectStart()
         {
             if (!IntegrationLore.LoreIntegrationEnabled()) return;
@@ -386,78 +403,86 @@ namespace NeuroLobotomyCorporation
 
         public static void BeginFacilityManagement()
         {
+            FacilityManagementScene managementScene = null;
+            string typeOfManagement = "";
             if (SefiraBossManager.Instance.IsAnyBossSessionActivated())
             {
                 switch (SefiraBossManager.Instance.CurrentActivatedSefira)
                 {
                     case SefiraEnum.MALKUT:
-                        ActionScene.Instance = new MalkuthSuppressionScene();
-                        NeuroSDKHandler.SendCommand("change_action_scene|malkuth_suppression");
+                        managementScene = new MalkuthSuppressionScene();
+                        typeOfManagement = "malkuth";
                         break;
                     case SefiraEnum.YESOD:
-                        ActionScene.Instance = new YesodSuppressionScene();
-                        NeuroSDKHandler.SendCommand("change_action_scene|yesod_suppression");
+                        managementScene = new YesodSuppressionScene();
+                        typeOfManagement = "yesod";
                         break;
                     case SefiraEnum.HOD:
-                        ActionScene.Instance = new HodSuppressionScene();
-                        NeuroSDKHandler.SendCommand("change_action_scene|hod_suppression");
+                        managementScene = new HodSuppressionScene();
+                        typeOfManagement = "hod";
                         break;
                     case SefiraEnum.NETZACH:
-                        ActionScene.Instance = new NetzachSuppressionScene();
-                        NeuroSDKHandler.SendCommand("change_action_scene|netzach_suppression");
+                        managementScene = new NetzachSuppressionScene();
+                        typeOfManagement = "netzach";
                         break;
                     case SefiraEnum.TIPERERTH1:
                     case SefiraEnum.TIPERERTH2:
-                        ActionScene.Instance = new TipherethSuppressionScene();
-                        NeuroSDKHandler.SendCommand("change_action_scene|tiphereth_suppression");
+                        managementScene = new TipherethSuppressionScene();
+                        typeOfManagement = "tiphereth";
                         break;
                     case SefiraEnum.GEBURAH:
-                        ActionScene.Instance = new GeburaSuppressionScene();
-                        NeuroSDKHandler.SendCommand("change_action_scene|gebura_suppression");
+                        managementScene = new GeburaSuppressionScene();
+                        typeOfManagement = "gebura";
                         break;
                     case SefiraEnum.CHESED:
-                        ActionScene.Instance = new ChesedSuppressionScene();
-                        NeuroSDKHandler.SendCommand("change_action_scene|chesed_suppression");
+                        managementScene = new ChesedSuppressionScene();
+                        typeOfManagement = "chesed";
                         break;
                     case SefiraEnum.BINAH:
-                        ActionScene.Instance = new BinahSuppressionScene();
-                        NeuroSDKHandler.SendCommand("change_action_scene|binah_suppression");
+                        managementScene = new BinahSuppressionScene();
+                        typeOfManagement = "binah";
                         break;
                     case SefiraEnum.CHOKHMAH:
-                        ActionScene.Instance = new HokmaSuppressionScene();
-                        NeuroSDKHandler.SendCommand("change_action_scene|hokma_suppression");
+                        managementScene = new HokmaSuppressionScene();
+                        typeOfManagement = "hokma";
                         break;
                     case SefiraEnum.KETHER:
                         switch (PlayerModel.instance.GetDay())
                         {
                             case 45:
-                                ActionScene.Instance = new ClawSuppressionScene();
-                                NeuroSDKHandler.SendCommand("change_action_scene|claw_suppression");
+                                managementScene = new ClawSuppressionScene();
+                                typeOfManagement = "claw";
                                 break;
                             case 46:
-                                ActionScene.Instance = new AbelSuppressionScene();
-                                NeuroSDKHandler.SendCommand("change_action_scene|abel_suppression");
+                                managementScene = new AbelSuppressionScene();
+                                typeOfManagement = "abel";
                                 break;
                             case 47:
-                                ActionScene.Instance = new AbramSuppressionScene();
-                                NeuroSDKHandler.SendCommand("change_action_scene|abram_suppression");
+                                managementScene = new AbramSuppressionScene();
+                                typeOfManagement = "abram";
                                 break;
                             case 48:
-                                ActionScene.Instance = new AdamSuppressionScene();
-                                NeuroSDKHandler.SendCommand("change_action_scene|adam_suppression");
+                                managementScene = new AdamSuppressionScene();
+                                typeOfManagement = "adam";
                                 break;
                             case 49:
-                                ActionScene.Instance = new DaatSuppressionScene();
-                                NeuroSDKHandler.SendCommand("change_action_scene|daat_suppression");
+                                managementScene = new DaatSuppressionScene();
                                 Spin.NeuroCameraRotationEvent.ResetSpinParams(); //y'know i've been using a lot of static variables in this mod but i haven't been clearing any of them. might wanna do that so there isn't any issues between days.
+                                typeOfManagement = "daat";
                                 break;
                         }
                         break;
                 }
-                return;
+                typeOfManagement = String.Format("{0}_suppression", typeOfManagement);
             }
-            ActionScene.Instance = new FacilityManagementScene();
-            NeuroSDKHandler.SendCommand("change_action_scene|facility_management");
+            else
+            {
+                managementScene = new FacilityManagementScene();
+                typeOfManagement = "facility_management";
+            }
+            ActionScene.Instance = managementScene;
+            string exParameters = ShootManagerialBullet.IsBulletUnlocked() + "|" + managementScene.GetDayStartContext();
+            NeuroSDKHandler.SendCommand("change_action_scene|" + typeOfManagement + "|" + exParameters);
         }
 
         public static void ChangeBossPhaseMeltdown()

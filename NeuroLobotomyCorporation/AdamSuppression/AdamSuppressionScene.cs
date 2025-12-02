@@ -27,7 +27,7 @@ namespace NeuroLobotomyCorporation.AdamSuppression
             return base.ProcessServerInput(message);
         }
 
-        private string GetDayStartContext()
+        public override string GetDayStartContext()
         {
             return "\"They will perish in torment if a savior does not come to them, just as mankind was rescued from the Great Flood a long time ago thanks to the man who built the Ark...\"" +
                 "\n\nKeter's Core Suppression, Act IV: Freedom and Salvation" +
@@ -47,7 +47,7 @@ namespace NeuroLobotomyCorporation.AdamSuppression
             {
                 altPhase = (int)((BinahCoreScript)anArbiter.script).Phase - 1;
             }
-            return "change_action_scene|adam_suppression|" + (CreatureOverloadManager.instance.GetQliphothOverloadLevel() - 1).ToString() + "|" + altPhase.ToString();
+            return "change_action_scene|adam_suppression|" + ShootManagerialBullet.IsBulletUnlocked() + "|" + GetDayStartContext() + "|" + (CreatureOverloadManager.instance.GetQliphothOverloadLevel() - 1).ToString() + "|" + altPhase.ToString();
         }
 
         /*

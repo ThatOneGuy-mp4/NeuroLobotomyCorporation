@@ -21,7 +21,7 @@ namespace NeuroLobotomyCorporation.TipherethSuppression
             return base.ProcessServerInput(message);
         }
 
-        private string GetDayStartContext()
+        public override string GetDayStartContext()
         {
             int currentDay = PlayerModel.instance.GetDay() + 1;
             return string.Format("\"This song, Tiphereth’s dirge, it’s for him... Tiphereth. ...I hope this performance and song will appease our souls.\"" +
@@ -34,7 +34,7 @@ namespace NeuroLobotomyCorporation.TipherethSuppression
 
         public override string RestartConnectorCommand()
         {
-            return "change_action_scene|tiphereth_suppression|" + (CreatureOverloadManager.instance.GetQliphothOverloadLevel() - 1).ToString();
+            return "change_action_scene|tiphereth_suppression|" + ShootManagerialBullet.IsBulletUnlocked() + "|" + GetDayStartContext() + "|" + (CreatureOverloadManager.instance.GetQliphothOverloadLevel() - 1).ToString();
         }
     }
 }

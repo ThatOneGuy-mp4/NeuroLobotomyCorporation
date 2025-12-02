@@ -164,6 +164,8 @@ namespace NeuroLCConnector
                 }
             };
 
+            protected override int ExpectedParameters => 1;
+
             protected override ExecutionResult Validate(ActionData actionData)
             {
                 int? power = actionData.Data?["power"]?.Value<int>();

@@ -42,6 +42,8 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     sefiraDepartment = currentPassage.GetSefiraEnum();
                 }
             }
+            if (RabbitManager.instance != null && RabbitManager.instance.ExistsSquad(sefiraDepartment)) return "failure|Suppression could not be ordered because the Rabbits are currently in the specified target's department.";
+
             UnitModel target = Helpers.TryFindAnySuppressibleTarget(targetName, sefiraDepartment);
             if (target == null) return "failure|There are no valid targets of the specified name.";
             ThreadPool.QueueUserWorkItem(CommandExecute, new SuppressTargetState(agent, target, sefiraDepartment));

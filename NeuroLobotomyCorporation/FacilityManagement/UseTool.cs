@@ -20,7 +20,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             if (!Helpers.AgentExists(agentName, out agent)) return "failure|Specified agent does not exist.";
             CreatureModel abnormality = null;
             if (!Helpers.AbnormalityExists(abnormalityName, out abnormality)) return "failure|Specified Abnormality does not exist.";
-            if (abnormality.metaInfo.creatureWorkType != CreatureWorkType.KIT) return "failure|Specified Abnormality is not a Tool. Use the 'AssignWork' command instead.";
+            if (abnormality.metaInfo.creatureWorkType != CreatureWorkType.KIT) return "failure|Specified Abnormality is not a Tool. Use the 'assign_work' command instead.";
             switch (Helpers.GetAgentWorkingState(agent))
             {
                 case Helpers.AgentWorkingState.WORKING:
@@ -47,6 +47,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                 case Helpers.AbnormalityWorkingState.COOLDOWN:
                     return "failure|Work could not be assigned because the specified Abnormality is in cooldown. Try again in a bit."; //this shouldn't be possible with a tool I think but I'll leave it there anyways
             }
+            if (RabbitManager.instance != null && RabbitManager.instance.ExistsSquad(abnormality.sefira.sefiraEnum)) return "failure|Tool could not be used because the Rabbits are currently in the specified Abnormality's department.";
             string cancelHint = "";
             if(abnormality.metaInfo.creatureKitType == CreatureKitType.EQUIP)
             {

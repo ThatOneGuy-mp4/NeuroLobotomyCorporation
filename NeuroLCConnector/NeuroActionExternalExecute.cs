@@ -21,6 +21,15 @@ namespace NeuroLCConnector
      */
     public abstract class NeuroActionExternalExecute : NeuroAction
     {
+        /*
+         * The entire way the mod is coded relies on '|' being able to separate Neuro's parameters. 
+         * If '|' is therefore included as normal text, everything will be offset and explode. 
+         * Therefore, specify the amount of parameters expected. If this does not match the actual amount, fail the action.
+         */
+        protected abstract int ExpectedParameters
+        {
+            get;
+        }
 
         /*
          * The overriden Validate method will perform any immediately possible validation (e.g., empty or null variables),
@@ -30,7 +39,9 @@ namespace NeuroLCConnector
         private const int RESULT_MESSAGE_INDEX = 1;
         protected ExecutionResult ValidateGameSide(params string[] actionParams)
         {
-            string returnedValidation = NeuroLCConnector.Connector.SendCommand(Name + "|" + String.Join('|', actionParams)).Result;
+            string finalMessage = Name + "|" + String.Join('|', actionParams);
+            if (finalMessage.Split('|').Length != ExpectedParameters + 1) return ExecutionResult.Failure("Action failed. You cannot use '|' in any parameter."); //ExpectedParameters - 1 because the name is also included here
+            string returnedValidation = NeuroLCConnector.Connector.SendCommand(finalMessage).Result;
             string[] returnedValidationSplit = returnedValidation.Split('|');
             if (returnedValidationSplit[IS_VALID_INDEX].Equals("failure")) return ExecutionResult.Failure(returnedValidationSplit[RESULT_MESSAGE_INDEX]);
             return ExecutionResult.Success(returnedValidationSplit[RESULT_MESSAGE_INDEX]);
@@ -66,8 +77,13 @@ namespace NeuroLCConnector
         protected sealed override Task Execute()
         {
             string result = NeuroLCConnector.Connector.SendCommand(Name).Result;
-            if (!String.IsNullOrEmpty(result)) result = String.Format("discard|{0}|true", result); 
+            if (!String.IsNullOrEmpty(result)) 
+            {
+                if (result.Split('|').Length > 1) result = result.Split('|')[1]; //If message contains failure| at the beginning as part of a default error handling.
+                result = String.Format("discard|{0}|true", result); 
+            }
             return NeuroLCConnector.Connector.SendContext(result.Split('|'));
         }
     }
+
 }

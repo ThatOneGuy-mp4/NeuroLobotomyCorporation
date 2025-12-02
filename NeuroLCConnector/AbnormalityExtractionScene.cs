@@ -82,11 +82,13 @@ namespace NeuroLCConnector
         }
         private static List<string> abnormalityTaglines;
 
-        public override void InitializeOptionalActions()
+        public override List<INeuroAction> InitializeOptionalActions()
         {
-            if (canExtract) RegisterAction("extract_abnormality");
-            else return;
-            if (canReextract) RegisterAction("reextract_abnormalities");
+            List<INeuroAction> optionalActions = new List<INeuroAction>();
+            if (canExtract) optionalActions.Add(new ExtractAbnormality());
+            else return optionalActions;
+            if (canReextract) optionalActions.Add(new ReextractAbnormalities());
+            return optionalActions;
         }
 
         protected override string GetActionSceneStartContext()

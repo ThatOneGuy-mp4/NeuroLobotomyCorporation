@@ -60,8 +60,12 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             public NeuroAssignmentBuf(UnitModel target) : base(float.MaxValue, (UnitBufType)727)
             {
                 int buf = 0;
-                if (AsiyahSynchronizationComplete) buf += BASE_INCREASE;
-                if (AtziluthSynchronizationComplete) buf += UPGRADE_INCREASE;
+                AgentModel agent = (AgentModel)this.model;
+                if(!agent.HasEquipment_Mod(new LcId(NEURO_HAIRPIN_REAL_ID)) && !agent.HasEquipment_Mod(new LcId(EVIL_HAIRPIN_REAL_ID)))
+                {
+                    if (AsiyahSynchronizationComplete) buf += BASE_INCREASE;
+                    if (AtziluthSynchronizationComplete) buf += UPGRADE_INCREASE;
+                }
                 this.primaryStat.hp = buf;
                 this.primaryStat.mental = buf;
                 this.primaryStat.work = buf;
@@ -109,7 +113,6 @@ namespace NeuroLobotomyCorporation.FacilityManagement
         {
             if (__instance.agent.HasUnitBuf((UnitBufType)727))
             {
-                NeuroSDKHandler.SendContext("has buf");
                 if(!UpgradeHairpin(__instance.agent) && EGO_CHANCE >= UnityEngine.Random.value && !AgentHasHairpin(__instance.agent))
                 {
                     if (!AtziluthSynchronizationComplete && __instance.agent.Equipment.gifts.addedGifts.Find((EGOgiftModel e) => e.metaInfo.AttachRegion == EGOgiftAttachRegion.HAIR) != null) return;

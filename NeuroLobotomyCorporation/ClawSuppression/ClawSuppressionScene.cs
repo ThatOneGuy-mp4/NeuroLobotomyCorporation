@@ -21,7 +21,7 @@ namespace NeuroLobotomyCorporation.ClawSuppression
             return base.ProcessServerInput(message);
         }
 
-        private string GetDayStartContext()
+        public override string GetDayStartContext()
         {
             return "Core Suppression has begun on Day 46." +
                 "\nKeter's Core Suppression, Act I: Proving Oneself" +
@@ -32,7 +32,7 @@ namespace NeuroLobotomyCorporation.ClawSuppression
 
         public override string RestartConnectorCommand()
         {
-            return "change_action_scene|claw_suppression|" + (CreatureOverloadManager.instance.GetQliphothOverloadLevel() - 1).ToString();
+            return "change_action_scene|claw_suppression|" + ShootManagerialBullet.IsBulletUnlocked() + "|" + GetDayStartContext() + "|" + (CreatureOverloadManager.instance.GetQliphothOverloadLevel() - 1).ToString();
         }
     }
 }

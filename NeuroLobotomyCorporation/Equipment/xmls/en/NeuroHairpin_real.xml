@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <localize>
 <text id="neurohairpin_real_name">Turing Test (Life)</text>	
-<text id="neurohairpin_real_desc">All Stats +10</text>
+<text id="neurohairpin_real_desc">All Stats +10 (does not stack with Neuro's Work or Suppression bonus)</text>
 </localize>

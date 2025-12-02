@@ -63,15 +63,27 @@ namespace NeuroLCConnector
             }
         }
 
-        public override void InitializeOptionalActions()
+        //Parse if bullets are unlocked and the day start context from the scene change command. Done this way to reduce l*tency.
+        private bool bulletUnlocked = false;
+        private string dayStartContext = "";
+        public void ParseParameters(string[] parameters)
         {
-            string isBulletUnlocked = NeuroLCConnector.Connector.SendCommand("is_bullet_unlocked").Result;
-            if (isBulletUnlocked.Equals("true")) RegisterAction("shoot_managerial_bullet");
+            if (parameters.Length < 3) return;
+            if (parameters[2].Equals("true")) bulletUnlocked = true;
+            if (parameters.Length < 4) return;
+            dayStartContext = parameters[3];
+        }
+
+        public override List<INeuroAction> InitializeOptionalActions()
+        {
+            List<INeuroAction> optionalActions = new List<INeuroAction>();
+            if (bulletUnlocked) optionalActions.Add(new ShootManagerialBullet());
+            return optionalActions;
         }
 
         protected override string GetActionSceneStartContext()
         {
-            return NeuroLCConnector.Connector.SendCommand("get_day_start_context").Result;
+            return dayStartContext;
         }
     }
 
@@ -110,6 +122,8 @@ namespace NeuroLCConnector
             }
         };
 
+        protected override int ExpectedParameters => 1;
+
         protected override ExecutionResult Validate(ActionData actionData)
         {
             string? agentName = actionData.Data?["agent_name"]?.Value<string>();
@@ -146,6 +160,8 @@ namespace NeuroLCConnector
                 ["include_escape_information"] = QJS.Enum(new List<string> { "true", "false" })
             }
         };
+
+        protected override int ExpectedParameters => 5;
 
         protected override ExecutionResult Validate(ActionData actionData)
         {
@@ -194,6 +210,8 @@ namespace NeuroLCConnector
             }
         };
 
+        protected override int ExpectedParameters => 3;
+
         protected override ExecutionResult Validate(ActionData actionData)
         {
             string? agentName = actionData.Data?["agent_name"]?.Value<string>();
@@ -222,6 +240,8 @@ namespace NeuroLCConnector
                 ["abnormality_name"] = QJS.Type(JsonSchemaType.String)
             }
         };
+
+        protected override int ExpectedParameters => 2;
 
         protected override ExecutionResult Validate(ActionData actionData)
         {
@@ -260,6 +280,8 @@ namespace NeuroLCConnector
             }
         };
 
+        protected override int ExpectedParameters => 3;
+
         protected override ExecutionResult Validate(ActionData actionData)
         {
             string? agentName = actionData.Data?["agent_name"]?.Value<string>();
@@ -296,6 +318,8 @@ namespace NeuroLCConnector
             }
         };
 
+        protected override int ExpectedParameters => 1;
+
         protected override ExecutionResult Validate(ActionData actionData)
         {
             string? agentName = actionData.Data?["agent_name"]?.Value<string>();
@@ -321,6 +345,8 @@ namespace NeuroLCConnector
                 ["target_department"] = QJS.Type(JsonSchemaType.String) 
             }
         };
+
+        protected override int ExpectedParameters => 3;
 
         protected override ExecutionResult Validate(ActionData actionData)
         {

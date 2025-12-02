@@ -184,7 +184,23 @@ namespace NeuroLobotomyCorporation
             string[] serverMessage = input.ReadToEnd().Split('|');
             request.InputStream.Close();
             input.Close();
-            string actionResult = ActionScene.Instance.ProcessServerInput(serverMessage);
+            string actionResult = "";
+            if (ActionScene.Instance != null && ActionScene.Instance is FacilityManagementScene &&
+                ((EscapeUI.instance != null && EscapeUI.instance.IsOpened) || (OptionUI.Instance != null && OptionUI.Instance.IsEnabled)))
+            {
+                actionResult = "failure|Action was blocked due to the pause menu being open.";
+            }
+            else if (ActionScene.Instance != null)
+            {
+                try
+                {
+                    actionResult = ActionScene.Instance.ProcessServerInput(serverMessage);
+                }
+                catch(Exception e)
+                {
+                    actionResult = "failure|An unknown, unhandled error occurred while processing the command.";
+                }
+            }
             if (actionResult == null) actionResult = "";
             using (HttpListenerResponse response = context.Response)
             {

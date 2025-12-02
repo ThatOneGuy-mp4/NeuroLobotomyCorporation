@@ -23,7 +23,7 @@ namespace NeuroLobotomyCorporation.BinahSuppression
             return base.ProcessServerInput(message);
         }
 
-        private string GetDayStartContext()
+        public override string GetDayStartContext()
         {
             int currentDay = PlayerModel.instance.GetDay() + 1;
             return String.Format("\"Ah, this brings me back to my senses. ...It seems this body of mine can also use these powers. Interesting, yet tenuous.\"" +
@@ -41,7 +41,7 @@ namespace NeuroLobotomyCorporation.BinahSuppression
             {
                 phase = (int)((BinahCoreScript)anArbiter.script).Phase - 1;
             }
-            return "change_action_scene|binah_suppression|" + phase.ToString();
+            return "change_action_scene|binah_suppression|" + ShootManagerialBullet.IsBulletUnlocked() + "|" + GetDayStartContext() + "|" + phase.ToString();
         }
 
         //i'm slightly concerned this may trigger more than once. i still don't have evidence of it but i'm suspicious anyways.

@@ -22,10 +22,6 @@ namespace NeuroLCConnector
      * (e.g., all of the Core Suppressions compared to their base class, FacilityManagementScene).
      */
 
-    /*
-     * TODO:
-     * -Add ActionScene for department expansion (same reason as above, but for choosing the next department)
-     */
     public abstract class ActionScene
     {
         public static ActionScene CurrentActionScene
@@ -56,20 +52,23 @@ namespace NeuroLCConnector
 
         public virtual void InitializeActionScene()
         {
-            NeuroActionHandler.RegisterActions(InitActions);
-            RegisteredActions.AddRange(InitActions);
-            InitializeOptionalActions();
+            List<INeuroAction> actionsToRegister = new List<INeuroAction>();
+            actionsToRegister.AddRange(InitActions);
+            actionsToRegister.AddRange(InitializeOptionalActions());
+            NeuroActionHandler.RegisterActions(actionsToRegister);
+            RegisteredActions.AddRange(actionsToRegister);
             string startContext = GetActionSceneStartContext();
             if (!String.IsNullOrEmpty(startContext)) Context.Send(startContext);
         }
 
-        public virtual void InitializeOptionalActions()
+        public virtual List<INeuroAction> InitializeOptionalActions()
         {
-
+            return new List<INeuroAction>();
         }
 
         public virtual void CleanUpActionScene()
         {
+            if (RegisteredActions.Count == 0) return;
             NeuroActionHandler.UnregisterActions(RegisteredActions);
             RegisteredActions.Clear();
         }

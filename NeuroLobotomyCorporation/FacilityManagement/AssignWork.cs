@@ -18,14 +18,13 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             WORK_TYPE = 3
         }
 
-        //TODO: add all the weird exceptions for special work types (der freischutz, red riding hood, el piano, one sin + whitenight, aib)
         public static string Command(string agentName, string abnoName, string workType)
         {
             AgentModel agent = null;
             CreatureModel abnormality = null;
             if (!Helpers.AgentExists(agentName, out agent)) return "failure|Action failed. Specified agent does not exist.";
             if (!Helpers.AbnormalityExists(abnoName, out abnormality)) return "failure|Action failed. Specified Abnormality does not exist.";
-            if (abnormality.metaInfo.creatureWorkType == CreatureWorkType.KIT) return "failure|Action failed. Specified Abnormality is a Tool. Use the 'UseTool' command instead.";
+            if (abnormality.metaInfo.creatureWorkType == CreatureWorkType.KIT) return "failure|Action failed. Specified Abnormality is a Tool. Use the 'use_tool' command instead.";
             int workId = 0;
             switch (workType)
             {
@@ -71,6 +70,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                 case Helpers.AbnormalityWorkingState.COOLDOWN:
                     return "failure|Work could not be assigned because the specified Abnormality is in cooldown. Try again in a bit.";
             }
+            if (RabbitManager.instance != null && RabbitManager.instance.ExistsSquad(abnormality.sefira.sefiraEnum)) return "failure|Work could not be assigned because the Rabbits are currently in the specified Abnormality's department.";
             string specialResultMessage = "";
             bool specialResultSuccess = false;
             if (IsSpecialWork(agent, abnormality, workId, out specialResultMessage, out specialResultSuccess))

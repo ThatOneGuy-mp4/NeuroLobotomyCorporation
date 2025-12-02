@@ -39,6 +39,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     return String.Format("success|{0} has stopped suppressing their target.", agentName);
                 case Helpers.AgentWorkingState.IDLE:
                     if (agent.Equipment.kitCreature == null) return "failure|The specified Agent is idle and has no action to cancel.";
+                    if (RabbitManager.instance != null && RabbitManager.instance.ExistsSquad(agent.Equipment.kitCreature.sefira.sefiraEnum)) return "failure|Tool could not be returned because the Rabbits are currently in the Tool's department.";
                     ThreadPool.QueueUserWorkItem(CommandExecute, new CancelActionState(agent, CancelType.EQUIPPED_TOOL));
                     return String.Format("success|{0} has been ordered to return their equipped Tool.", agentName);
                 case Helpers.AgentWorkingState.HERETIC:

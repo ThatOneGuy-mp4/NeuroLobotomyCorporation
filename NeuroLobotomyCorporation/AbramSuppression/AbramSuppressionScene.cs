@@ -25,7 +25,7 @@ namespace NeuroLobotomyCorporation.AbramSuppression
             return base.ProcessServerInput(message);
         }
 
-        private string GetDayStartContext()
+        public override string GetDayStartContext()
         {
             return "\"Only regret awaits you tomorrow. It’s a well deserved punishment for someone as trifling as us.\"" +
                 "\n\nKeter's Core Suppression, Act III: Regret and Atonement" +
@@ -45,7 +45,7 @@ namespace NeuroLobotomyCorporation.AbramSuppression
             {
                 altPhase = (int)((GeburahCoreScript)redMistModel.script).Phase - 1;
             }
-            return "change_action_scene|abram_suppression|" + (CreatureOverloadManager.instance.GetQliphothOverloadLevel() - 1).ToString() + "|" + altPhase.ToString();
+            return "change_action_scene|abram_suppression|" + ShootManagerialBullet.IsBulletUnlocked() + "|" + GetDayStartContext() + "|" + (CreatureOverloadManager.instance.GetQliphothOverloadLevel() - 1).ToString() + "|" + altPhase.ToString();
         }
 
         /*

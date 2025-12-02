@@ -28,7 +28,7 @@ namespace NeuroLobotomyCorporation.DaatSuppression
         }
 
         private static int phase = 0;
-        private string GetDayStartContext()
+        public override string GetDayStartContext()
         {
             phase = 0;
             return "\"Shall we get to work? All we need to do is what we’ve always done.\"" +
@@ -39,7 +39,7 @@ namespace NeuroLobotomyCorporation.DaatSuppression
 
         public override string RestartConnectorCommand()
         {
-            return "change_action_scene|daat_suppression|" + phase.ToString();
+            return "change_action_scene|daat_suppression|" + ShootManagerialBullet.IsBulletUnlocked() + "|" + GetDayStartContext() + "|" + phase.ToString();
         }
 
         //Prefix - save the current next energy threshold; it it differs from the next energy threshold after updating, then a dialogue played, and therefore, increase phase.

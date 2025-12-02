@@ -72,6 +72,8 @@ namespace NeuroLCConnector
                 }
             };
 
+            private int ExpectedParameters = 9;
+
             //very very VERY important: if the original Agent is BongBong, forcefully set them to their true form.
             public static bool IsBongBong = false;
             private const string BONGBONG_OVERRIDE_COMMAND = "customize_agent|BongBong|0|0|255|11|11|31|7|5";
@@ -117,6 +119,7 @@ namespace NeuroLCConnector
                 if (mouthIndex == null) mouthIndex = -1;
                 else if (mouthIndex < 0 || mouthIndex > MAX_MOUTH_INDEX) return ExecutionResult.Failure(String.Format("Action failed. Parameter 'mouth_type_index' was provided but was outside of the range 0-{1}.", MAX_MOUTH_INDEX));
                 resultData = String.Format("customize_agent|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}", agentName, hairColorRed, hairColorGreen, hairColorBlue, frontHairIndex, backHairIndex, eyeIndex, eyebrowIndex, mouthIndex);
+                if (resultData.Split('|').Length != ExpectedParameters + 1) return ExecutionResult.Failure("Action failed. You cannot use '|' in any parameter.");
                 return ExecutionResult.Success(String.Format("Customizing {0}...", agentName));
             }
 

@@ -83,6 +83,8 @@ namespace NeuroLCConnector
             Type = JsonSchemaType.Null
         };
 
+        protected override int ExpectedParameters => 0;
+
         protected override ExecutionResult Validate(ActionData actionData)
         {
             return ValidateGameSide();

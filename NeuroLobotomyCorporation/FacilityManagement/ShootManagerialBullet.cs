@@ -8,7 +8,6 @@ namespace NeuroLobotomyCorporation.FacilityManagement
 {
     public class ShootManagerialBullet
     {
-        //TODO: make sure this works as intended. if it doesn't, just check if UnlockedBulletTypes is not an empty string.
         public static string IsBulletUnlocked()
         {
             return GlobalBulletWindow.CurrentWindow.ActiveControl.activeSelf.ToString().ToLower();

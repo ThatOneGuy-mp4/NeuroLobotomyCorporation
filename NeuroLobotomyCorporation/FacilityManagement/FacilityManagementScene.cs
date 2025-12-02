@@ -62,10 +62,10 @@ namespace NeuroLobotomyCorporation.FacilityManagement
 
         public override string RestartConnectorCommand()
         {
-            return "change_action_scene|facility_management";
+            return "change_action_scene|facility_management|" + ShootManagerialBullet.IsBulletUnlocked() + "|" + GetDayStartContext();
         }
 
-        private string GetDayStartContext()
+        public virtual string GetDayStartContext()
         {
             int currentDay = PlayerModel.instance.GetDay() + 1;
             int energyRequired = (int)StageTypeInfo.instnace.GetEnergyNeed(currentDay - 1);

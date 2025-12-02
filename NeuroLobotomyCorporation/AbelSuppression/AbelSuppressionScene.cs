@@ -21,7 +21,7 @@ namespace NeuroLobotomyCorporation.AbelSuppression
             return base.ProcessServerInput(message);
         }
 
-        private string GetDayStartContext()
+        public override string GetDayStartContext()
         {
             return "\"We had no idea where to go, sailing the ocean without a map or any kind of guidance. Do you think it’ll be any better now? It won’t.\"" +
                 "\n\nKeter's Core Suppression, Act II: Fatigue and Waiting" +
@@ -33,7 +33,7 @@ namespace NeuroLobotomyCorporation.AbelSuppression
 
         public override string RestartConnectorCommand()
         {
-            return "change_action_scene|abel_suppression|" + (CreatureOverloadManager.instance.GetQliphothOverloadLevel() - 1).ToString();
+            return "change_action_scene|abel_suppression|" + ShootManagerialBullet.IsBulletUnlocked() + "|" + GetDayStartContext() + "|" + (CreatureOverloadManager.instance.GetQliphothOverloadLevel() - 1).ToString();
         }
     }
 }
