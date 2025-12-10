@@ -15,6 +15,7 @@ I would not recommend installing this mod currently because it is very almost fi
     - [Mindedness's Reticle Memory Leak Fix](https://www.nexusmods.com/lobotomycorporation/mods/586) (fixes a memory leak, obviously. you do not want to play with the memory leaks.)
     - [Pcix's Optimization Mod](https://www.nexusmods.com/lobotomycorporation/mods/57) (fixes another memory leak. does come with the downside of employees popping in and out of existence when you look away from them though, so consider that before installing.)
     - [Is It Chris's Project Nugway](https://www.nexusmods.com/lobotomycorporation/mods/609) (allows free customization, and recustomization, of your agents. this is important because Neuro will need to refer to agents by name to command them and thus should be able to name and customize them to better remember them. also, it's fun.)
+    - [TheNamesan's Music Loop Fix](https://www.nexusmods.com/lobotomycorporation/mods/616) (fixes a weird issue where the game doesn't loop music while paused. recommended if you don't like awkward silences.)
 7. Open the Connector folder's config file. Set the "NeuroURI" key's value to whatever websocket server you're using. Alternatively, set the "NEURO_SDK_WS_URL" environment variable instead.
 8. The game-to-server requests and server-to-game requests run on http://localhost:8080 and http://localhost:8081 respectively by default. Either ensure nothing else is running on those servers, or, change the "GameToServerURI" and "ServerToGameURI" keys in both the Mod and Connector config files. These must be identical in both config files, and both be http or https URIs.
 9. Launch the game through the Lobotomy Mod Manager. This will automatically open the secondary program which will connect to whatever Neuro SDK program you're using.
@@ -22,6 +23,7 @@ Once the game has been opened, you can also start or kill the secondary program 
     - "neurosdk start {connector/handler/all}"; starts the specified of the last three options, if they are not already started
     - "neurosdk kill {connector/handler/all}"; kills the specified of the last three options, if they are alive
     - "neurosdk restart {connector/handler/all}"; kills, then starts the specified of the last three options. uniquely, also attempts to give all actions back that the AI should have had, if the connector was restarted.
+Please note that the integration is disabled during the tutorial and part of the first day. 
 
 And voila, you're all set to let a human-like AI play Lobotomy Corporation! Just make sure the Head doesn't find out...
 
