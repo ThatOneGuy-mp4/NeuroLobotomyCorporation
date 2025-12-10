@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+	<scene id="EvilBriahSync">
+		<character id="angela" name="angela_name" color="FFBBFF" sprite="Angela" />
+		<position character="angela" to="right"/>
+		<bgm src="story-02_ogg" />
+		<speak speaker="angela" anim="Default1">custom/EvilBriahSync1_1</speak>
+		<speak speaker="angela">custom/EvilBriahSync1_2</speak>
+		<speak speaker="angela" anim="Glad3">custom/EvilBriahSync1_3</speak>
+		<speak speaker="angela">custom/EvilBriahSync1_4</speak>
+		<speak speaker="angela">custom/EvilBriahSync1_5</speak>
+		<select>
+			<option text="EvilBriahSyncSelection1_1">
+				<speak speaker="angela" anim="Default1">custom/EvilBriahSync2_1</speak>
+				<speak speaker="angela" anim="Glad3">custom/EvilBriahSync2_2</speak>
+				<speak speaker="angela">custom/EvilBriahSync2_3</speak>
+				<speak speaker="angela">custom/EvilBriahSync2_4</speak>
+				<select>
+					<option text="EvilBriahSyncSelection2_1">
+						<speak speaker="angela" anim="Glad3">custom/EvilBriahSync3_1</speak>
+					</option>
+					<option text="EvilBriahSyncSelection2_2">
+						<speak speaker="angela" anim="Glad3">custom/EvilBriahSync3_2</speak>
+					</option>
+					<option text="EvilBriahSyncSelection2_3">
+						<speak speaker="angela" anim="Default1">custom/EvilBriahSync3_3</speak>
+					</option>
+				</select>
+				<speak speaker="angela" anim="Default1">custom/EvilBriahSync4_1</speak>
+				<speak speaker="angela">custom/EvilBriahSync4_2</speak>
+				<select>
+					<option text="EvilBriahSyncSelection3_1">
+						<speak speaker="angela" anim="Glad3">custom/EvilBriahSync5_1</speak>
+						<speak speaker="angela" anim="Default1">custom/EvilBriahSync5_2</speak>
+						<speak speaker="angela" anim="Glad3">custom/EvilBriahSync5_3</speak>
+					</option>
+					<option text="EvilBriahSyncSelection3_2">
+						<speak speaker="angela" anim="Default1">custom/EvilBriahSync6_1</speak>
+						<speak speaker="angela">custom/EvilBriahSync6_2</speak>
+					</option>
+				</select>
+				<speak speaker="angela" anim="Default1">custom/EvilBriahSync7_1</speak>
+			</option>
+			<option text="EvilBriahSyncSelection1_2">
+				<speak speaker="angela" anim="Default1">custom/EvilBriahSync8_1</speak>
+				<speak speaker="angela">custom/EvilBriahSync8_2</speak>
+				<speak speaker="angela">custom/EvilBriahSync8_3</speak>
+			</option>
+		</select>
+		<bgm src="Dear Lorenne"/>
+		<speak speaker="angela" anim="Default1">custom/EvilBriahSync9_1</speak>
+		<speak speaker="angela">custom/EvilBriahSync9_2</speak>
+		<speak speaker="angela">custom/EvilBriahSync9_3</speak>
+		<select>
+			<option text="EvilBriahSyncSelection4_1">
+				<speak speaker="angela" anim="Glad3">custom/EvilBriahSync10_1</speak>
+			</option>
+			<option text="EvilBriahSyncSelection4_2">
+				<speak speaker="angela" anim="Default1">custom/EvilBriahSync10_2</speak>
+			</option>
+			<option text="EvilBriahSyncSelection4_3">
+				<speak speaker="angela" anim="Default1">custom/EvilBriahSync10_3</speak>
+			</option>
+		</select>
+		<speak speaker="angela" anim="Default1">custom/EvilBriahSync11_1</speak>
+		<speak speaker="angela" anim="Anger1">custom/EvilBriahSync11_2</speak>
+		<speak speaker="angela" anim="Default1">custom/EvilBriahSync11_3</speak>
+		<speak speaker="angela" anim="Glad3">custom/EvilBriahSync11_4</speak>
+	</scene>
+</root>

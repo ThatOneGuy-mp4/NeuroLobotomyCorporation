@@ -111,8 +111,11 @@ namespace NeuroLobotomyCorporation
                 new HarmonyMethod(typeof(WatchStory.Patches).GetMethod("EndStorySegment")), null);
             //Play Integration Lore
             harmonyInstance.Patch(typeof(StorySceneController).GetMethod("TryPlayNextSubStory", AccessTools.all), 
-                new HarmonyMethod(typeof(IntegrationLore).GetMethod("PlayIntegrationLore")),
-                null, null);
+                new HarmonyMethod(typeof(IntegrationLore).GetMethod("PlayIntegrationLore")), null, null);
+            harmonyInstance.Patch(typeof(StorySceneController).GetMethod("LoadStoryWithFade", AccessTools.all),
+               new HarmonyMethod(typeof(IntegrationLore).GetMethod("PlayLayerSyncLore")), null, null);
+            harmonyInstance.Patch(typeof(StorySceneController).GetMethod("OnEndSeedUI", AccessTools.all),
+               new HarmonyMethod(typeof(IntegrationLore).GetMethod("SetAwaitingBriahAtziluthLore")), null, null);
             //Story fixes end
 
             //Day Preparation fixes

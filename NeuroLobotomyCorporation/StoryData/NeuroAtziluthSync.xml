@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+	<scene id="NeuroAtziluthSync">
+		<character id="angela" name="angela_name" color="FFBBFF" sprite="Angela" />
+		<position character="angela" to="right"/>
+		<bgm src="Tilarids - Strange Dream" />
+		<speak speaker="angela" anim="Default1">custom/NeuroAtziluthSync1_1</speak>
+		<speak speaker="angela">custom/NeuroAtziluthSync1_2</speak>
+		<speak speaker="angela">custom/NeuroAtziluthSync1_3</speak>
+		<speak speaker="angela" anim="Glad3">custom/NeuroAtziluthSync1_4</speak>
+		<speak speaker="angela" anim="Glad1">custom/NeuroAtziluthSync1_5</speak>
+		<speak speaker="angela" anim="Glad3">custom/NeuroAtziluthSync1_6</speak>
+		<speak speaker="angela" anim="Default1">custom/NeuroAtziluthSync1_7</speak>
+		<speak speaker="angela">custom/NeuroAtziluthSync1_8</speak>
+		<speak speaker="angela">custom/NeuroAtziluthSync1_9</speak>
+		<speak speaker="angela">custom/NeuroAtziluthSync1_10</speak>
+		<speak speaker="angela">custom/NeuroAtziluthSync1_11</speak>
+		<speak speaker="angela">custom/NeuroAtziluthSync1_12</speak>
+		<select>
+			<option text="NeuroAtziluthSyncSelection1_1">
+				<speak speaker="angela" anim="Glad3">custom/NeuroAtziluthSync2_1</speak>
+				<speak speaker="angela" anim="Glad4">custom/NeuroAtziluthSync2_2</speak>
+			</option>
+			<option text="NeuroAtziluthSyncSelection1_2">
+				<speak speaker="angela" anim="Default1">custom/NeuroAtziluthSync3_1</speak>
+				<speak speaker="angela">custom/NeuroAtziluthSync3_2</speak>
+				<speak speaker="angela" anim="Glad3">custom/NeuroAtziluthSync3_3</speak>
+				<speak speaker="angela" anim="Glad4">custom/NeuroAtziluthSync3_4</speak>
+			</option>
+		</select>
+	</scene>
+</root>

@@ -81,6 +81,18 @@
     <None Update="Info\GlobalInfo.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Localize\en\NeuroAtziluthSyncDialogueOptions.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Localize\en\EvilAtziluthSyncDialogueOptions.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Localize\en\EvilBriahSyncDialogueOptions.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Localize\en\NeuroBriahSyncDialogueOptions.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Localize\en\NeuroIntroLoreDialogueOptions.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -93,7 +105,31 @@
     <None Update="Resources\NeuroSprite.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="StoryData\NeuroAtziluthSync.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="StoryData\EvilAtziluthSync.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="StoryData\EvilBriahSync.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="StoryData\NeuroBriahSync.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="StoryData\NeuroIntroLore.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="StoryData\text\en\NeuroAtziluthSync.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="StoryData\text\en\EvilAtziluthSync.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="StoryData\text\en\EvilBriahSync.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="StoryData\text\en\NeuroBriahSync.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="StoryData\text\en\NeuroIntroLore.xml">

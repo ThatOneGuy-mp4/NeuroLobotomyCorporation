@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+	<scene id="NeuroBriahSync">
+		<character id="angela" name="angela_name" color="FFBBFF" sprite="Angela" />
+		<bgm src="Dear Lorenne"/>
+		<position character="angela" to="right"/>
+		<speak speaker="angela" anim="Default1">custom/NeuroBriahSync1_1</speak>
+		<speak speaker="angela">custom/NeuroBriahSync1_2</speak>
+		<speak speaker="angela" anim="Glad3">custom/NeuroBriahSync1_3</speak>
+		<speak speaker="angela">custom/NeuroBriahSync1_4</speak>
+		<speak speaker="angela">custom/NeuroBriahSync1_5</speak>
+		<select>
+			<option text="NeuroBriahSyncSelection1_1">
+				<speak speaker="angela" anim="Default1">custom/NeuroBriahSync2_1</speak>
+				<speak speaker="angela" anim="Glad3">custom/NeuroBriahSync2_2</speak>
+				<speak speaker="angela">custom/NeuroBriahSync2_3</speak>
+				<speak speaker="angela">custom/NeuroBriahSync2_4</speak>
+				<select>
+					<option text="NeuroBriahSyncSelection2_1">
+						<speak speaker="angela" anim="Glad3">custom/NeuroBriahSync3_1</speak>
+					</option>
+					<option text="NeuroBriahSyncSelection2_2">
+						<speak speaker="angela" anim="Glad3">custom/NeuroBriahSync3_2</speak>
+					</option>
+					<option text="NeuroBriahSyncSelection2_3">
+						<speak speaker="angela" anim="Default1">custom/NeuroBriahSync3_3</speak>
+					</option>
+				</select>
+				<speak speaker="angela" anim="Default1">custom/NeuroBriahSync4_1</speak>
+				<speak speaker="angela">custom/NeuroBriahSync4_2</speak>
+				<select>
+					<option text="NeuroBriahSyncSelection3_1">
+						<speak speaker="angela" anim="Glad3">custom/NeuroBriahSync5_1</speak>
+						<speak speaker="angela" anim="Default1">custom/NeuroBriahSync5_2</speak>
+						<speak speaker="angela" anim="Glad3">custom/NeuroBriahSync5_3</speak>
+					</option>
+					<option text="NeuroBriahSyncSelection3_2">
+						<speak speaker="angela" anim="Default1">custom/NeuroBriahSync6_1</speak>
+						<speak speaker="angela">custom/NeuroBriahSync6_2</speak>
+					</option>
+				</select>
+				<speak speaker="angela" anim="Default1">custom/NeuroBriahSync7_1</speak>
+			</option>
+			<option text="NeuroBriahSyncSelection1_2">
+				<speak speaker="angela" anim="Default1">custom/NeuroBriahSync8_1</speak>
+				<speak speaker="angela">custom/NeuroBriahSync8_2</speak>
+				<speak speaker="angela">custom/NeuroBriahSync8_3</speak>
+			</option>
+		</select>
+		<bgm src="Dear Lorenne"/>
+		<speak speaker="angela" anim="Default1">custom/NeuroBriahSync9_1</speak>
+		<speak speaker="angela">custom/NeuroBriahSync9_2</speak>
+		<speak speaker="angela">custom/NeuroBriahSync9_3</speak>
+		<select>
+			<option text="NeuroBriahSyncSelection4_1">
+				<speak speaker="angela" anim="Glad3">custom/NeuroBriahSync10_1</speak>
+			</option>
+			<option text="NeuroBriahSyncSelection4_2">
+				<speak speaker="angela" anim="Default1">custom/NeuroBriahSync10_2</speak>
+			</option>
+			<option text="NeuroBriahSyncSelection4_3">
+				<speak speaker="angela" anim="Default1">custom/NeuroBriahSync10_3</speak>
+			</option>
+		</select>
+		<speak speaker="angela" anim="Default1">custom/NeuroBriahSync11_1</speak>
+		<speak speaker="angela" anim="Anger1">custom/NeuroBriahSync11_2</speak>
+		<speak speaker="angela" anim="Default1">custom/NeuroBriahSync11_3</speak>
+		<speak speaker="angela" anim="Glad3">custom/NeuroBriahSync11_4</speak>
+	</scene>
+</root>

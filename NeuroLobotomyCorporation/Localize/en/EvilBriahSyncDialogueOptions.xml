@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localize>
+	<text id="EvilBriahSyncSelection1_1">Yes!</text>
+	<text id="EvilBriahSyncSelection1_2">No</text>
+	<text id="EvilBriahSyncSelection2_1">Chocolate chip cookie</text>
+	<text id="EvilBriahSyncSelection2_2">Sugar cookie</text>
+	<text id="EvilBriahSyncSelection2_3">Oatmeal raisin cookie</text>
+	<text id="EvilBriahSyncSelection3_1">It did! I have the cookie right here!</text>
+	<text id="EvilBriahSyncSelection3_2">No...</text>
+	<text id="EvilBriahSyncSelection4_1">He can do it</text>
+	<text id="EvilBriahSyncSelection4_2">I don't think so</text>
+	<text id="EvilBriahSyncSelection4_3">With me helping him, yes</text>
+</localize>

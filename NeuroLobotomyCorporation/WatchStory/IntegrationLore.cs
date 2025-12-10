@@ -10,6 +10,33 @@ namespace NeuroLobotomyCorporation.WatchStory
 {
     public class IntegrationLore
     {
+        public enum LoreToPlay
+        {
+            None,
+            IntroLore,
+            AsiyahSync,
+            BriahSync,
+            AtziluthSync
+        }
+        public static LoreToPlay nextLore = LoreToPlay.None;
+
+        //Prefix - if a layer is fully synchronized, play the associated Angela-to-AI conversation
+        public static bool PlayLayerSyncLore(StorySceneController __instance, string storyId)
+        {
+            if (nextLore == LoreToPlay.None) return true;
+            string id = NeuroSDKHandler.AiPlaying + nextLore.ToString();
+            nextLore = LoreToPlay.None;
+            neuroResponseState = OnlyNeuroState.NEURO_START;
+            FieldInfo curStateInfo = typeof(StorySceneController).GetField("_curState", AccessTools.all);
+            curStateInfo.SetValue(__instance, StorySceneController.StorySceneState.SEFIRA_FINALE_ANGELA);
+            MethodInfo loadStoryWithFadeInfo = typeof(StorySceneController).GetMethod("LoadStoryWithFade", AccessTools.all);
+            loadStoryWithFadeInfo.Invoke(__instance, new object[]
+            {
+                id
+            });
+            return false;
+        }
+
         //Prefix - if the story that just finished was the very first one, load the special lore explaining how Nwero
         //is integrated into Lobotomy Corporation's systems before going to Malkuth
         private static bool isFirstStoryViewed = false;
@@ -51,6 +78,14 @@ namespace NeuroLobotomyCorporation.WatchStory
         {
             if (neuroResponseState == OnlyNeuroState.ANY_RESPONSE) return;
             neuroResponseState = neuroResponseState - 1;
+        }
+
+        //Postfix - if 70% or 90% seed of light story is about to be played, set the next story to be the respective layer synced lore
+        public static void SetAwaitingBriahAtziluthLore(string angelaStory)
+        {
+            if (String.IsNullOrEmpty(angelaStory)) return;
+            if (angelaStory.Equals("boss_fifth")) nextLore = LoreToPlay.BriahSync;
+            if (angelaStory.Equals("boss_sixth")) nextLore = LoreToPlay.AtziluthSync;
         }
     }
 }
