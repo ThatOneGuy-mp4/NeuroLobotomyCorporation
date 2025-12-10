@@ -97,7 +97,6 @@ namespace NeuroLobotomyCorporation
         private static readonly string _serverToGameUri = "serverToGameURI";
         private static readonly string _aiPlaying = "aiPlaying";
         private static readonly string _allowExecutionBullet = "allowExBullet";
-
         private static void LoadConfig()
         {
             if (!File.Exists(fileName)) return;
@@ -238,6 +237,7 @@ namespace NeuroLobotomyCorporation
         public static void SendCommand(string command)
         {
             if (Instance == null) return;
+            if (GlobalGameManager.instance == null || GlobalGameManager.instance.gameMode == GameMode.TUTORIAL) return;
             NeuroSDKHandler.Instance.QueuedCommands.Add(command);
         }
 
