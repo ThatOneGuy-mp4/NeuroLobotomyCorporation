@@ -71,7 +71,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             UnitModel target = suppressTargetState.Target;
             if (agent.IsSuppressing()) agent.ForcelyCancelSuppress();
             agent.Suppress(target);
-            if (SpecialBossReward.BriahSynchronizationComplete) agent.AddUnitBuf(new SpecialBossReward.NeuroAssignmentBuf(target));
+            if (SpecialBossReward.BriahSynchronizationComplete) agent.AddUnitBuf(new SpecialBossReward.NeuroAssignmentBuf(target, agent));
         }
     }
 }

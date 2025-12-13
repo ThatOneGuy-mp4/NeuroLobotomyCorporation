@@ -98,7 +98,6 @@ namespace NeuroLobotomyCorporation.FacilityManagement
         }
 
         //I think lob corp has a passive code-readability-debuffing-aura
-        //(TODO: clean up all this stuff generally, prolly put them in their own methods)
         private static void CommandExecute(object state)
         {
             GetDetailedAbnormalityInfoState infoState = (GetDetailedAbnormalityInfoState)state;

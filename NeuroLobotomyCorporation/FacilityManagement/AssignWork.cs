@@ -204,7 +204,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             }
         }
 
-        private static List<SystemLogScript.CreatureSystemLog> neuroCreatedLogItems = new List<SystemLogScript.CreatureSystemLog>();
+        public static List<SystemLogScript.CreatureSystemLog> neuroCreatedLogItems = new List<SystemLogScript.CreatureSystemLog>();
         public static void CommandExecute(object state)
         {
             AssignWorkState parameters = (AssignWorkState)state;
@@ -224,7 +224,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             agent.counterAttackEnabled = false;
             abnormality.Unit.room.OnWorkAllocated(agent);
             abnormality.script.OnWorkAllocated(data, agent);
-            agent.AddUnitBuf(new SpecialBossReward.NeuroAssignmentBuf(abnormality));
+            agent.AddUnitBuf(new SpecialBossReward.NeuroAssignmentBuf(abnormality, agent));
 
             SystemLogScript logScript = GameObject.FindObjectOfType<SystemLogScript>();
             string workTypeAfterCheckingForMalkuth = "";

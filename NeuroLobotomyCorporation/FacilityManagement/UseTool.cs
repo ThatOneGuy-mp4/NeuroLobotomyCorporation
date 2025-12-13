@@ -14,6 +14,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             AGENT_NAME = 1,
             ABNORMALITY_NAME = 2
         }
+
         public static string Command(string agentName, string abnormalityName)
         {
             AgentModel agent = null;

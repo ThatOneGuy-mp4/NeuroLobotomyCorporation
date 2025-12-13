@@ -101,16 +101,16 @@ namespace NeuroLCConnector
     {
         public override string Name => "get_agent_statuses";
 
-        protected override string SuccessMessage => "Getting all agents' statuses to send as context...";
+        protected override string SuccessMessage => "Getting all Agents' statuses to send as context...";
 
-        protected override string Description => "Get a brief overview of the status of all agents.";
+        protected override string Description => "Get a brief overview of the status of all Agents.";
     }
 
     public class GetDetailedAgentInfo : NeuroActionExternalExecute
     {
         public override string Name => "get_detailed_agent_info";
 
-        protected override string Description => "Get the detailed information for a specified agent.";
+        protected override string Description => "Get the detailed information for a specified Agent.";
 
         protected override JsonSchema? Schema => new()
         {
@@ -196,7 +196,7 @@ namespace NeuroLCConnector
     {
         public override string Name => "assign_work";
 
-        protected override string Description => "Assign an agent to do work on an Abnormality.";
+        protected override string Description => "Assign an Agent to do work on an Abnormality.";
 
         protected override JsonSchema? Schema => new()
         {
@@ -228,7 +228,7 @@ namespace NeuroLCConnector
     {
         public override string Name => "use_tool";
 
-        protected override string Description => "Assign an agent to use a Tool Abnormality.";
+        protected override string Description => "Assign an Agent to use a Tool Abnormality.";
 
         protected override JsonSchema? Schema => new()
         {
@@ -266,7 +266,7 @@ namespace NeuroLCConnector
     {
         public override string Name => "suppress_target";
 
-        protected override string Description => "Order an agent to suppress a specified entity.";
+        protected override string Description => "Order an Agent to suppress a specified entity.";
 
         protected override JsonSchema? Schema => new()
         {

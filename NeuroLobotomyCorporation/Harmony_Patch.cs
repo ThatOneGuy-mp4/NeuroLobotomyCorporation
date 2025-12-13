@@ -52,12 +52,14 @@ namespace NeuroLobotomyCorporation
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             HarmonyInstance harmonyInstance = HarmonyInstance.Create("ThatOneGuy.NeuroLobotomyCorporation");
+            //Initialization and console commands
             harmonyInstance.Patch(typeof(NewTitleScript).GetMethod("Update", AccessTools.all), null,
                 new HarmonyMethod(typeof(Harmony_Patch).GetMethod("InitializePreEndingTitleScreen")), null);
             harmonyInstance.Patch(typeof(AlterTitleController).GetMethod("Update", AccessTools.all), null,
                 new HarmonyMethod(typeof(Harmony_Patch).GetMethod("InitializePostEndingTitleScreen")), null);
             harmonyInstance.Patch(typeof(ConsoleScript).GetMethod("OnExitEdit", AccessTools.all), null,
                 new HarmonyMethod(typeof(NeuroSDKHandler).GetMethod("SDKConsoleCommand")), null);
+            //end initialization and console commands
 
             //Remove actions while the pause menu effects are happening
             harmonyInstance.Patch(typeof(EscapeUI).GetMethod("RestartAtCheckpoint", AccessTools.all),
@@ -137,15 +139,6 @@ namespace NeuroLobotomyCorporation
                 new HarmonyMethod(typeof(DayPreparation.Patches).GetMethod("InterruptResearchWithSpecialBossReward", AccessTools.all)), null, null);
             //Day Preparation fixes end
 
-            harmonyInstance.Patch(typeof(DeployUI).GetMethod("OnManagementStart", AccessTools.all), null,
-                new HarmonyMethod(typeof(Harmony_Patch).GetMethod("BeginFacilityManagement", AccessTools.all)), null);
-            harmonyInstance.Patch(typeof(LoggingScript).GetMethod("MakeText", AccessTools.all), null,
-                new HarmonyMethod(typeof(AssignWork).GetMethod("SortSystemLogs", AccessTools.all)), null);
-            harmonyInstance.Patch(typeof(SystemLogScript).GetMethod("OnNotice", AccessTools.all), null,
-                new HarmonyMethod(typeof(AssignWork).GetMethod("UpdateNeuroLogsObservationLevel", AccessTools.all)), null);
-            harmonyInstance.Patch(typeof(GlobalBulletWindow).GetMethod("Update", AccessTools.all), null,
-                new HarmonyMethod(typeof(ShootManagerialBullet).GetMethod("NeuroShootBullet", AccessTools.all)), null);
-
             //Give Neuro context for all of Gebura's special attacks + phase changes
             harmonyInstance.Patch(typeof(GeburahCoreScript).GetMethod("OnTakeDamage", AccessTools.all), null,
                 new HarmonyMethod(typeof(GeburaSuppressionScene).GetMethod("PhaseChangeGebura", AccessTools.all)), null);
@@ -165,7 +158,6 @@ namespace NeuroLobotomyCorporation
                 new HarmonyMethod(typeof(GeburaSuppressionScene).GetMethod("TwilightExhausted", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(GreedyThrow).GetMethod("OnEnd", AccessTools.all), null,
                 new HarmonyMethod(typeof(GeburaSuppressionScene).GetMethod("GoldRushThrowExhausted", AccessTools.all)), null);
-            //end Gebura context
             //Red Mist ragebait neuroTomfoolery
             harmonyInstance.Patch(typeof(GeburahBoss.FirstPhase).GetMethod("GetNextAction", AccessTools.all), null,
                new HarmonyMethod(typeof(GeburaSuppressionScene).GetMethod("Phase1InterruptWithRagebait", AccessTools.all)), null);
@@ -175,7 +167,7 @@ namespace NeuroLobotomyCorporation
               new HarmonyMethod(typeof(GeburaSuppressionScene).GetMethod("Phase3InterruptWithRagebait", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(SefiraBossCreatureModel).GetMethod("OnFixedUpdate", AccessTools.all), null,
                 new HarmonyMethod(typeof(Poke).GetMethod("PokeRedMist", AccessTools.all)), null);
-            //end ragebait
+            //end Gebura context
 
             //Give Neuro context for all of Binah's special attacks + phase changes + meltdowns
             harmonyInstance.Patch(typeof(BinahCoreScript).GetMethod("OnTakeDamage", AccessTools.all), null,
@@ -245,10 +237,17 @@ namespace NeuroLobotomyCorporation
                 new HarmonyMethod(typeof(SpecialBossReward).GetMethod("TryGiveHairpinEGO", AccessTools.all)), null);
             //end Special Boss Reward fixes
 
+            //Facility Management patches and context
+            harmonyInstance.Patch(typeof(DeployUI).GetMethod("OnManagementStart", AccessTools.all), null,
+                new HarmonyMethod(typeof(Harmony_Patch).GetMethod("BeginFacilityManagement", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(LoggingScript).GetMethod("MakeText", AccessTools.all), null,
+                new HarmonyMethod(typeof(AssignWork).GetMethod("SortSystemLogs", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(SystemLogScript).GetMethod("OnNotice", AccessTools.all), null,
+                new HarmonyMethod(typeof(AssignWork).GetMethod("UpdateNeuroLogsObservationLevel", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(GlobalBulletWindow).GetMethod("Update", AccessTools.all), null,
+                new HarmonyMethod(typeof(ShootManagerialBullet).GetMethod("NeuroShootBullet", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(IsolateRoom).GetMethod("Update", AccessTools.all), null,
                 new HarmonyMethod(typeof(CancelAction).GetMethod("CancelChannelledTool", AccessTools.all)), null);
-
-            //The FacilityManagement Context Zone
             harmonyInstance.Patch(typeof(AngelaConversation).GetMethod("MakeMessage", AccessTools.all), null,
                 new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroAngelaMessage", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(AgentModel).GetMethod("OnDie", AccessTools.all), null,
@@ -283,7 +282,7 @@ namespace NeuroLobotomyCorporation
                 new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("SendResultScreenInformation", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(Sefira).GetMethod("OnAgentCannotControll", AccessTools.all), new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroPrefixAllAgentsDead", AccessTools.all)),
                 new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroPostfixAllAgentsDead", AccessTools.all)), null);
-            //FacilityManagement context end
+            //FacilityManagement end
 
             //Hokma Price of Silence Information
             harmonyInstance.Patch(typeof(ChokhmahPlaySpeedBlockUI).GetMethod("SetText", AccessTools.all), null,
@@ -316,6 +315,7 @@ namespace NeuroLobotomyCorporation
                new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("DontTouchMeButtonMash", AccessTools.all)), null, null);
             //Don't Touch Me context end
 
+            //Patch remaining methods that can't be manually patched due to having overloads
             harmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
 
         }
@@ -344,6 +344,7 @@ namespace NeuroLobotomyCorporation
         {
             NeuroSDKHandler.SendCommand("clear_actions");
         }
+
         public static void AbnormalityChoiceSelectStart()
         {
             if (!IntegrationLore.LoreIntegrationEnabled()) return;
@@ -487,6 +488,7 @@ namespace NeuroLobotomyCorporation
                 managementScene = new FacilityManagementScene();
                 typeOfManagement = "facility_management";
             }
+            FacilityManagementScene.ResetStaticParams();
             ActionScene.Instance = managementScene;
             string exParameters = ShootManagerialBullet.IsBulletUnlocked() + "|" + managementScene.GetDayStartContext();
             NeuroSDKHandler.SendCommand("change_action_scene|" + typeOfManagement + "|" + exParameters);

@@ -57,11 +57,11 @@ namespace NeuroLobotomyCorporation.FacilityManagement
 
         public class NeuroAssignmentBuf : UnitStatBuf
         {
-            public NeuroAssignmentBuf(UnitModel target) : base(float.MaxValue, (UnitBufType)727)
+            public NeuroAssignmentBuf(UnitModel target, AgentModel agent) : base(float.MaxValue, (UnitBufType)727)
             {
                 int buf = 0;
-                AgentModel agent = (AgentModel)this.model;
-                if(!agent.HasEquipment_Mod(new LcId(NEURO_HAIRPIN_REAL_ID)) && !agent.HasEquipment_Mod(new LcId(EVIL_HAIRPIN_REAL_ID)))
+                this.model = agent;
+                if (!agent.HasEquipment_Mod(NEURO_HAIRPIN_REAL_ID) && !agent.HasEquipment_Mod(EVIL_HAIRPIN_REAL_ID))
                 {
                     if (AsiyahSynchronizationComplete) buf += BASE_INCREASE;
                     if (AtziluthSynchronizationComplete) buf += UPGRADE_INCREASE;
@@ -75,7 +75,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
 
             public override void FixedUpdate()
             {
-                if (!CanHaveBuf()) Destroy();
+                if (!CanHaveBuf()) Destroy(); 
             }
 
             //If the Agent is doing something that is not what Neuro asked, destroy the buff.
@@ -102,10 +102,13 @@ namespace NeuroLobotomyCorporation.FacilityManagement
         }
 
         private static readonly float BASE_EGO_CHANCE = 0.01f;
-        private static readonly int NEURO_HAIRPIN_FAKE_ID = 412192022;
-        private static readonly int NEURO_HAIRPIN_REAL_ID = 412192024;
-        private static readonly int EVIL_HAIRPIN_FAKE_ID = 43252024;
-        private static readonly int EVIL_HAIRPIN_REAL_ID = 43252025;
+        private static readonly float ASIYAH_EGO_ADD = 0.01f;
+        private static readonly float BRIAH_EGO_ADD = 0.02f;
+        private static readonly float ATZILUTH_EGO_ADD = 0.01f;
+        private static readonly LcId NEURO_HAIRPIN_FAKE_ID = new LcId("NeuroLobotomyCorporation", 412192022);
+        private static readonly LcId NEURO_HAIRPIN_REAL_ID = new LcId("NeuroLobotomyCorporation", 412192024);
+        private static readonly LcId EVIL_HAIRPIN_FAKE_ID = new LcId("NeuroLobotomyCorporation", 43252024);
+        private static readonly LcId EVIL_HAIRPIN_REAL_ID = new LcId("NeuroLobotomyCorporation", 43252025);
 
         //Postfix - if Work is completed while an Agent still has the buf from Neuro/Evil assigning work, small chance to make it permanent
         //(is cosmetic until Atziluth synced)
@@ -114,9 +117,9 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             if (__instance.agent.HasUnitBuf((UnitBufType)727))
             {
                 float egoChance = BASE_EGO_CHANCE;
-                if (AsiyahSynchronizationComplete) egoChance += 0.01f;
-                if (BriahSynchronizationComplete) egoChance += 0.02f;
-                if (AtziluthSynchronizationComplete) egoChance += 0.01f;
+                if (AsiyahSynchronizationComplete) egoChance += ASIYAH_EGO_ADD;
+                if (BriahSynchronizationComplete) egoChance += BRIAH_EGO_ADD;
+                if (AtziluthSynchronizationComplete) egoChance += ATZILUTH_EGO_ADD;
                 if(!UpgradeHairpin(__instance.agent) && egoChance >= UnityEngine.Random.value && !AgentHasHairpin(__instance.agent))
                 {
                     if (!AtziluthSynchronizationComplete && __instance.agent.Equipment.gifts.addedGifts.Find((EGOgiftModel e) => e.metaInfo.AttachRegion == EGOgiftAttachRegion.HAIR) != null) return;
@@ -124,12 +127,14 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     {
                         if (!AtziluthSynchronizationComplete)
                         {
-                            ConsoleCommand_Mod.AddGift_Mod(__instance.agent.instanceId, new LcId(NEURO_HAIRPIN_FAKE_ID));
+                            ConsoleCommand_Mod.AddGift_Mod(__instance.agent.instanceId, NEURO_HAIRPIN_FAKE_ID);
+                            NeuroSDKHandler.SendContext(String.Format("...something seems to have attached itself to {0}'s head.", __instance.agent.GetUnitName()), true);
                             return;
                         }
                         else
                         {
-                            ConsoleCommand_Mod.AddGift_Mod(__instance.agent.instanceId, new LcId(NEURO_HAIRPIN_REAL_ID));
+                            ConsoleCommand_Mod.AddGift_Mod(__instance.agent.instanceId, NEURO_HAIRPIN_REAL_ID);
+                            NeuroSDKHandler.SendContext(String.Format("{0} has received your E.G.O Gift.", __instance.agent.GetUnitName()), true);
                             return;
                         }
                     }
@@ -137,12 +142,14 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     {
                         if (!AtziluthSynchronizationComplete)
                         {
-                            ConsoleCommand_Mod.AddGift_Mod(__instance.agent.instanceId, new LcId(EVIL_HAIRPIN_FAKE_ID));
+                            ConsoleCommand_Mod.AddGift_Mod(__instance.agent.instanceId, EVIL_HAIRPIN_FAKE_ID);
+                            NeuroSDKHandler.SendContext(String.Format("...something seems to have attached itself to {0}'s head.", __instance.agent.GetUnitName()), true);
                             return;
                         }
                         else
                         {
-                            ConsoleCommand_Mod.AddGift_Mod(__instance.agent.instanceId, new LcId(EVIL_HAIRPIN_REAL_ID));
+                            ConsoleCommand_Mod.AddGift_Mod(__instance.agent.instanceId, EVIL_HAIRPIN_REAL_ID);
+                            NeuroSDKHandler.SendContext(String.Format("{0} has received your E.G.O Gift.", __instance.agent.GetUnitName()), true);
                             return;
                         }
                     }
@@ -154,14 +161,14 @@ namespace NeuroLobotomyCorporation.FacilityManagement
         private static bool UpgradeHairpin(AgentModel agent)
         {
             if (!AtziluthSynchronizationComplete) return false;
-            if (agent.HasEquipment(NEURO_HAIRPIN_FAKE_ID))
+            if (agent.HasEquipment_Mod(NEURO_HAIRPIN_FAKE_ID))
             {
-                agent.AttachEGOgift(EGOgiftModel.MakeGift(EquipmentTypeList.instance.GetData(NEURO_HAIRPIN_REAL_ID)));
+                ConsoleCommand_Mod.AddGift_Mod(agent.instanceId, NEURO_HAIRPIN_REAL_ID);
                 return true;
             }
-            else if (agent.HasEquipment(EVIL_HAIRPIN_FAKE_ID))
+            else if (agent.HasEquipment_Mod(EVIL_HAIRPIN_FAKE_ID))
             {
-                agent.AttachEGOgift(EGOgiftModel.MakeGift(EquipmentTypeList.instance.GetData(EVIL_HAIRPIN_REAL_ID)));
+                ConsoleCommand_Mod.AddGift_Mod(agent.instanceId, EVIL_HAIRPIN_REAL_ID);
                 return true;
             }
             return false;
@@ -169,10 +176,10 @@ namespace NeuroLobotomyCorporation.FacilityManagement
 
         private static bool AgentHasHairpin(AgentModel agent)
         {
-            return (agent.HasEquipment_Mod(new LcId(NEURO_HAIRPIN_FAKE_ID))
-                || agent.HasEquipment_Mod(new LcId(NEURO_HAIRPIN_REAL_ID))
-                || agent.HasEquipment_Mod(new LcId(EVIL_HAIRPIN_FAKE_ID))
-                || agent.HasEquipment_Mod(new LcId(EVIL_HAIRPIN_REAL_ID)));
+            return (agent.HasEquipment_Mod(NEURO_HAIRPIN_FAKE_ID)
+                || agent.HasEquipment_Mod(NEURO_HAIRPIN_REAL_ID)
+                || agent.HasEquipment_Mod(EVIL_HAIRPIN_FAKE_ID)
+                || agent.HasEquipment_Mod(EVIL_HAIRPIN_REAL_ID));
         }
 
         private static void UpgradeAllHairpins()
@@ -243,7 +250,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             else newlySyncedLayer = "Asiyah";
             List<string> descs = new List<string>();
             string title = LocalizeTextDataModel.instance.GetText(String.Format("{0}Sync_Title", newlySyncedLayer));
-            string finalRewardMessage = title;
+            string finalRewardMessage = title + "\nREWARD:\n";
             if (!String.IsNullOrEmpty(title)) instance.sefiraBoss_Prefix.text = title;
             int i = 1;
             string nextDesc = String.Format(LocalizeTextDataModel.instance.GetText(String.Format("{0}Sync_{1}", newlySyncedLayer, i)), NeuroSDKHandler.AiPlaying);

@@ -39,16 +39,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Equipment\Sprite\Attachment\EvilHairpin_real.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Equipment\Sprite\Attachment\EvilHairpin_fake.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Equipment\Sprite\Attachment\NeuroHairpin_real.png">
+    <None Update="Equipment\Sprite\Attachment\EvilHairpin_real.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Equipment\Sprite\Attachment\NeuroHairpin_fake.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Equipment\Sprite\Attachment\NeuroHairpin_real.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Equipment\txts\EvilHairpin_fake.txt">
@@ -73,6 +73,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Equipment\xmls\en\NeuroHairpin_fake.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ExternalData\xml\Language\en\creatures\Shelter_en.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Info\en\Info.xml">
@@ -106,6 +109,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="ModConfig.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\EvilSprite.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Resources\NeuroSprite.png">

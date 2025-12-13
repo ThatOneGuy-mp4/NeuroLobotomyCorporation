@@ -362,7 +362,6 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             }
         }
 
-        //TODO: check if twilight has already been obtained before telling neuro it can be obtained
         public static void TellApocalypseBirdNarration(BossBird __instance, BossBird.NarrationState state)
         {
             string narration = String.Format("'{0}'\n", __instance.GetParamData(BossBird.GetNarrationKeyByEnum(state)).Trim());
@@ -374,7 +373,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     break;
                 case BossBird.NarrationState.BOSS_APPEAR:
                     narration += "WARNING! The three birds have fused into the Apocalypse Bird! The eggs which give it strength have also appeared around the facility." +
-                        "\nIf the Apocalypse Bird is successfully suppressed, a special reward may be extracted.";
+                        "\nIf the Apocalypse Bird is successfully suppressed, a special reward may be extracted, if it is not already owned.";
                     break;
                 case BossBird.NarrationState.BIGBIRD_ARRIVED:
                     narration += "Big Bird has arrived at the Entrance to the Black Forest.";

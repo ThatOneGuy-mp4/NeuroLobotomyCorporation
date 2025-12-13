@@ -72,6 +72,15 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             return String.Format("Day {0} has begun. Manage the Abnormalities until {1} P.E. Boxes have been collected to end the day.", currentDay, energyRequired);
         }
 
+        //Just in case all the static params fuck something up between days. Purge them.
+        //(most of them seem to be cleared automatically actually so)
+        public static void ResetStaticParams()
+        {
+            whiteNightScript = null;
+            apostleIndex = 0;
+            AssignWork.neuroCreatedLogItems = new List<SystemLogScript.CreatureSystemLog>();
+        }
+
         //Postfix - modify the message to remove anything that does not make sense as an Angela-to-Neuro conversation.
         public static void InformNeuroAngelaMessage(AngelaMessageState state, string __result)
         {
@@ -147,8 +156,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
         public static void InformNeuroAbnormalityQliphothCounterDroppedToZero(CreatureModel __instance)
         {
             //If the Abnormality can escape, do not inform her of the Qliphoth Counter dropping to 0. That information will be implied by the escape context.
-            //(prolly need to add an exception for Warm-hearted Woodsman)
-            if (__instance.qliphothCounter == 0 && !__instance.metaInfo.isEscapeAble) NeuroSDKHandler.SendContext(String.Format("{0}'s Qliphoth Counter has dropped to 0.", __instance.script.GetName()), true);
+            if (__instance.qliphothCounter == 0 && (!__instance.metaInfo.isEscapeAble || __instance.script is Lumberjack)) NeuroSDKHandler.SendContext(String.Format("{0}'s Qliphoth Counter has dropped to 0.", __instance.script.GetName()), true);
         }
 
         //Postfix
@@ -160,15 +168,15 @@ namespace NeuroLobotomyCorporation.FacilityManagement
         //Postfix
         public static void InformNeuroChildSpawned(ChildCreatureModel __instance)
         {
-            NeuroSDKHandler.SendContext(String.Format("{0} has created a child entity, {1}.", (__instance as ChildCreatureModel).parent.script.GetName(), __instance.script.GetName()), true);
+            NeuroSDKHandler.SendContext(String.Format("{0} has created a child entity, {1}.", __instance.parent.script.GetName(), __instance.script.GetName()), true);
         }
 
         //Postfix
-        //make sure this doesn't count bosses. you'll probably need to add special exceptions here
         public static void InformNeuroAbnormalitySuppressed(CreatureModel __instance)
         {
             if (__instance is OrdealCreatureModel) return; //i don't want to inform her of every defeated ordeal creature. 
             if (__instance is ChildCreatureModel) { /* i don't want to inform her of every defeated child but then there's il piano or whoever else breaches by spawning a child. figure that out later. */ }
+            if (__instance is SefiraBossCreatureModel) return;
             else NeuroSDKHandler.SendContext(String.Format("{0} has been suppressed.", __instance.script.GetName()), true);
         }
 
@@ -206,8 +214,6 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                 }
             }
         }
-
-
 
         private static bool overloadIsFromMeltdown = false;
         [HarmonyPatch(typeof(CreatureOverloadManager), "ActivateOverload", new Type[] { typeof(int), typeof(OverloadType), typeof(float), typeof(bool), typeof(bool), typeof(bool), typeof(long[]) })]
