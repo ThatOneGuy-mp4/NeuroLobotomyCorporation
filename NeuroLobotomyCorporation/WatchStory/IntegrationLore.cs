@@ -56,7 +56,7 @@ namespace NeuroLobotomyCorporation.WatchStory
         }
 
         //Checks if Neuro should be given commands before she canonically gets the ability to
-        //(if the first story has been viewed or if we've reset to day one (malkuth mission complete. surely vedal would not reset to day one before completing malkuth's first mission right.)) 
+        //(if the first story has been viewed or if we've reset to day one (malkuth mission exists or is complete))
         public static bool LoreIntegrationEnabled()
         {
             return (isFirstStoryViewed || MissionManager.instance.GetCurrentSefiraMission(SefiraEnum.MALKUT) != null || MissionManager.instance.GetClearedOrClosedMissionNum(SefiraEnum.MALKUT) > 0);
@@ -80,12 +80,24 @@ namespace NeuroLobotomyCorporation.WatchStory
             neuroResponseState = neuroResponseState - 1;
         }
 
-        //Postfix - if 70% or 90% seed of light story is about to be played, set the next story to be the respective layer synced lore
-        public static void SetAwaitingBriahAtziluthLore(string angelaStory)
+        //Prefix - if 4 bosses have been cleared when the seed of light ui ends, set the next story to be the Asiyah sync lore, then trigger a load story with fade so the correct patch activates
+        //         if 70% or 90% seed of light story is about to be played, set the next story to be the respective layer synced lore
+        public static bool SetAwaitingLayerLore(string angelaStory)
         {
-            if (String.IsNullOrEmpty(angelaStory)) return;
+            if (String.IsNullOrEmpty(angelaStory))
+            {
+                if (MissionManager.instance.GetClearedOrClosedBossMissionNum() != 4) return true;
+                nextLore = LoreToPlay.AsiyahSync;
+                MethodInfo loadStoryWithFadeInfo = typeof(StorySceneController).GetMethod("LoadStoryWithFade", AccessTools.all);
+                loadStoryWithFadeInfo.Invoke(StorySceneController.instance, new object[]
+                {
+                    (PlayerModel.instance.GetDay() + 1).ToString()
+                });
+                return false;
+            }
             if (angelaStory.Equals("boss_fifth")) nextLore = LoreToPlay.BriahSync;
             if (angelaStory.Equals("boss_sixth")) nextLore = LoreToPlay.AtziluthSync;
+            return true;
         }
     }
 }

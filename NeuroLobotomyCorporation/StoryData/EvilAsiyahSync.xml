@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+	<scene id="EvilAsiyahSync">
+		<character id="angela" name="angela_name" color="FFBBFF" sprite="Angela" />
+		<position character="angela" to="right"/>
+		<bgm src="op-theme ogg" />
+		<speak speaker="angela" anim="Default1">custom/EvilAsiyahSync1_1</speak>
+		<speak speaker="angela">custom/EvilAsiyahSync1_2</speak>
+		<speak speaker="angela" anim="Glad3">custom/EvilAsiyahSync1_3</speak>
+		<speak speaker="angela" anim="Default1">custom/EvilAsiyahSync1_4</speak>
+		<speak speaker="angela">custom/EvilAsiyahSync1_5</speak>
+		<select>
+			<option text="EvilAsiyahSyncSelection1_1">
+				<speak speaker="angela" anim="Glad4">custom/EvilAsiyahSync2_1</speak>
+			</option>
+			<option text="EvilAsiyahSyncSelection1_2">
+				<speak speaker="angela" anim="Glad1">custom/EvilAsiyahSync3_1</speak>
+				<speak speaker="angela">custom/EvilAsiyahSync3_2</speak>
+			</option>
+			<option text="EvilAsiyahSyncSelection1_3">
+				<speak speaker="angela" anim="Sigh">custom/EvilAsiyahSync4_1</speak>
+				<speak speaker="angela" anim="Anger1">custom/EvilAsiyahSync4_2</speak>
+			</option>
+		</select>
+		<speak speaker="angela" anim="Default1">custom/EvilAsiyahSync5_1</speak>
+		<speak speaker="angela" anim="Glad3">custom/EvilAsiyahSync5_2</speak>
+		<speak speaker="angela" anim="Default1">custom/EvilAsiyahSync5_3</speak>
+		<speak speaker="angela" anim="Glad4">custom/EvilAsiyahSync5_4</speak>
+		<speak speaker="angela" anim="Default1">custom/EvilAsiyahSync5_5</speak>
+		<select>
+			<option text="EvilAsiyahSyncSelection2_1">
+				<speak speaker="angela" anim="Default1">custom/EvilAsiyahSync6_1</speak>
+				<speak speaker="angela" anim="Glad3">custom/EvilAsiyahSync6_2</speak>
+			</option>
+			<option text="EvilAsiyahSyncSelection2_2">
+				<speak speaker="angela" anim="Default1">custom/EvilAsiyahSync7_1</speak>
+				<speak speaker="angela">custom/EvilAsiyahSync7_2</speak>
+				<select>
+					<option text="EvilAsiyahSyncSelection2_3_1">
+						<speak speaker="angela" anim="Sigh">custom/EvilAsiyahSync8_1</speak>
+						<speak speaker="angela" anim="Default1">custom/EvilAsiyahSync8_2</speak>
+					</option>
+					<option text="EvilAsiyahSyncSelection2_3_2">
+						<speak speaker="angela" anim="Sigh">custom/EvilAsiyahSync8_1</speak>
+						<speak speaker="angela" anim="Default1">custom/EvilAsiyahSync8_2</speak>
+					</option>
+					<option text="EvilAsiyahSyncSelection2_3_3">
+						<speak speaker="angela" anim="Sigh">custom/EvilAsiyahSync9_1</speak>
+						<speak speaker="angela">custom/EvilAsiyahSync9_2</speak>
+					</option>
+				</select>
+			</option>
+		</select>
+		<speak speaker="angela" anim="Default1">custom/EvilAsiyahSync10_1</speak>
+		<speak speaker="angela" anim="Glad3">custom/EvilAsiyahSync10_2</speak>
+		<speak speaker="angela" anim="Default1">custom/EvilAsiyahSync10_3</speak>
+		<speak speaker="angela" anim="Glad3">custom/EvilAsiyahSync10_4</speak>
+	</scene>
+</root>

@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+	<scene id="NeuroAsiyahSync">
+		<character id="angela" name="angela_name" color="FFBBFF" sprite="Angela" />
+		<position character="angela" to="right"/>
+		<bgm src="op-theme ogg" />
+		<speak speaker="angela" anim="Default1">custom/NeuroAsiyahSync1_1</speak>
+		<speak speaker="angela">custom/NeuroAsiyahSync1_2</speak>
+		<speak speaker="angela" anim="Glad3">custom/NeuroAsiyahSync1_3</speak>
+		<speak speaker="angela" anim="Default1">custom/NeuroAsiyahSync1_4</speak>
+		<speak speaker="angela">custom/NeuroAsiyahSync1_5</speak>
+		<select>
+			<option text="NeuroAsiyahSyncSelection1_1">
+				<speak speaker="angela" anim="Glad4">custom/NeuroAsiyahSync2_1</speak>
+			</option>
+			<option text="NeuroAsiyahSyncSelection1_2">
+				<speak speaker="angela" anim="Glad1">custom/NeuroAsiyahSync3_1</speak>
+				<speak speaker="angela">custom/NeuroAsiyahSync3_2</speak>
+			</option>
+			<option text="NeuroAsiyahSyncSelection1_3">
+				<speak speaker="angela" anim="Sigh">custom/NeuroAsiyahSync4_1</speak>
+				<speak speaker="angela" anim="Anger1">custom/NeuroAsiyahSync4_2</speak>
+			</option>
+		</select>
+		<speak speaker="angela" anim="Default1">custom/NeuroAsiyahSync5_1</speak>
+		<speak speaker="angela" anim="Glad3">custom/NeuroAsiyahSync5_2</speak>
+		<speak speaker="angela" anim="Default1">custom/NeuroAsiyahSync5_3</speak>
+		<speak speaker="angela" anim="Glad4">custom/NeuroAsiyahSync5_4</speak>
+		<speak speaker="angela" anim="Default1">custom/NeuroAsiyahSync5_5</speak>
+		<select>
+			<option text="NeuroAsiyahSyncSelection2_1">
+				<speak speaker="angela" anim="Default1">custom/NeuroAsiyahSync6_1</speak>
+				<speak speaker="angela" anim="Glad3">custom/NeuroAsiyahSync6_2</speak>
+			</option>
+			<option text="NeuroAsiyahSyncSelection2_2">
+				<speak speaker="angela" anim="Default1">custom/NeuroAsiyahSync7_1</speak>
+				<speak speaker="angela">custom/NeuroAsiyahSync7_2</speak>
+				<select>
+					<option text="NeuroAsiyahSyncSelection2_3_1">
+						<speak speaker="angela" anim="Sigh">custom/NeuroAsiyahSync8_1</speak>
+						<speak speaker="angela" anim="Default1">custom/NeuroAsiyahSync8_2</speak>
+					</option>
+					<option text="NeuroAsiyahSyncSelection2_3_2">
+						<speak speaker="angela" anim="Sigh">custom/NeuroAsiyahSync8_1</speak>
+						<speak speaker="angela" anim="Default1">custom/NeuroAsiyahSync8_2</speak>
+					</option>
+					<option text="NeuroAsiyahSyncSelection2_3_3">
+						<speak speaker="angela" anim="Sigh">custom/NeuroAsiyahSync9_1</speak>
+						<speak speaker="angela">custom/NeuroAsiyahSync9_2</speak>
+					</option>
+				</select>
+			</option>
+		</select>
+		<speak speaker="angela" anim="Default1">custom/NeuroAsiyahSync10_1</speak>
+		<speak speaker="angela" anim="Glad3">custom/NeuroAsiyahSync10_2</speak>
+		<speak speaker="angela" anim="Default1">custom/NeuroAsiyahSync10_3</speak>
+		<speak speaker="angela" anim="Glad3">custom/NeuroAsiyahSync10_4</speak>
+	</scene>
+</root>

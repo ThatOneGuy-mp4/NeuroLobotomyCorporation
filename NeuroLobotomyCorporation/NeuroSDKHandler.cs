@@ -1,4 +1,5 @@
 ﻿using NeuroLobotomyCorporation.FacilityManagement;
+using NeuroLobotomyCorporation.WatchStory;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -316,6 +317,10 @@ namespace NeuroLobotomyCorporation
                 case "restart":
                     if (parameters.Length < 3) return;
                     CommandRestart(parameters[2]);
+                    return;
+                case "regaincontrol":
+                    IntegrationLore.DecreaseNeuroResponseState();
+                    IntegrationLore.DecreaseNeuroResponseState();
                     return;
             }
         }

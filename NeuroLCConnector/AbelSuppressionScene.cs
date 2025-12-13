@@ -63,6 +63,12 @@ namespace NeuroLCConnector
             return YesodSuppressionScene.ScrambleContext(context, phase / 2);
         }
 
+        public override void CleanUpActionScene()
+        {
+            phase = -1;
+            base.CleanUpActionScene();
+        }
+
         private string CreateScrambledPhaseTransition(int targetPhase)
         {
             string abelDialogue = PhaseTransitionAbelDialogue[targetPhase];

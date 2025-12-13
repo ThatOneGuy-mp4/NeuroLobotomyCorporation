@@ -10,12 +10,14 @@
 		<cg src="BlackCG" effect="fade" />
 		<wait time="2" />
 		<remove_cg effect="fade" />
+		<bgm src="story-04_ogg"/>
 		<speak speaker="angela" anim="Anger3">custom/NeuroIntroLore1_4</speak>
 		<speak speaker="angela" anim="Default1">custom/NeuroIntroLore1_5</speak>
 		<speak speaker="angela">custom/NeuroIntroLore1_6</speak>
 		<speak speaker="angela" anim="Anger3">custom/NeuroIntroLore1_7</speak>
 		<speak speaker="angela" anim="Default1">custom/NeuroIntroLore1_8</speak>
 		<speak speaker="angela" anim="Glad3">custom/NeuroIntroLore1_9</speak>
+		<bgm src="op-theme ogg"/>
 		<speak speaker="angela">custom/NeuroIntroLore1_10</speak>
 		<speak speaker="angela" anim="Default1">custom/NeuroIntroLore1_11</speak>
 		<speak speaker="angela" anim="Glad3">custom/NeuroIntroLore1_12</speak>

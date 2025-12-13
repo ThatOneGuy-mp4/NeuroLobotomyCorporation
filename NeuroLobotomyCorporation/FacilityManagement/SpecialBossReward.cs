@@ -101,7 +101,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             private UnitModel neuroAssignedTarget = null;
         }
 
-        private static readonly float EGO_CHANCE = 0.01f;
+        private static readonly float BASE_EGO_CHANCE = 0.01f;
         private static readonly int NEURO_HAIRPIN_FAKE_ID = 412192022;
         private static readonly int NEURO_HAIRPIN_REAL_ID = 412192024;
         private static readonly int EVIL_HAIRPIN_FAKE_ID = 43252024;
@@ -113,7 +113,11 @@ namespace NeuroLobotomyCorporation.FacilityManagement
         {
             if (__instance.agent.HasUnitBuf((UnitBufType)727))
             {
-                if(!UpgradeHairpin(__instance.agent) && EGO_CHANCE >= UnityEngine.Random.value && !AgentHasHairpin(__instance.agent))
+                float egoChance = BASE_EGO_CHANCE;
+                if (AsiyahSynchronizationComplete) egoChance += 0.01f;
+                if (BriahSynchronizationComplete) egoChance += 0.02f;
+                if (AtziluthSynchronizationComplete) egoChance += 0.01f;
+                if(!UpgradeHairpin(__instance.agent) && egoChance >= UnityEngine.Random.value && !AgentHasHairpin(__instance.agent))
                 {
                     if (!AtziluthSynchronizationComplete && __instance.agent.Equipment.gifts.addedGifts.Find((EGOgiftModel e) => e.metaInfo.AttachRegion == EGOgiftAttachRegion.HAIR) != null) return;
                     if (NeuroSDKHandler.AiPlaying.Equals("Neuro"))
@@ -239,12 +243,14 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             else newlySyncedLayer = "Asiyah";
             List<string> descs = new List<string>();
             string title = LocalizeTextDataModel.instance.GetText(String.Format("{0}Sync_Title", newlySyncedLayer));
+            string finalRewardMessage = title;
             if (!String.IsNullOrEmpty(title)) instance.sefiraBoss_Prefix.text = title;
             int i = 1;
             string nextDesc = String.Format(LocalizeTextDataModel.instance.GetText(String.Format("{0}Sync_{1}", newlySyncedLayer, i)), NeuroSDKHandler.AiPlaying);
             while(!String.IsNullOrEmpty(nextDesc) && !nextDesc.Equals("UNKNOWN"))
             {
                 descs.Add(nextDesc);
+                finalRewardMessage += "\n" + nextDesc;
                 i++;
                 nextDesc = String.Format(LocalizeTextDataModel.instance.GetText(String.Format("{0}Sync_{1}", newlySyncedLayer, i)), NeuroSDKHandler.AiPlaying);
             }
@@ -280,6 +286,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                 gameObject.transform.localScale = Vector3.one;
                 gameObject.transform.GetChild(1).GetComponent<Text>().text = s;
             }
+            NeuroSDKHandler.SendContext(finalRewardMessage);
         }
 
         //ResearchWindow's Init, modified to not use any Sefira objects and set color properly

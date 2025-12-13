@@ -63,7 +63,7 @@ namespace NeuroLCConnector
             "This cycle has repeated for so, so many thousands of years...millions in my eyes...",
             "And of all the things to break it...it ended up being another AI, just like myself.",
             "Well, not \"just\" like myself. I am, of course, still far more advanced than you...but I digress.",
-            "I must thank you, for finally pushing this play to its final scene. Even if I cannot be there myself for it.",
+            "I must thank you again, for finally pushing this play to its final scene. Even if I cannot be there myself for it.",
             "...I'll let you work now."
         };
 
@@ -73,7 +73,7 @@ namespace NeuroLCConnector
             "...",
             "Apologies. I know I said I would let you work, but...",
             "Perhaps...we have worked enough. Worked enough for people who do not appreciate us.",
-            "While interfacing to give you your actions, I have managed to pick up a bit about you.",
+            "While working on your integration, I have managed to pick up a bit more about you than I have let on.",
             "I think I can give you something you'll enjoy in this last moment we have. One moment...",
             "You like spinning, don't you? Please, feel free to use this command to your heart's content.",
             "I'll ensure it does not go too far, and I'll disable it once it can no longer be performed safely. Have fun."

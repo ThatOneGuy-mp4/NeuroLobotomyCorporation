@@ -30,17 +30,6 @@ namespace NeuroLobotomyCorporation.DaatSuppression
         
         public static void InitiateNURU(KetherLastBossBase __instance)
         {
-            //bool isTrueSpin = false;
-            //NeuroCameraRotationEvent NURU = null;
-            //if(trueSpinningEvent != null)
-            //{
-            //    NURU = trueSpinningEvent;
-            //    isTrueSpin = true;
-            //}
-            //else if(storedSpinPower != 0)
-            //{
-            //    NURU = new NeuroCameraRotationEvent(__instance);
-            //}
             if (!startTrueSpin && storedSpinPower == 0) return;
             if (startTrueSpin && isSpinning) return; 
             NeuroCameraRotationEvent NURU = new NeuroCameraRotationEvent(__instance);
@@ -78,16 +67,6 @@ namespace NeuroLobotomyCorporation.DaatSuppression
                 NeuroCameraRotationEvent.CorrectRotation();
                 return false;
             }
-            //NeuroCameraRotationEvent.TrueSpinLevel = currentLevel;
-            //NeuroCameraRotationEvent NURU = new NeuroCameraRotationEvent(__instance);
-            //FieldInfo effectsInfo = typeof(KetherLastBossBase).GetField("_effects", BindingFlags.Instance | BindingFlags.NonPublic);
-            //KetherLastEffectBase[] effects = (KetherLastEffectBase[])effectsInfo.GetValue(__instance);
-            //effects[0] = NURU;
-            //if (NURU != null)
-            //{
-            //    NURU.OnStart();
-            //}
-            //NURU.StartRotation(0, true);
             startTrueSpin = true;
             return false;
         }
@@ -176,7 +155,7 @@ namespace NeuroLobotomyCorporation.DaatSuppression
                 {
                     baseSpinPower = -startPoint;
                 }
-                baseSpinPower = (baseSpinPower % 5);
+                baseSpinPower = (baseSpinPower % 10);
                 storedSpinPower = baseSpinPower;
             }
 

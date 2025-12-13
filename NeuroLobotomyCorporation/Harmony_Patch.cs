@@ -115,7 +115,7 @@ namespace NeuroLobotomyCorporation
             harmonyInstance.Patch(typeof(StorySceneController).GetMethod("LoadStoryWithFade", AccessTools.all),
                new HarmonyMethod(typeof(IntegrationLore).GetMethod("PlayLayerSyncLore")), null, null);
             harmonyInstance.Patch(typeof(StorySceneController).GetMethod("OnEndSeedUI", AccessTools.all),
-               new HarmonyMethod(typeof(IntegrationLore).GetMethod("SetAwaitingBriahAtziluthLore")), null, null);
+               new HarmonyMethod(typeof(IntegrationLore).GetMethod("SetAwaitingLayerLore")), null, null);
             //Story fixes end
 
             //Day Preparation fixes
@@ -279,6 +279,10 @@ namespace NeuroLobotomyCorporation
                 new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroRabbitsDialogue", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(RabbitProtocolWindow).GetMethod("OnClickCommand", AccessTools.all), new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroPreRabbitsDeployed", AccessTools.all)),
                 new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroPostRabbitsDeployed", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(ResultScreen.Report).GetMethod("OnManagementEnd", AccessTools.all), null,
+                new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("SendResultScreenInformation", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(Sefira).GetMethod("OnAgentCannotControll", AccessTools.all), new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroPrefixAllAgentsDead", AccessTools.all)),
+                new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroPostfixAllAgentsDead", AccessTools.all)), null);
             //FacilityManagement context end
 
             //Hokma Price of Silence Information

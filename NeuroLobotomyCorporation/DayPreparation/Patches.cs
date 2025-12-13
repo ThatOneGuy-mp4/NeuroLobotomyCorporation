@@ -10,11 +10,7 @@ namespace NeuroLobotomyCorporation.DayPreparation
 {
     public class Patches
     {
-        //set add da'at sefira to research queue
-        //prefix - when da'at appears in research queue do a custom Init 
-        //then do the boss custom boss reward
-
-        //on confirm prefix
+        //Prefix - when a special boss reward is ready to be shown, interrupt the regular research phase
         public static bool InterruptResearchWithSpecialBossReward(ResearchWindow __instance)
         {
             if (!SpecialBossReward.ReevaluateSynchronizationStatus()) return true;
@@ -29,7 +25,6 @@ namespace NeuroLobotomyCorporation.DayPreparation
             ResearchPhaseProgress();
         }
 
-        private static bool waitingForSpecialBossReward = false;
         //Postfix - perform actions based on the stage of the research phase
         public static void ResearchPhaseProgress()
         {

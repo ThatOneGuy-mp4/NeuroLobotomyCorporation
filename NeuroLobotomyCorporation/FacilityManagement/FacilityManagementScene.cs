@@ -89,7 +89,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     string finalMessage = "";
                     if (!SefiraBossManager.Instance.IsAnyBossSessionActivated())
                     {
-                        if (__result.Contains("perfect fit as manager")) finalMessage += "Look now, the result of your effort is before us. It is exactly as we needed. See, you’re a perfect fit as assistant to the manager of the facility.";
+                        if (__result.Contains("perfect fit as manager")) finalMessage += "Look now, the result of your effort is before us. It is exactly as we needed. See, you’re a perfect fit as assistant to the manager of the facility.\n";
                         else finalMessage += __result + "\n";
                     }
                     else finalMessage += "The target amount of energy has been collected. ";
@@ -102,7 +102,11 @@ namespace NeuroLobotomyCorporation.FacilityManagement
         //Postfix
         public static void InformNeuroAgentDied(AgentModel __instance)
         {
-            if (!__instance.invincible) NeuroSDKHandler.SendContext(String.Format("{0} has died.", __instance.GetUnitName()), true);
+            if (!__instance.invincible) 
+            {
+                NeuroSDKHandler.SendContext(String.Format("{0} has died.", __instance.GetUnitName()), true);
+                if (__instance.GetCurrentSefira().GetAliveAgentCnt() == 0) NeuroSDKHandler.SendContext(String.Format("Every Agent in the {0} Department has died. Work success rates with Abnormalities in said department have massively decreased.", Helpers.GetDepartmentBySefira(__instance.currentSefiraEnum)), true);
+            }
         }
 
         //Postfix
@@ -136,7 +140,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
          * is to go through every Abnormality individually and explicitly code the output for these exceptions across all relevant patches.
          * And like, who would...who would spend all that time for something ultimately so small?
          * ...
-         * TODO: add all exceptions to the standard context sending
+         * TODO: add all exceptions to the standard context sending. maybe
          */
 
         //Prefix - check if the Abnormality's Qliphoth Counter is 0 before it is updated
@@ -220,14 +224,14 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             {
                 if (SefiraBossManager.Instance.CheckBossActivation(SefiraEnum.BINAH) || (SefiraBossManager.Instance.IsKetherBoss() && SefiraBossManager.Instance.GetKetherBossType() == KetherBossType.E3))
                 {
-                    if(type != OverloadType.DEFAULT)
+                    if (type != OverloadType.DEFAULT)
                     {
                         BinahSuppressionScene.InformNeuroArbiterMeltdowns(overloadCount, type);
                         return;
                     }
                 }
                 if (overloadCount == 0) NeuroSDKHandler.SendContext("The Qliphoth Meltdown Level has been raised, however, no overloads or Ordeals have occurred.");
-                else NeuroSDKHandler.SendContext(String.Format("The Qliphoth Meltdown Level has been raised, and {0} containment units have become overloaded as a result.", overloadCount), true);
+                else NeuroSDKHandler.SendContext(String.Format("The Qliphoth Meltdown Level has been raised, and {0} containment unit(s) have become overloaded as a result.", overloadCount), true);
                 overloadIsFromMeltdown = false; //begin sending overload context again
             }
         }
@@ -431,7 +435,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                 dontTouchMeEventStarted = true;
                 NeuroSDKHandler.SendCommand("dont_touch_me_touched_event_start");
             }
-            else if(__instance.model.GetUnitName().Equals("Don’t Touch Me") && isolateClicked.Count < 5)
+            else if (__instance.model.GetUnitName().Equals("Don’t Touch Me") && isolateClicked.Count < 5)
             {
                 NeuroSDKHandler.SendContext("Don't Touch Me has been touched.", true);
             }
@@ -441,7 +445,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
         {
             FieldInfo isolateClickedInfo = typeof(DontTouchMe).GetField("isolateClicked", BindingFlags.Instance | BindingFlags.NonPublic);
             Queue<float> isolateClicked = (Queue<float>)isolateClickedInfo.GetValue(__instance);
-            if (!dontTouchMeEventStarted && isolateClicked.Count < 5 && __instance.model.GetUnitName().Equals("O-05-47")) 
+            if (!dontTouchMeEventStarted && isolateClicked.Count < 5 && __instance.model.GetUnitName().Equals("O-05-47"))
             {
                 dontTouchMeEventStarted = true;
                 NeuroSDKHandler.SendCommand("dont_touch_me_touched_event_start");
@@ -471,6 +475,58 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             {
                 __instance.OnOpenCollectionWindow();
                 neuroButtonMashTimer.StartTimer(0.75f);
+            }
+        }
+
+        public static void SendResultScreenInformation(ResultScreen.Report __instance)
+        {
+            if (ActionScene.Instance == null || ActionScene.Instance.RestartConnectorCommand().Contains("suppression")) return; //don't give results on boss clear
+            int day = PlayerModel.instance.GetDay() + 1;
+            string survivalRate = __instance.time[5].text;
+            string rankDesc = "";
+            switch (__instance.Rank.text)
+            {
+                case "S":
+                    rankDesc = "Today's performance has been awarded an S Rank. Flawless work.";
+                    break;
+                case "A":
+                    rankDesc = "Today's performance has been awarded an A Rank. Very good work.";
+                    break;
+                case "B":
+                    rankDesc = "Today's performance has been awarded a B Rank. Not perfect, but far from a failure.";
+                    break;
+                case "C":
+                    rankDesc = "Today's performance has been awarded a C Rank. It seems you struggled today...but, there's always tomorrow.";
+                    break;
+                case "D":
+                    rankDesc = "Today's performance has been awarded...a D Rank. Please, try a bit harder next time. We need Agents alive for tomorrow.";
+                    break;
+                case "F":
+                    rankDesc = "Today's performance has been awarded...an F Rank. You and the manager need to get your act together immediately, or this company is doomed.";
+                    break;
+            }
+            string result = String.Format("Day {0} has ended, with an Agent survival rate of {1}." +
+                "\n{2}", day.ToString(), survivalRate, rankDesc);
+            NeuroSDKHandler.SendCommand("clear_actions");
+            NeuroSDKHandler.SendContext(result, true);
+        }
+
+        //Prefix - store whether or not every Agent is dead
+        public static void InformNeuroPrefixAllAgentsDead(out bool __state)
+        {
+            __state = GameStatusUI.GameStatusUI.Window.sceneController.IsAgentAlldead;
+        }
+
+        //Postfix - if there was an Agent alive, and now they're all dead, inform Neuro that the game is over
+        public static void InformNeuroPostfixAllAgentsDead(bool __state)
+        {
+            if(!__state && GameStatusUI.GameStatusUI.Window.sceneController.IsAgentAlldead)
+            {
+                int day = PlayerModel.instance.GetDay() + 1;
+                if(day != 47 && day != 48 && day != 49) //Keter game over is already handled elsewhere
+                {
+                    NeuroSDKHandler.SendContext("Every single Agent is dead, panicking, or uncontrollable. All we can do now is wait for the manager to retry the day...", true);
+                }
             }
         }
     }

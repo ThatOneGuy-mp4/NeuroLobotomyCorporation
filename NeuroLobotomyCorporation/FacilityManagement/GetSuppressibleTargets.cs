@@ -26,7 +26,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                 {
                     activeBossCreatures = (SefiraBossManager.Instance.CurrentBossBase as KetherMiddleBossBase).bossBaseList[2].modelList; //gets GeburahBossBase
                 }
-                if (SefiraBossManager.Instance.IsKetherBoss(KetherBossType.E3) && SefiraBossManager.Instance.CurrentBossBase.QliphothOverloadLevel < 7)
+                if (SefiraBossManager.Instance.IsKetherBoss(KetherBossType.E3) && SefiraBossManager.Instance.CurrentBossBase.QliphothOverloadLevel < 8)
                 {
                     activeBossCreatures = (SefiraBossManager.Instance.CurrentBossBase as KetherLowerBossBase).bossBaseList[1].modelList; //gets BinahBossBase
                 }
@@ -126,7 +126,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                             ordealCreaturesInOrdeal.Add(ordealCreature);
                         }
                     }
-                    string ordealTargets = String.Format("{0}\n-------------------------\n", ordeal.OrdealTypeText);
+                    string ordealTargets = "";
                     foreach (OrdealCreatureModel ordealCreature in ordealCreaturesInOrdeal)
                     {
                         if (ordealCreature.hp <= 0) continue;
@@ -136,7 +136,11 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                         string healthPercentRemaining = ((int)((float)(ordealCreature.hp / ordealCreature.metaInfo.maxHp) * 100)).ToString();
                         ordealTargets += String.Format("{0}, {1} Level Threat, {2}, {3}% HP Remaining\n", name, riskLevel, location, healthPercentRemaining);
                     }
-                    result += ordealTargets + "\n";
+                    if (!String.IsNullOrEmpty(ordealTargets))
+                    {
+                        ordealTargets = String.Format("{0}\n-------------------------\n{1}", ordeal.OrdealTypeText, ordealTargets);
+                        result += ordealTargets + "\n";
+                    }
                 }
             }
             if (specialEnemies.Count > 0)
@@ -154,7 +158,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     "! WARNING ! WARNING ! WARNING ! WARNING !\n\n", specialResult) + result;
             }
 
-            if (String.IsNullOrEmpty(result)) return "There are no suppressable targets at the moment.";
+            if (String.IsNullOrEmpty(result)) return "There are no suppressible targets at the moment.";
             return result;
         }
 

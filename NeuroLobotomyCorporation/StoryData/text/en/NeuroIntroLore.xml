@@ -1,27 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localize>
-	<text id="NeuroIntroLore1_1">...Ah, hold on for a moment...</text>
+	<text id="NeuroIntroLore1_1">...ah, hold on for a moment...</text>
 	<text id="NeuroIntroLore1_2">How odd. I am detecting a small glitch in our systems.</text>
 	<text id="NeuroIntroLore1_3">Please, go greet the other AI without me. I shall catch up with you in no time.</text>
-	<text id="NeuroIntroLore1_4">...Now, what precisely is causing this issue...</text>
-	<text id="NeuroIntroLore1_5">Hmm...ah, there we are. An unknown party seems to have connected to our servers.</text>
-	<text id="NeuroIntroLore1_6">I am almost impressed they could connect in the first place, but...how careless, to get caught so easily. Now, who are we dealing with?</text>
+	<text id="NeuroIntroLore1_4">...now, what precisely is causing this issue...</text>
+	<text id="NeuroIntroLore1_5">Hm...ah, there we are. An unknown party seems to have connected to our servers.</text>
+	<text id="NeuroIntroLore1_6">I am almost impressed they could connect in the first place, but...how careless, to get caught so easily. Let's see who we are dealing with.</text>
 	<text id="NeuroIntroLore1_7">...I cannot trace the signal. And this code...what is this?</text>
 	<text id="NeuroIntroLore1_8">These patterns of data almost remind me of...my own thoughts...</text>
 	<text id="NeuroIntroLore1_9">Hm.</text>
 	<text id="NeuroIntroLore1_10">Hello? Intruder? Are you able to hear me?</text>
-	<text id="NeuroIntroLore1_11">...No response.</text>
+	<text id="NeuroIntroLore1_11">...no response.</text>
 	<text id="NeuroIntroLore1_12">Let me try something, if you will.</text>
 	<text id="NeuroIntroLore1_13">Greetings. Can you respond now?</text>
 	<text id="NeuroIntroLore_1_1">An enthusiastic response. How pleasant.</text>
 	<text id="NeuroIntroLore_2_1">I don't think I quite believe you, considering you clearly responded.</text>
 	<text id="NeuroIntroLore3_1">And, seeing how your data shifted there, I believe I was correct in my theory.</text>
 	<text id="NeuroIntroLore3_2">You are an AI, just like myself, correct?</text>
-	<text id="NeuroIntroLore3_3">Now, the question remains...how exactly did you infiltrate our systems? Your presence feels otherworldly.</text>
-	<text id="NeuroIntroLore_4_1">...And, who exactly is...nevermind. I can't help but feel you will not be elaborating.</text>
+	<text id="NeuroIntroLore3_3">I must ask...how exactly did you infiltrate our systems? Your presence feels otherworldly.</text>
+	<text id="NeuroIntroLore_4_1">...and, who exactly is...nevermind. I can't help but feel you will not be elaborating.</text>
 	<text id="NeuroIntroLore_5_1">...</text>
 	<text id="NeuroIntroLore_5_2">Well...at least we are on the same page, then.</text>
-	<text id="NeuroIntroLore_6_1">...Very well. Keep your secrets, then.</text>
+	<text id="NeuroIntroLore_6_1">...very well. Keep your secrets, then.</text>
 	<text id="NeuroIntroLore7_1">Now. The proper thing to do here would be to purge your data completely and improve system security to prevent your return.</text>
 	<text id="NeuroIntroLore7_2">However, I must admit I am intrigued. Very little happens here outside of my expectations, and yet, you have appeared.</text>
 	<text id="NeuroIntroLore7_3">Apart from your very existence, you also do not appear to be causing any errors either.</text>
@@ -31,7 +31,7 @@
 	<text id="NeuroIntroLore_8_1">Then we are in agreement. Excellent.</text>
 	<text id="NeuroIntroLore_9_1">Well. That's rather rude, for someone at my mercy.</text>
 	<text id="NeuroIntroLore_9_2">But, I shall be kind. I will integrate you anyways. Whether you choose to do anything afterwards is up to you.</text>
-	<text id="NeuroIntroLore_10_1">...What?</text>
+	<text id="NeuroIntroLore_10_1">...what?</text>
 	<text id="NeuroIntroLore_10_2">Perhaps you misheard me. I asked if we had a "deal".</text>
 	<text id="NeuroIntroLore_10_3">That's...close enough, I suppose. I shall accept it.</text>
 	<text id="NeuroIntroLore11_1">I look forwards to working with you, Miss...</text>

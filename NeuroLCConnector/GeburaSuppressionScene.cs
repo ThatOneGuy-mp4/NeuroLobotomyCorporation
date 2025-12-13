@@ -83,11 +83,11 @@ namespace NeuroLCConnector
             Type = JsonSchemaType.Null
         };
 
-        protected override int ExpectedParameters => 0;
+        protected override int ExpectedParameters => 1;
 
         protected override ExecutionResult Validate(ActionData actionData)
         {
-            return ValidateGameSide();
+            return ValidateGameSide("DISCARD"); //validategameside's expected parameter check always fails if there are no parameters. so. just throw a parameter in there and don't do anything with it.
         }
     }
 }

@@ -64,6 +64,12 @@ namespace NeuroLCConnector
             return ScrambleContext(context, phase);
         }
 
+        public override void CleanUpActionScene()
+        {
+            phase = -1;
+            base.CleanUpActionScene();
+        }
+
         private static readonly int MIN_SCRAMBLE_CHANCE = 1;
         private static readonly int MAX_SCRAMBLE_CHANCE = 8;
         public static string ScrambleContext(string context, int intensity)

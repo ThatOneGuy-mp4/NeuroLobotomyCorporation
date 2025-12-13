@@ -315,7 +315,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     {
                         string guidelinesLeftToUnlock = (guidelines.Count - lockedGuidelineIndex).ToString();
                         string guidelineCost = abnormality.observeInfo.GetObserveCost(CreatureModel.careTakingRegion[lockedGuidelineIndex]).ToString();
-                        managerialGuidelines += String.Format("There are {0} managerial guidelines left to unlock before they can be read, each of which costs {1} personal P.E. Boxes.", guidelinesLeftToUnlock, guidelineCost);
+                        managerialGuidelines += String.Format("There are {0} managerial guideline(s) left to unlock before they can be read, each of which costs {1} personal P.E. Boxes.", guidelinesLeftToUnlock, guidelineCost);
                     }
                     info += managerialGuidelines;
                 }
@@ -372,7 +372,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                 }
                 if (infoState.IncludeManagerialGuidelines)
                 {
-                    info += "Managerial Guidelines\n-------------------------------------";
+                    info += "Managerial Guidelines\n-------------------------------------\n";
                     List<int> lockedGuidelines = new List<int>();
                     int i = 0;
                     while(i < abnormality.metaInfo.specialSkillTable.descList.Count)
@@ -406,7 +406,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     {
                         if(abnormality.metaInfo.creatureKitType == CreatureKitType.ONESHOT)
                         {
-                            info += String.Format("{0} guidelines have yet to be unlocked, and will become visible after {1} has been used ", lockedGuidelines.Count, infoState.AbnormalityName);
+                            info += String.Format("{0} guideline(s) have yet to be unlocked, and will become visible after {1} has been used ", lockedGuidelines.Count, infoState.AbnormalityName);
                             for(int j = 0; j < lockedGuidelines.Count; j++)
                             {
                                 if (j != 0 && j == lockedGuidelines.Count - 1) info += "and ";

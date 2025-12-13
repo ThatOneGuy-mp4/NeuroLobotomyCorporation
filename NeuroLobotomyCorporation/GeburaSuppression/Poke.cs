@@ -15,7 +15,7 @@ namespace NeuroLobotomyCorporation.GeburaSuppression
         public static string Command()
         {
             if (poking) return "failure|The previous poke has not gone through yet...please wait a moment...";
-            if (SefiraManager.instance.GameOverCheck()) return "failure|Every Agent is dead...suppression cannot continue. Please ask the manager to retry the day."; //i'm not letting vedal tell neuro to spam poke 12000 times to win. because i feel like that's something he'd consider if everyone else was dead.
+            if (SefiraManager.instance.GameOverCheck()) return "failure|Every Agent is dead...suppression cannot continue. All we can do is wait for the manager to retry the day..."; //i'm not letting vedal tell neuro to spam poke 12000 times to win. because i feel like that's something he'd consider if everyone else was dead.
             SefiraBossCreatureModel redMistModel = (SefiraBossCreatureModel)Helpers.TryFindSefiraCoreTarget("The Red Mist");
             if (RedMistRagebait.Instance == null || RedMistRagebait.Instance.RedMistModel != redMistModel) RedMistRagebait.Instance = new RedMistRagebait(redMistModel);
             if (!RedMistRagebait.Instance.CanPoke()) return "failure|...I fear the manager will not learn the lesson he is supposed to if you do much of the work for him. Once the next 'phase' begins, you may assist again."; //additional anti-cheese for vedal. prevents neuro from poking too much in one phase.
@@ -32,7 +32,6 @@ namespace NeuroLobotomyCorporation.GeburaSuppression
         {
             if (poking)
             {
-                //if (RedMistRagebait.Instance == null || RedMistRagebait.Instance.RedMistModel != __instance) RedMistRagebait.Instance = new RedMistRagebait(__instance);
                 poking = false;               
                 RedMistRagebait.Instance.RedMistModel.TakeDamage(null, new DamageInfo(RwbpType.N, 1f));
                 if (!String.IsNullOrEmpty(RedMistRagebait.Instance.ragingDialogue)) { (__instance.script as GeburahCoreScript).AnimScript.MakeGeburahText(RedMistRagebait.Instance.ragingDialogue); RedMistRagebait.Instance.ragingDialogue = ""; }
