@@ -24,6 +24,7 @@ Once the game has been opened, you can also start or kill the secondary program 
     - "neurosdk start {connector/handler/all}"; starts the specified of the last three options, if they are not already started
     - "neurosdk kill {connector/handler/all}"; kills the specified of the last three options, if they are alive
     - "neurosdk restart {connector/handler/all}"; kills, then starts the specified of the last three options. uniquely, also attempts to give all actions back that the AI should have had, if the connector was restarted.
+
 Please note that the integration is disabled during the tutorial and part of the first day. 
 There are also some sections where ONLY the AI has control. If something goes wrong and the AI can't respond, use the console command "neurosdk regaincontrol" to...regain control.
 
