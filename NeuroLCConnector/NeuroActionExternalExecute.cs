@@ -66,7 +66,7 @@ namespace NeuroLCConnector
 
         protected sealed override JsonSchema? Schema => new()
         {
-            Type = JsonSchemaType.Null
+            Type = JsonSchemaType.None
         };
 
         protected sealed override ExecutionResult Validate(ActionData actionData)
