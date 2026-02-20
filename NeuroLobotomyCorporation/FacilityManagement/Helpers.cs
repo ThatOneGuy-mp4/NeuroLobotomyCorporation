@@ -148,7 +148,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
         {
             string location = "";
             PassageObjectModel currentPassage = unit.GetMovableNode().GetPassage();
-            if (currentPassage == null || (unit is CreatureModel && ((unit as CreatureModel).script is Bunny || (unit as CreatureModel).script is Wraith))) //Meat Lantern and Dimension Refraction Variant are hidden while breaching
+            if (currentPassage == null) 
             {
                 location = "Location Unknown";
             }

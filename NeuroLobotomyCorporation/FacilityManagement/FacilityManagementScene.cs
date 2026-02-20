@@ -34,7 +34,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                 case "get_abnormality_statuses":
                     return GetAbnormalityStatuses.Command();
                 case "get_detailed_abnormality_info":
-                    return GetDetailedAbnormalityInfo.Command(message[(int)GetDetailedAbnormalityInfo.Parameters.ABNORMALITY_NAME], bool.Parse(message[(int)GetDetailedAbnormalityInfo.Parameters.INCLUDE_BASIC_INFO]), bool.Parse(message[(int)GetDetailedAbnormalityInfo.Parameters.INCLUDE_MANAGERIAL_GUIDELINES]), bool.Parse(message[(int)GetDetailedAbnormalityInfo.Parameters.INCLUDE_WORK_SUCCESS_RATES]), bool.Parse(message[(int)GetDetailedAbnormalityInfo.Parameters.INCLUDE_ESCAPE_INFORMATION]));
+                    return GetDetailedAbnormalityInfo.Command(message[(int)GetDetailedAbnormalityInfo.Parameters.ABNORMALITY_NAME], Boolean.Parse(message[(int)GetDetailedAbnormalityInfo.Parameters.INCLUDE_BASIC_INFO]), Boolean.Parse(message[(int)GetDetailedAbnormalityInfo.Parameters.INCLUDE_MANAGERIAL_GUIDELINES]), Boolean.Parse(message[(int)GetDetailedAbnormalityInfo.Parameters.INCLUDE_WORK_SUCCESS_RATES]), Boolean.Parse(message[(int)GetDetailedAbnormalityInfo.Parameters.INCLUDE_ESCAPE_INFORMATION]));
                 case "get_overloaded_units":
                     return GetOverloadedUnits.Command();
                 case "assign_work":

@@ -93,24 +93,36 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             List<CreatureModel> escapedAbnormalities = Helpers.GetAllSuppressibleAbnormalitiesAndChildren();
             if (escapedAbnormalities.Count > 0)
             {
+                List<string> undetectableAbnormalities = new List<string>();
                 escapedAbnormalities = RemoveSpecialAbnormalities(escapedAbnormalities, specialEnemies);
                 result += "Breaching Abnormalities\n-------------------------\n";
                 List<Helpers.Entry<SefiraEnum, List<CreatureModel>>> sortedAbnormalities = Helpers.SortAbnormalitiesByDepartment(escapedAbnormalities.ToArray(), true);
                 foreach (Helpers.Entry<SefiraEnum, List<CreatureModel>> sortingEntry in sortedAbnormalities)
                 {
                     if (sortingEntry.v.Count == 0) continue;
-                    result += String.Format("Currently in the {0} Department:\n", Helpers.GetDepartmentBySefira(sortingEntry.k));
+                    string inDepartment = "";
                     foreach (CreatureModel abnormality in sortingEntry.v)
                     {
                         string name = abnormality.script.GetName();
                         string riskLevel = abnormality.metaInfo.riskLevelForce;
                         string healthPercentRemaining = ((int)((float)(abnormality.hp / abnormality.metaInfo.maxHp) * 100)).ToString();
+
                         List<string> defenseInfo = Helpers.GetResistanceTypeValues(abnormality);
-                        result += String.Format("-{0}, {1} Level Threat, {2}% HP Remaining, " +
+                        string abnormalityInfo = String.Format("-{0}, {1} Level Threat, {2}% HP Remaining, " +
                         "{3}/{4}/{5}/{6} (Red/White/Black/Pale) Resistances\n", name, riskLevel, healthPercentRemaining,
                         defenseInfo[(int)Helpers.ResistanceTypes.RED], defenseInfo[(int)Helpers.ResistanceTypes.WHITE], defenseInfo[(int)Helpers.ResistanceTypes.BLACK], defenseInfo[(int)Helpers.ResistanceTypes.PALE]);
+                        if (abnormality.script is Bunny || abnormality.script is Wraith) undetectableAbnormalities.Add(abnormalityInfo);
+                        else inDepartment += abnormalityInfo;
                     }
-                    result += "\n";
+                    if (!String.IsNullOrEmpty(inDepartment))
+                    {
+                        result += String.Format("Currently in the {0} Department:\n{1}\n", Helpers.GetDepartmentBySefira(sortingEntry.k), inDepartment);
+                    }
+                }
+                if(undetectableAbnormalities.Count > 0) //thank you Meat Lantern and Dimensional Refraction Variant for making me reshuffle my code
+                {
+                    if(undetectableAbnormalities.Count == 1) result += String.Format("Currently in the ??? Department:\n{0}\n", undetectableAbnormalities[0]);
+                    else result += String.Format("Currently in the ??? Department:\n{0}\n{1}\n", undetectableAbnormalities[0], undetectableAbnormalities[1]); //not programming a loop when only two abnormalities can possibly appear here
                 }
             }
             List<OrdealBase> activatedOrdeals = OrdealManager.instance.GetActivatedOrdeals();

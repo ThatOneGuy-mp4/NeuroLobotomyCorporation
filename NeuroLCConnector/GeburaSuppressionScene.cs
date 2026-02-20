@@ -80,7 +80,7 @@ namespace NeuroLCConnector
 
         protected sealed override JsonSchema? Schema => new()
         {
-            Type = JsonSchemaType.Null
+            Type = JsonSchemaType.None
         };
 
         protected override int ExpectedParameters => 1;

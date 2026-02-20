@@ -158,10 +158,10 @@ namespace NeuroLCConnector
             Properties = new Dictionary<string, JsonSchema>
             {
                 ["abnormality_name"] = QJS.Type(JsonSchemaType.String),
-                ["include_basic_info"] = QJS.Enum(new List<string> { "true", "false"}),
-                ["include_managerial_guidelines"] = QJS.Enum(new List<string> { "true", "false" }),
-                ["include_work_success_rates"] = QJS.Enum(new List<string> { "true", "false" }),
-                ["include_escape_information"] = QJS.Enum(new List<string> { "true", "false" })
+                ["include_basic_info"] = QJS.Type(JsonSchemaType.Boolean), 
+                ["include_managerial_guidelines"] = QJS.Type(JsonSchemaType.Boolean), 
+                ["include_work_success_rates"] = QJS.Type(JsonSchemaType.Boolean), 
+                ["include_escape_information"] = QJS.Type(JsonSchemaType.Boolean) 
             }
         };
 
@@ -171,19 +171,15 @@ namespace NeuroLCConnector
         {
             string? abnormalityName = actionData.Data?["abnormality_name"]?.Value<string>();
             if (String.IsNullOrEmpty(abnormalityName)) return ExecutionResult.Failure("Action failed. Missing required parameter 'abnormality_name'.");
-            string? includeBasicInfo = actionData.Data?["include_basic_info"]?.Value<string>();
-            if (String.IsNullOrEmpty(includeBasicInfo)) includeBasicInfo = "true";
-            else if (!includeBasicInfo.Equals("false") && !includeBasicInfo.Equals("true")) return ExecutionResult.Failure("Action failed. Parameter 'include_basic_info' must be 'true', 'false', or left empty.");
-            string? includeManagerialGuidelines = actionData.Data?["include_managerial_guidelines"]?.Value<string>();
-            if (String.IsNullOrEmpty(includeManagerialGuidelines)) includeManagerialGuidelines = "true";
-            else if (!includeManagerialGuidelines.Equals("false") && !includeManagerialGuidelines.Equals("true")) return ExecutionResult.Failure("Action failed. Parameter 'include_managerial_guidelines' must be 'true', 'false', or left empty.");
-            string? includeWorkSuccessRates = actionData.Data?["include_work_success_rates"]?.Value<string>();
-            if (String.IsNullOrEmpty(includeWorkSuccessRates)) includeWorkSuccessRates = "true";
-            else if (!includeWorkSuccessRates.Equals("false") && !includeWorkSuccessRates.Equals("true")) return ExecutionResult.Failure("Action failed. Parameter 'include_work_success_rates' must be 'true', 'false', or left empty.");
-            string? includeEscapeInformation = actionData.Data?["include_escape_information"]?.Value<string>();
-            if (String.IsNullOrEmpty(includeEscapeInformation)) includeEscapeInformation = "true";
-            else if (!includeEscapeInformation.Equals("false") && !includeEscapeInformation.Equals("true")) return ExecutionResult.Failure("Action failed. Parameter 'include_escape_information' must be 'true', 'false', or left empty.");
-            return ValidateGameSide(abnormalityName, includeBasicInfo, includeManagerialGuidelines, includeWorkSuccessRates, includeEscapeInformation);
+            bool? includeBasicInfo = actionData.Data?["include_basic_info"]?.Value<bool>();
+            if (includeBasicInfo == null) includeBasicInfo = false;
+            bool? includeManagerialGuidelines = actionData.Data?["include_managerial_guidelines"]?.Value<bool>();
+            if (includeManagerialGuidelines == null) includeManagerialGuidelines = false;
+            bool? includeWorkSuccessRates = actionData.Data?["include_work_success_rates"]?.Value<bool>();
+            if (includeWorkSuccessRates == null) includeWorkSuccessRates = false;
+            bool? includeEscapeInformation = actionData.Data?["include_escape_information"]?.Value<bool>();
+            if (includeEscapeInformation == null) includeEscapeInformation = false;
+            return ValidateGameSide(abnormalityName, includeBasicInfo.ToString(), includeManagerialGuidelines.ToString(), includeWorkSuccessRates.ToString(), includeEscapeInformation.ToString());
         }
     }
 

@@ -15,7 +15,8 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             foreach (Helpers.Entry<SefiraEnum, List<CreatureModel>> sortingEntry in sortedAbnormalities)
             {
                 status += Helpers.GetDepartmentBySefira(sortingEntry.k) + " Department Abnormalities:\n";
-                foreach (CreatureModel abnormality in sortingEntry.v)
+                if (sortingEntry.k == SefiraEnum.DAAT) status += "Nothing. The only person left here is a girl long since fallen silent."; //Silent Girl foreshadowing
+                else foreach (CreatureModel abnormality in sortingEntry.v)
                 {
                     string abnormalityName = abnormality.GetUnitName();
                     string riskLevel = "";
