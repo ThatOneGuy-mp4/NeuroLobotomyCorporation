@@ -282,6 +282,8 @@ namespace NeuroLobotomyCorporation
                 new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("SendResultScreenInformation", AccessTools.all)), null);
             harmonyInstance.Patch(typeof(Sefira).GetMethod("OnAgentCannotControll", AccessTools.all), new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroPrefixAllAgentsDead", AccessTools.all)),
                 new HarmonyMethod(typeof(FacilityManagementScene).GetMethod("InformNeuroPostfixAllAgentsDead", AccessTools.all)), null);
+            harmonyInstance.Patch(typeof(LoggingScript).GetMethod("MakeText", AccessTools.all), null,
+                new HarmonyMethod(typeof(WriteLog).GetMethod("StoreLogInformation", AccessTools.all)), null);
             //FacilityManagement end
 
             //Hokma Price of Silence Information

@@ -162,8 +162,6 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             return result;
         }
 
-
-
         private static bool TryCheckIsSpecialEnemy(UnitModel unit, List<string> specialEnemies)
         {
             if (unit is ChildCreatureModel && (unit as ChildCreatureModel).script is DeathAngelApostle) return true; //special output will be handled by WhiteNight's status

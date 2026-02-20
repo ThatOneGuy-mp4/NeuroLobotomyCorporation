@@ -51,6 +51,10 @@ namespace NeuroLobotomyCorporation.FacilityManagement
                     return ShootManagerialBullet.IsBulletUnlocked();
                 case "shoot_managerial_bullet":
                     return ShootManagerialBullet.Command(message[(int)ShootManagerialBullet.Parameters.BULLET_TYPE], message[(int)ShootManagerialBullet.Parameters.TARGET_NAME], message[(int)ShootManagerialBullet.Parameters.TARGET_DEPARTMENT]);
+                case "write_log":
+                    return WriteLog.Command(message[WriteLog.LOG_TEXT]);
+                case "read_logs":
+                    return ReadLogs.Command(Int32.Parse(message[(int)ReadLogs.Parameters.NUM_OF_LOGS]), Boolean.Parse(message[(int)ReadLogs.Parameters.NEURO_LOGS_ONLY]));
                 case "keep_pressing":
                     neuroButtonMashTimer = new Timer();
                     neuroButtonMashTimer.autoStop = false;
@@ -79,6 +83,7 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             whiteNightScript = null;
             apostleIndex = 0;
             AssignWork.neuroCreatedLogItems = new List<SystemLogScript.CreatureSystemLog>();
+            WriteLog.ClearLogs();
         }
 
         //Postfix - modify the message to remove anything that does not make sense as an Angela-to-Neuro conversation.

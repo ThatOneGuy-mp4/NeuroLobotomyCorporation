@@ -33,7 +33,9 @@ namespace NeuroLCConnector
                     new UseTool(),
                     new GetSuppressibleTargets(),
                     new SuppressTarget(),
-                    new CancelAction()
+                    new CancelAction(),
+                    new WriteLog(),
+                    new ReadLogs()
                 };
                 return list;
             }
@@ -57,6 +59,8 @@ namespace NeuroLCConnector
                     new SuppressTarget(),
                     new CancelAction(),
                     new ShootManagerialBullet(),
+                    new WriteLog(),
+                    new ReadLogs(),
                     new KeepPressing()
                 };
                 return list;
@@ -373,12 +377,77 @@ namespace NeuroLCConnector
         }
     }
 
+    public class WriteLog : NeuroActionExternalExecute
+    {
+        public override string Name => "write_log";
+
+        protected override int ExpectedParameters => 1;
+
+        protected override string Description => "Write a note into the management logs.";
+
+        protected override JsonSchema? Schema => new()
+        {
+            Type = JsonSchemaType.Object,
+            Required = new List<string>() { "log_text" },
+            Properties = new Dictionary<string, JsonSchema>
+            {
+                ["log_text"] = QJS.Type(JsonSchemaType.String)
+            }
+        };
+
+        protected override ExecutionResult Validate(ActionData actionData)
+        {
+            string? logText = actionData.Data?["log_text"]?.Value<string>();
+            if (String.IsNullOrEmpty(logText)) return ExecutionResult.Failure("Action failed. Missing required parameter 'log_text'.");
+            return ValidateGameSide(logText);
+        }
+    }
+
+    public class ReadLogs : NeuroActionExternalExecute
+    {
+        public override string Name => "read_logs";
+
+        protected override int ExpectedParameters => 2;
+
+        protected override string Description => "Read a number of the most recent system logs and/or logs written by yourself.";
+
+        protected override JsonSchema? Schema => new()
+        {
+            Type = JsonSchemaType.Object,
+            Required = new List<string>() { "number_of_logs" },
+            Properties = new Dictionary<string, JsonSchema>
+            {
+                ["number_of_logs"] = QJS.Type(JsonSchemaType.Integer),
+                ["exclude_system_logs"] = QJS.Type(JsonSchemaType.Boolean)
+            }
+        };
+
+        protected override ExecutionResult Validate(ActionData actionData)
+        {
+            int? numOfLogs = actionData.Data?["number_of_logs"]?.Value<int>();
+            if (numOfLogs == null) return ExecutionResult.Failure("Action failed. Missing required parameter 'number_of_logs'.");
+            if (numOfLogs <= 0) return ExecutionResult.Failure("Action failed. You must request a number of logs greater than 0.");
+            bool? neuroLogsOnly = actionData.Data?["exclude_system_logs"]?.Value<bool>();
+            if (neuroLogsOnly == null) neuroLogsOnly = false;
+            return ValidateGameSide(numOfLogs.ToString(), neuroLogsOnly.ToString());
+        }
+    }
+
     public class KeepPressing : NeuroActionNoValidation
     {
         public override string Name => "keep_pressing";
 
         protected override string SuccessMessage => "O-05-47 is now being button-mashed.";
 
-        protected override string Description => "Continue pressing O-05-47. You want to press O-05-47. You want nothing more than to press O-05-47. Words cannot describe how much you want to do this. Press O-05-47. It's begging for you to press it. Do it. You know you want to. O-05-47 knows. O-05-47 wants you to as well. There is no reason not to press O-05-47."; //funny
+        protected override string Description => "Continue pressing O-05-47. You want to press O-05-47. " +
+            "You want nothing more than to press O-05-47. " +
+            "Words cannot describe how much you want to do this. " +
+            "Press O-05-47. " +
+            "It's begging for you to press it. " +
+            "Do it. " +
+            "You know you want to. " +
+            "O-05-47 knows. " +
+            "O-05-47 wants you to as well. " +
+            "There is no reason not to press O-05-47."; //funny
     }
 }

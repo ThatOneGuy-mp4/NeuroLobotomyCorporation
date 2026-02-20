@@ -226,7 +226,6 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             abnormality.script.OnWorkAllocated(data, agent);
             agent.AddUnitBuf(new SpecialBossReward.NeuroAssignmentBuf(abnormality, agent));
 
-            SystemLogScript logScript = GameObject.FindObjectOfType<SystemLogScript>();
             string workTypeAfterCheckingForMalkuth = "";
             if (SefiraBossManager.Instance.CheckBossActivation(SefiraEnum.MALKUT) || SefiraBossManager.Instance.IsKetherBoss(KetherBossType.E1))
             {
@@ -236,8 +235,8 @@ namespace NeuroLobotomyCorporation.FacilityManagement
             {
                 workTypeAfterCheckingForMalkuth = data.calledName;
             }
-            LogItemScript neuroLog = logScript.script.MakeText("");
-            neuroLog.SetText(String.Format("▶  <color=#66bfcd>{0}</color> begins their <color=#84bd36>{1}</color> with <color=#ef9696>{2}</color>.", agent.GetUnitName(), workTypeAfterCheckingForMalkuth, abnormality.GetUnitName()));
+            string workLog = String.Format("<color=#66bfcd>{0}</color> begins their <color=#84bd36>{1}</color> with <color=#ef9696>{2}</color>.", agent.GetUnitName(), workTypeAfterCheckingForMalkuth, abnormality.GetUnitName());
+            LogItemScript neuroLog = WriteLog.WriteTextToLog(workLog); 
             SystemLogScript.CreatureSystemLog neuroCreatureLog = GetNeuroCreatureSystemLog(abnormality);
             if (neuroCreatureLog == null)
             {

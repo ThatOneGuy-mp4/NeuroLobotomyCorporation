@@ -96,7 +96,6 @@ namespace NeuroLCConnector
                 GameInput.Prefixes.Add(gameToServerURI);
                 GameInput.Start();
                 GameInput.TimeoutManager.IdleConnection = new TimeSpan(7, 2, 7);
-
             }
             catch (Exception e)
             {
