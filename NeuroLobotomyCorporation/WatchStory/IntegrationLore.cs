@@ -20,10 +20,12 @@ namespace NeuroLobotomyCorporation.WatchStory
         }
         public static LoreToPlay nextLore = LoreToPlay.None;
 
+        public static bool DisableLore = false;
+
         //Prefix - if a layer is fully synchronized, play the associated Angela-to-AI conversation
         public static bool PlayLayerSyncLore(StorySceneController __instance, string storyId)
         {
-            if (nextLore == LoreToPlay.None) return true;
+            if (DisableLore || nextLore == LoreToPlay.None) return true;
             string id = NeuroSDKHandler.AiPlaying + nextLore.ToString();
             nextLore = LoreToPlay.None;
             neuroResponseState = OnlyNeuroState.NEURO_START;
@@ -59,7 +61,7 @@ namespace NeuroLobotomyCorporation.WatchStory
         //(if the first story has been viewed or if we've reset to day one (malkuth mission exists or is complete))
         public static bool LoreIntegrationEnabled()
         {
-            return (isFirstStoryViewed || MissionManager.instance.GetCurrentSefiraMission(SefiraEnum.MALKUT) != null || MissionManager.instance.GetClearedOrClosedMissionNum(SefiraEnum.MALKUT) > 0);
+            return (DisableLore || isFirstStoryViewed || MissionManager.instance.GetCurrentSefiraMission(SefiraEnum.MALKUT) != null || MissionManager.instance.GetClearedOrClosedMissionNum(SefiraEnum.MALKUT) > 0);
         }
 
         public enum OnlyNeuroState
@@ -84,6 +86,7 @@ namespace NeuroLobotomyCorporation.WatchStory
         //         if 70% or 90% seed of light story is about to be played, set the next story to be the respective layer synced lore
         public static bool SetAwaitingLayerLore(string angelaStory)
         {
+            if (DisableLore) return true;
             if (String.IsNullOrEmpty(angelaStory))
             {
                 if (MissionManager.instance.GetClearedOrClosedBossMissionNum() != 4) return true;

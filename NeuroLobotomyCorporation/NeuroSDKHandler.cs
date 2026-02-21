@@ -98,6 +98,7 @@ namespace NeuroLobotomyCorporation
         private static readonly string _serverToGameUri = "serverToGameURI";
         private static readonly string _aiPlaying = "aiPlaying";
         private static readonly string _allowExecutionBullet = "allowExBullet";
+        private static readonly string _disableLore = "disableLore";
         private static void LoadConfig()
         {
             if (!File.Exists(fileName)) return;
@@ -133,6 +134,17 @@ namespace NeuroLobotomyCorporation
             {
                 if (allowExBullet.InnerText.ToLower().Equals("true")) ShootManagerialBullet.CanUseExecutionBullets = true;
             }
+
+            XmlNode disableLore = settingsNode.SelectSingleNode(_disableLore);
+            if (disableLore != null)
+            {
+                if (disableLore.InnerText.ToLower().Equals("true"))
+                {
+                    WatchStory.IntegrationLore.DisableLore = true;
+                    if(String.IsNullOrEmpty(AiPlaying)) AiPlaying = "Neuro";
+                }
+            }
+
         }
 
         public static void SetAIPlaying(string aiName)

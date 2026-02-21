@@ -7,9 +7,13 @@
 	<!--URI for the server's connection to the game.-->
 	<serverToGameURI>http://localhost:8081</serverToGameURI>
 	
-	<!--Which of Neuro/Evil is playing the game. This will be automatically set during Day 1. Only change it if the twin playing sets it incorrectly.-->
+	<!--Which of Neuro/Evil is playing the game. This will be automatically set during Day 1, if the custom story is enabled.-->
+	<!--Only change it if the twin playing sets it incorrectly, or if the custom story is disabled below.-->
 	<aiPlaying></aiPlaying>
 	
 	<!--Allows Neuro/Evil to fire the 8th type of Managerial Bullet once unlocked. It is highly recommended to leave as false.-->
 	<allowExBullet>False</allowExBullet>
+
+	<!--Disables custom integration story events. Certain special upgrades will still be given, but with no explanation.-->
+	<disableLore>False</disableLore>
 </settings>

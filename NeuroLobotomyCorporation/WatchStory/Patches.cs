@@ -218,7 +218,7 @@ namespace NeuroLobotomyCorporation.WatchStory
         private static bool lastSpeakerWasRobotSephira;
         public static void ContextSpeak(StoryDialogueUI __instance, StoryUI.CharacterVar charVar, string text)
         {
-            if (isSkipping) return;
+            if (isSkipping && !IntegrationLore.OnlyNeuroCanRespond()) return;
             string finalDialogue = "";
             switch (GetDialogueType(__instance))
             {
@@ -304,7 +304,7 @@ namespace NeuroLobotomyCorporation.WatchStory
                 return;
             }
             if (!__result) return;
-            if (isSkipping) return;
+            if (isSkipping && !IntegrationLore.OnlyNeuroCanRespond()) return;
             responseFromNeuro = false;
             int selectedDialogueIndex = ((int)e - 2);
             NeuroSDKHandler.SendCommand("dialogue_option_end");
@@ -325,7 +325,7 @@ namespace NeuroLobotomyCorporation.WatchStory
                 dialogueOptions.Add(dialogue);
                 finalMessage += "|" + dialogue;
             }
-            if (isSkipping) return;
+            if (isSkipping && !IntegrationLore.OnlyNeuroCanRespond()) return;
             if (!IntegrationLore.LoreIntegrationEnabled()) return;
             NeuroSDKHandler.SendCommand(finalMessage);
         }
@@ -336,7 +336,7 @@ namespace NeuroLobotomyCorporation.WatchStory
             NeuroSDKHandler.SendContext("! WARNING ! WARNING ! WARNING ! WARNING ! WARNING !" +
                 "\n----------------------------------------------------" +
                 "\nMANIFESTATION OF QLIPHA DUE TO SEPHIRAH BREAKDOWN" +
-                "\n\nSUPPRESSION OF SEPHIRAH'S CORE REQUIRED" +
+                "\n\nSuppression of Sephirah's Core Required" +
                 "\n----------------------------------------------------" +
                 "\n! WARNING ! WARNING ! WARNING ! WARNING ! WARNING !", false);
         }
