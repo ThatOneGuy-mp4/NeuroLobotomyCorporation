@@ -42,7 +42,7 @@ namespace NeuroLCConnector
 
         protected override string GetActionSceneStartContext()
         {
-            return "";
+            return "Day preparation is underway. Once the manager has finished hiring Agents or equipping E.G.O Gear, facility management will begin.";
         }
 
 

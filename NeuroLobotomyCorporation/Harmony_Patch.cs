@@ -70,6 +70,11 @@ namespace NeuroLobotomyCorporation
                 new HarmonyMethod(typeof(Harmony_Patch).GetMethod("ClearActionsMoveToTitle")), null, null);
             //End Pause Menu fixes
 
+            //Tutorial
+            harmonyInstance.Patch(typeof(AngelaConversationUI).GetMethod("TutorialNarration", AccessTools.all), null,
+                new HarmonyMethod(typeof(Harmony_Patch).GetMethod("SendTutorialDialogue")), null);
+            //end tutorial
+
             //Abnormality Selection fixes 
             harmonyInstance.Patch(typeof(CreatureSelectUI).GetMethod("Init", AccessTools.all), null,
                 new HarmonyMethod(typeof(Harmony_Patch).GetMethod("AbnormalityChoiceSelectStart")), null);
@@ -345,6 +350,19 @@ namespace NeuroLobotomyCorporation
         public static void ClearActionsMoveToTitle()
         {
             NeuroSDKHandler.SendCommand("clear_actions");
+        }
+
+        private static bool tutorialStarted = false;
+        public static void SendTutorialDialogue(string desc)
+        {
+            string firstTutorialMessage = "";
+            if (!tutorialStarted)
+            {
+                firstTutorialMessage = "Greetings, AI. The manager will now learn how to control the facility; you will gain control of the facility yourself later, but for now, you can only sit back and watch." +
+                    "\nPlease, try to ignore information about the 'controls', and try to pay attention to what I say about the mechanics of the management.\n\n";
+                tutorialStarted = true;
+            }
+            NeuroSDKHandler.SendContext(firstTutorialMessage + desc, true, true);
         }
 
         public static void AbnormalityChoiceSelectStart()

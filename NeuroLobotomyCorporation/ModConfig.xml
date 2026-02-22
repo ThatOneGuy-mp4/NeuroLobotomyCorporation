@@ -2,10 +2,11 @@
 <settings>
 	<!--The following must be http or https URIs which exactly match the ones in the Connector's config file.-->
 	<!--Please note that neither of these are equivalent to NEURO_SDK_WS_URL, check the Connector's config for that.-->
+	<!--Also, please note that using localhost instead of 127.0.0.1 causes all of the twins' actions to have 2 extra seconds of l*tency, so don't use that.-->
 	<!--URI for the game's connection to the server.-->
-	<gameToServerURI>http://localhost:8080</gameToServerURI>
+	<gameToServerURI>http://127.0.0.1:8080</gameToServerURI>
 	<!--URI for the server's connection to the game.-->
-	<serverToGameURI>http://localhost:8081</serverToGameURI>
+	<serverToGameURI>http://127.0.0.1:8081</serverToGameURI>
 	
 	<!--Which of Neuro/Evil is playing the game. This will be automatically set during Day 1, if the custom story is enabled.-->
 	<!--Only change it if the twin playing sets it incorrectly, or if the custom story is disabled below.-->

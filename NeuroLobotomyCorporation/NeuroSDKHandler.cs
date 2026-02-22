@@ -247,17 +247,17 @@ namespace NeuroLobotomyCorporation
             }, command);
         }
 
-        public static void SendCommand(string command)
+        public static void SendCommand(string command, bool force = false)
         {
             if (Instance == null) return;
-            if (GlobalGameManager.instance == null || GlobalGameManager.instance.gameMode == GameMode.TUTORIAL) return;
+            if (GlobalGameManager.instance == null || (GlobalGameManager.instance.gameMode == GameMode.TUTORIAL && !force)) return;
             NeuroSDKHandler.Instance.QueuedCommands.Add(command);
         }
 
-        public static void SendContext(string message, bool silent = false)
+        public static void SendContext(string message, bool silent = false, bool force = false)
         {
             string fullCommand = "send_context|" + message + "|" + silent.ToString();
-            SendCommand(fullCommand);
+            SendCommand(fullCommand, force);
         }
 
         private void OnApplicationQuit()
@@ -284,7 +284,7 @@ namespace NeuroLobotomyCorporation
             ConnectorInstance = new Process();
             ConnectorInstance.StartInfo.FileName = Application.dataPath + @"\BaseMods\ThatOneGuy_NeuroLobotomyCorporation\Connector\NeuroLCConnector.exe";
             ConnectorInstance.StartInfo.UseShellExecute = false;
-            ConnectorInstance.StartInfo.CreateNoWindow = false;
+            ConnectorInstance.StartInfo.CreateNoWindow = true;
             ConnectorInstance.Start();
         }
 

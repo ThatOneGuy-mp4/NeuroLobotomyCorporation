@@ -39,7 +39,7 @@ namespace NeuroLCConnector
 
 
         //vedal please don't ban for me this k thx
-        private static readonly double BASE_LATENCY = 0.15;
+        private static readonly double BASE_LATENCY = 0.20;
         private static Random rand = new Random();
         public static async Task InduceLatency(int intensity)
         {

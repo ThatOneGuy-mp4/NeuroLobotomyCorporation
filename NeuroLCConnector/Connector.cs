@@ -22,7 +22,6 @@ namespace NeuroLCConnector
     * So instead...when the Neuro Modded Lobotomy Corporation starts up, it opens *this* program,
     * which *can* run the Neuro SDK (using the non-Unity C# implementation by pandapanda135, https://github.com/pandapanda135/CSharp-Neuro-SDK]).
     * Then the game and this program send commands to each other using web requests to actually run the integration.
-    * This adds some latency but like. I could not for the life of me figure out another way to do it. So.
     */
 
     public class Connector
